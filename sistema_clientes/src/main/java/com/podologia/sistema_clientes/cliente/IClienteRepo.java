@@ -12,6 +12,11 @@ import java.util.Optional;
 public interface IClienteRepo extends JpaRepository<ClienteEntity,Long> {
 
     @Query("SELECT c from ClienteEntity c WHERE c.nombreCliente = :nombreCliente")
-    Optional<ClienteEntity> findByNombre(@Param("nombreCliente") String nombre);
+    Optional<ClienteEntity> findByNombre(@Param("nombreCliente") String nombreCliente);
+
+   @Query("Select c FROM ClienteEntity c WHERE c.dniCliente = :dniCliente")
+    Optional<ClienteEntity> findByDni(@Param("dniCliente") String dniCliente);
+
+
 
 }
