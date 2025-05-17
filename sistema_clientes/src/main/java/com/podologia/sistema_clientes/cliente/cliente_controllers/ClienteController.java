@@ -14,75 +14,65 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+@RequestMapping("cliente")
 public class ClienteController {
     private final IClienteService clienteService;
 
-    @PostMapping("cliente/crear")
+    @PostMapping("/crear")
     public ResponseEntity<String> saveCliente(@RequestBody ClienteEntity cliente){
         clienteService.saveCliente(cliente);
         return  ResponseEntity.status(HttpStatus.CREATED).body("cliente creada");
     }
 
-    @GetMapping("cliente/todas")
+
+    @GetMapping("/todas")
     public ResponseEntity<List<ClienteEntity>> traerTodosClientes(){
         List<ClienteEntity> listaClientes = clienteService.getCliente();
         if(listaClientes.isEmpty()){
-            return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(listaClientes);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(listaClientes);
+        return ResponseEntity.ok(listaClientes);
     }
 
-    @GetMapping("cliente/{idCliente}")
-    public ResponseEntity<?> buscarClientePorId(@PathVariable Long idCliente){
-        Optional<ClienteEntity> optional = clienteService.findCliente(idCliente);
-        if(optional.isPresent()){
-            return ResponseEntity.status(HttpStatus.OK).body(optional.get());
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CLIENTE NO ENCONTRADO");
-        }
+
+    @GetMapping("/{idCliente}")
+    public ResponseEntity<ClienteEntity> buscarClientePorId(@PathVariable Long idCliente){
+        ClienteEntity cliente = clienteService.findCliente(idCliente).get(); // service ya lanza si no existe
+        return ResponseEntity.ok(cliente);
     }
 
-    @DeleteMapping("cliente/eliminar/{idCliente}")
-    public ResponseEntity<String> eliminarCita(@PathVariable Long idCliente){
+
+    @DeleteMapping("/eliminar/{idCliente}")
+    public ResponseEntity<Void> eliminarCliente(@PathVariable Long idCliente){
         clienteService.deleteCliente(idCliente);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("CLIENTE ELIMINADO");
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("cliente/editar/{idCliente}")
+
+    @PutMapping("/editar/{idCliente}")
     public ResponseEntity<String> editarCliente(@PathVariable Long idCliente, @RequestBody ClienteEntity clienteNuevo){
-        clienteService.editCliente(idCliente,clienteNuevo);
-        return ResponseEntity.status(HttpStatus.OK).body("CLIENT EDITADA");
+        log.info("el id del duenio a editar es : "+idCliente);
+        clienteService.editCliente(idCliente, clienteNuevo);
+        return ResponseEntity.ok("Cliente editado");
     }
 
-    @GetMapping("cliente/dni/{dni}")
-    public ResponseEntity<?> buscarClientePorDni(@PathVariable String dni) {
-       Optional<ClienteEntity> optional = clienteService.buscarClienteDni(dni);
-       if(optional.isPresent()){
-           return  ResponseEntity.status(HttpStatus.OK).body(optional.get());
-       }else{
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CLIENTE NO ENCONTRADA");
-       }
+    @GetMapping("/dni/{dni}")
+    public ResponseEntity<ClienteEntity> buscarClientePorDni(@PathVariable String dni) {
+        ClienteEntity cliente = clienteService.buscarClienteDni(dni).get();
+        return ResponseEntity.ok(cliente);
     }
 
 
-    @GetMapping("cliente/nombre/{nombre}")
-    public ResponseEntity<?> buscarClientePorNombre(@PathVariable String nombre) {
-        Optional<ClienteEntity> optional = clienteService.buscarNombreCliente(nombre);
-        if(optional.isPresent()){
-            return  ResponseEntity.status(HttpStatus.OK).body(optional.get());
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CLIENTE NO ENCONTRADA");
-        }
+    @GetMapping("/nombre/{nombre}")
+    public ResponseEntity<ClienteEntity> buscarClientePorNombre(@PathVariable String nombre) {
+        ClienteEntity cliente = clienteService.buscarNombreCliente(nombre).get();
+        return ResponseEntity.ok(cliente);
     }
 
-    @GetMapping("cliente/cita/{idCita}")
-    public ResponseEntity<?> obtenerClientePorCita(@PathVariable Long idCita) {
-        Optional<ClienteEntity> optional = clienteService.obtenerClientePorCitaId(idCita);
-        if(optional.isPresent()){
-            return  ResponseEntity.status(HttpStatus.OK).body(optional.get());
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CLIENTE NO ENCONTRADA");
-        }
+    @GetMapping("/cita/{idCita}")
+    public ResponseEntity<ClienteEntity> obtenerClientePorCita(@PathVariable Long idCita) {
+        ClienteEntity cliente = clienteService.obtenerClientePorCitaId(idCita).get();
+        return ResponseEntity.ok(cliente);
     }
 
 

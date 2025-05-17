@@ -21,7 +21,7 @@ public class FacturaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFactura;
-    private String numeroFactura;
+    private String numeroFactura;//usar un metodo para generar un numeroFactura en shared -> util, ahi crearlo, por mientras crearlo manualmente
 
     @ManyToOne
     @JoinColumn(name = "cliente_id",nullable = false)

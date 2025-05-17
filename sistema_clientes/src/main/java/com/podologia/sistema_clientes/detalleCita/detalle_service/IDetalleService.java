@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface IDetalleService {
     List<DetalleEntity> listaDetalle() ;
-    void saveDetalle(DetalleEntity detalleEntity);
+    void saveDetalle(DetalleEntity detalleEntity,Long idCita);
     void deleteDetalle(Long id_detalle);
     Optional<DetalleEntity> findDetalle(Long id_detalle);
     void editDetalle(Long id_detalle,DetalleEntity detalleEntity);

@@ -1,5 +1,7 @@
 package com.podologia.sistema_clientes.cita.cita_entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.enume.EstadoCita;
@@ -17,19 +19,25 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@ToString(exclude = {"cliente", "factura", "listaDetalle"})
 public class CitaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCita;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id",nullable = false)
+    @JoinColumn(name = "cliente_id")
+    @JsonIgnore
     private ClienteEntity cliente;
 
+    @Enumerated(EnumType.STRING)
     private TipoCita tipoCita;
+
     private LocalDateTime fechaCita;
+
+    @Enumerated(EnumType.STRING)
     private EstadoCita estadoCita;
+
     private String observaciones;
 
     @OneToOne(mappedBy = "citaEntity",fetch = FetchType.EAGER,cascade = CascadeType.ALL)

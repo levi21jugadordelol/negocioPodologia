@@ -1,5 +1,6 @@
 package com.podologia.sistema_clientes.detalleCita.detalle_entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.productoUtilizado.productoUtilizado_entity.ProductUtilizadoEntity;
 import jakarta.persistence.*;
@@ -22,10 +23,13 @@ public class DetalleEntity {
 
     @ManyToOne
     @JoinColumn(name="cita_id",nullable = false)
+
     private CitaEntity cita;
 
     @ManyToOne
     @JoinColumn(name = "servicio_id",nullable = false)
+    @ToString.Exclude
+    @JsonBackReference
     private ServicioEntity servicio;
 
     private double duracion_total;

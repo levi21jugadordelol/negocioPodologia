@@ -2,6 +2,7 @@ package com.podologia.sistema_clientes.factura.factura_service;
 
 import com.podologia.sistema_clientes.factura.IFacturaRepo;
 import com.podologia.sistema_clientes.factura.factura_entity.FacturaEntity;
+import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,52 +31,69 @@ public class FacturaServiceImpl implements IFacturaService {
     public void saveFactura(FacturaEntity facturaEntity) {
           if(facturaEntity == null){
               log.warn("no puede haber ser nullo el objeto factura");
-          }else{
-              facturaRepo.save(facturaEntity);
+              throw new IllegalArgumentException("factura no puede ser null");
           }
+          facturaRepo.save(facturaEntity);
+        log.info("factura guardada con éxito: {}", facturaEntity);
     }
 
     @Transactional
     @Override
     public void deleteFactura(Long id_factura) {
-           if(facturaRepo.existsById(id_factura)){
+           if(!facturaRepo.existsById(id_factura)){
+               log.error("no existe dicho id {}", id_factura);
+               throw new EntidadNoEncontradaException("factura con ID " + id_factura + " no existe.");
+           }else{
                facturaRepo.deleteById(id_factura);
                log.info("el id fue eliminado correctamente: {}",id_factura);
-           }else{
-               log.error("no existe dicho id {}", id_factura);
            }
     }
 
     @Override
     public Optional<FacturaEntity> findFactura(Long id_Factura) {
-          Optional<FacturaEntity> facturaId = facturaRepo.findById(id_Factura);
-          if(facturaId.isPresent()){
-              log.info("detalle encontrada con id:{}",id_Factura);
-          }else{
-              log.warn("no se encontro el id {}",id_Factura);
-          }
-          return facturaId;
+         FacturaEntity factura = facturaRepo.findById(id_Factura)
+                 .orElseThrow(()->{
+                     log.warn("factura no encontrado con ID: {}", id_Factura);
+                     return new EntidadNoEncontradaException("factura con ID " + id_Factura + " no encontrado.");
+                 });
+        log.info("factura encontrado exitosamente con ID: {}", id_Factura);
+        return Optional.of(factura);
     }
 
+    @Transactional
     @Override
     public void editFactura(Long id_factura, FacturaEntity facturaEntity) {
-           Optional<FacturaEntity> facturaId = facturaRepo.findById(id_factura);
-           if(facturaId.isPresent()){
-               facturaEntity.setIdFactura(id_factura);
-               facturaRepo.save(facturaEntity);
-               log.info("factura actualizada con el id :{}",id_factura);
-           }else{
-               log.info("factura no hallada con el id :{}",id_factura);
-           }
+        FacturaEntity factura = facturaRepo.findById(id_factura)
+                .orElseThrow(()->{
+                    log.warn("factura no encontrado con ID: {}", id_factura);
+                    return new EntidadNoEncontradaException("factura con ID " + id_factura + " no encontrado.");
+                });
+        facturaEntity.setIdFactura(id_factura);
+        facturaRepo.save(facturaEntity);
+        log.info("factura actualizado con ID: {}", id_factura);
     }
 
     @Override
     public Optional<FacturaEntity> buscarcodigo(String codigo) {
-        return facturaRepo.findFacturaByNumero(codigo);
+
+        FacturaEntity factura = facturaRepo.findFacturaByNumero(codigo)
+                .orElseThrow(()->{
+                    log.warn("factura no encontrado con el codigo: {}", codigo);
+                    return new EntidadNoEncontradaException("factura con el codigo " + codigo + " no encontrado.");
+                });
+        log.info("factura encontrado exitosamente con el codigo : {}", codigo);
+        return Optional.of(factura);
+
     }
 
     @Override
     public List<FacturaEntity> findFacturaCliente(Long id_cliente) {
-          return facturaRepo.findFacturaByClientId(id_cliente);
+         List<FacturaEntity> listaFactura = facturaRepo.findFacturaByClientId(id_cliente);
+         if(listaFactura.isEmpty()){
+             log.warn("No se encontraron facturas para el cliente con ID: {}", id_cliente);
+             throw new EntidadNoEncontradaException("No se encontraron factura para el cliente con ID: " + id_cliente);
+         }
+
+        return listaFactura;
     }
 }

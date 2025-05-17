@@ -8,13 +8,13 @@ import java.util.Optional;
 public interface IServicioService {
 
     List<ServicioEntity> getServicios();
-    void saveServicio(ServicioEntity servicio);
+    ServicioEntity saveServicio(ServicioEntity servicio);
     void deleteServicio(Long id_servicio);
     Optional<ServicioEntity> findServicio(Long id_servicio);
     void editServicio(Long id_servicio,ServicioEntity servicio);
 
     Optional<ServicioEntity> buscarNombre(String nombre_service);
 
-
+    void validarDetalles(ServicioEntity servicio);
 
 }

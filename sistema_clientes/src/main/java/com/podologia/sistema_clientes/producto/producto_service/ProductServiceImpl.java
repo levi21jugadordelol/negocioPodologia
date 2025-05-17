@@ -2,6 +2,7 @@ package com.podologia.sistema_clientes.producto.producto_service;
 
 import com.podologia.sistema_clientes.producto.IProductoRepo;
 import com.podologia.sistema_clientes.producto.producto_entity.ProductoEntity;
+import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,49 +31,56 @@ public class ProductServiceImpl implements IProductService {
     public void saveProduct(ProductoEntity productoEntity) {
         if (productoEntity == null) {
             log.warn("no puede haber ser nullo el objeto producto");
-
-        }else{
-            productoRepo.save(productoEntity);
+            throw new IllegalArgumentException("producto no puede ser null");
         }
+        productoRepo.save(productoEntity);
+        log.info("producto guardada con éxito: {}", productoEntity);
     }
 
     @Transactional
     @Override
     public void deleteProduct(Long id_producto) {
-         if(productoRepo.existsById(id_producto)){
-           productoRepo.deleteById(id_producto);
-             log.info("el id fue eliminado correctamente: {}",id_producto);
-        }else{
+         if(!productoRepo.existsById(id_producto)){
              log.error("no existe dicho id {}", id_producto);
+             throw new EntidadNoEncontradaException("producto con ID " + id_producto + " no existe.");
+        }else{
+             productoRepo.deleteById(id_producto);
+             log.info("el id fue eliminado correctamente: {}",id_producto);
          }
     }
 
     @Override
     public Optional<ProductoEntity> findProduct(Long id_producto) {
-        Optional<ProductoEntity> productoId = productoRepo.findById(id_producto);
-
-        if(productoId.isPresent()){
-            log.info("producto encontrada con id:{}",id_producto);
-        }else{
-            log.warn("no se encontro el id {}",id_producto);
-        }
-        return productoId;
+         ProductoEntity producto = productoRepo.findById(id_producto)
+                 .orElseThrow(()->{
+                     log.warn("producto no encontrado con ID: {}", id_producto);
+                     return new EntidadNoEncontradaException("producto con ID " + id_producto + " no encontrado.");
+                 });
+        log.info("producto encontrado exitosamente con ID: {}", id_producto);
+        return Optional.of(producto);
     }
 
+    @Transactional
     @Override
     public void editProducto(Long id_producto, ProductoEntity productoEntity) {
-           Optional<ProductoEntity> productoId = productoRepo.findById(id_producto);
-           if(productoId.isPresent()){
-               productoEntity.setIdProducto(id_producto);
-               productoRepo.save(productoEntity);
-               log.info("producto actualizada con el id :{}",id_producto);
-           }else{
-               log.info("factura con el id no hallada :{}",id_producto);
-           }
+        ProductoEntity producto = productoRepo.findById(id_producto)
+                .orElseThrow(()->{
+                    log.warn("producto no encontrado con ID: {}", id_producto);
+                    return new EntidadNoEncontradaException("producto con ID " + id_producto + " no encontrado.");
+                });
+        productoEntity.setIdProducto(id_producto);
+        productoRepo.save(productoEntity);
+        log.info("producto actualizado con ID: {}", id_producto);
     }
 
     @Override
     public Optional<ProductoEntity> buscarProducto(String nombre_producto) {
-        return productoRepo.findProductoByNombre(nombre_producto);
+        ProductoEntity producto = productoRepo.findProductoByNombre(nombre_producto)
+                .orElseThrow(()->{
+                    log.warn("producto no encontrado con el nombre: {}", nombre_producto);
+                    return new EntidadNoEncontradaException("producto con el nombre: " + nombre_producto + " no encontrado.");
+                });
+        log.info("producto encontrado exitosamente con el nombre: {}", nombre_producto);
+        return Optional.of(producto);
     }
 }

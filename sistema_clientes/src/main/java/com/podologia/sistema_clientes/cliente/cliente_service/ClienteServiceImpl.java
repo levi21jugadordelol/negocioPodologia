@@ -4,6 +4,7 @@ import com.podologia.sistema_clientes.cita.ICitaRepo;
 import com.podologia.sistema_clientes.cliente.IClienteRepo;
 import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteDto;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
+import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
 import com.podologia.sistema_clientes.shared.util.mapper.ClienteMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +37,11 @@ public class ClienteServiceImpl implements IClienteService{
     public void saveCliente(ClienteEntity clienteEntity) {
         if(clienteEntity == null){
             log.warn("el objeto cliente no puede ser null");
-        }else{
-            clienteRepo.save(clienteEntity);
+            throw new IllegalArgumentException("El cliente no puede ser null");
         }
+        clienteRepo.save(clienteEntity);
+        log.info("Cliente guardado con éxito: {}", clienteEntity);
+
     }
 
 
@@ -46,8 +49,9 @@ public class ClienteServiceImpl implements IClienteService{
     @Transactional
     @Override
     public void deleteCliente(Long id_cliente) {
-        if(!(clienteRepo.existsById(id_cliente))){
+        if(!clienteRepo.existsById(id_cliente)){
             log.error("no existe el id :{}",id_cliente);
+            throw new EntidadNoEncontradaException("Cliente con ID " + id_cliente + " no existe.");
         }
         clienteRepo.deleteById(id_cliente);
         log.info("el id fue eliminado correctamente: {}",id_cliente);
@@ -56,41 +60,60 @@ public class ClienteServiceImpl implements IClienteService{
 
     @Override
     public Optional<ClienteEntity> findCliente(Long id_cliente) {
-        Optional<ClienteEntity> clienteId= clienteRepo.findById(id_cliente);
-        if(clienteId.isPresent()){
-            log.info("cliente encontrado: con el id: {}",id_cliente);
-        }else{
-            log.warn("no se encontro cliente con el id:{}",id_cliente);
-        }
-        return clienteId;
+        ClienteEntity cliente = clienteRepo.findById(id_cliente)
+                .orElseThrow(()->{
+                    log.warn("cliente no encontrado con ID: {}", id_cliente);
+                    return new EntidadNoEncontradaException("cliente con ID " + id_cliente + " no encontrado.");
+                });
+        log.info("cliente encontrado exitosamente con ID: {}", id_cliente);
+        return Optional.of(cliente);
     }
 
+    @Transactional
     @Override
     public void editCliente(Long id_cliente, ClienteEntity cliente) {
-         Optional<ClienteEntity> clienteId = clienteRepo.findById(id_cliente);
-         if(clienteId.isPresent()){
-            cliente.setIdCliente(id_cliente);
-            clienteRepo.save(cliente);
-            log.info("cliente actualizado con el id: {}", id_cliente);
-         }else {
-             log.error("Intento de editar una cliente inexistente con ID: {}\", id_cliente");
-         }
+        ClienteEntity existente = clienteRepo.findById(id_cliente)
+                .orElseThrow(() -> {
+                    log.error("No se puede editar, cliente no existe con ID: {}", id_cliente);
+                    return new EntidadNoEncontradaException("Cliente con ID " + id_cliente + " no encontrado para edición.");
+                });
+
+        cliente.setIdCliente(id_cliente);
+        clienteRepo.save(cliente);
+        log.info("Cliente actualizado con ID: {}", id_cliente);
     }
 
     @Override
-    public Optional<ClienteEntity> buscarClienteDni(String dni_cliente) {
-        return clienteRepo.findByDni(dni_cliente);
+    public Optional<ClienteEntity> buscarClienteDni(String dniCliente) {
+        return Optional.of(
+                clienteRepo.findByDni(dniCliente)
+                        .orElseThrow(() -> {
+                            log.warn("Cliente no encontrado con DNI: {}", dniCliente);
+                            return new EntidadNoEncontradaException("Cliente con DNI " + dniCliente + " no encontrado.");
+                        })
+        );
     }
 
     @Override
-    public Optional<ClienteEntity> buscarNombreCliente(String nombre_cliente) {
-
-        return clienteRepo.findByNombre(nombre_cliente);
+    public Optional<ClienteEntity> buscarNombreCliente(String nombreCliente) {
+        return Optional.of(
+                clienteRepo.findByNombre(nombreCliente)
+                        .orElseThrow(() -> {
+                            log.warn("Cliente no encontrado con nombre: {}", nombreCliente);
+                            return new EntidadNoEncontradaException("Cliente con nombre " + nombreCliente + " no encontrado.");
+                        })
+        );
     }
 
     @Override
-    public Optional<ClienteEntity> obtenerClientePorCitaId(Long cita_id) {
-        return citaRepo.findClienteByCitaId(cita_id);
+    public Optional<ClienteEntity> obtenerClientePorCitaId(Long idCita) {
+        return Optional.of(
+                citaRepo.findClienteByCitaId(idCita)
+                        .orElseThrow(() -> {
+                            log.warn("Cliente no encontrado con cita ID: {}", idCita);
+                            return new EntidadNoEncontradaException("Cliente con cita ID " + idCita + " no encontrado.");
+                        })
+        );
     }
 
 

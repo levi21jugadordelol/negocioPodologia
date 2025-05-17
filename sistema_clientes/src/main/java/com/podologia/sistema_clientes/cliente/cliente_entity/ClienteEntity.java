@@ -1,5 +1,7 @@
 package com.podologia.sistema_clientes.cliente.cliente_entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.factura.factura_entity.FacturaEntity;
 import jakarta.persistence.*;
@@ -13,7 +15,8 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+
+@ToString(exclude = {"listaCita", "listaFactura"})
 public class ClienteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +31,7 @@ public class ClienteEntity {
     fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
+
     private Set<CitaEntity> listaCita = new HashSet<>();
 
     public void addCita(CitaEntity citaEntity){
@@ -39,6 +43,7 @@ public class ClienteEntity {
     fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
+
     private Set<FacturaEntity> listaFactura = new HashSet<>();
 
     public void addFactura(FacturaEntity facturaEntity){

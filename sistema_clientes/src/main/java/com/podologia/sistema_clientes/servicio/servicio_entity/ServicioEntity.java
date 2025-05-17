@@ -1,5 +1,6 @@
 package com.podologia.sistema_clientes.servicio.servicio_entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +27,8 @@ public class ServicioEntity {
             fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
+    @JsonManagedReference
+    @ToString.Exclude
     private Set<DetalleEntity> listDetalle = new HashSet<>();
 
     public void addDetalle(DetalleEntity detalleEntity){

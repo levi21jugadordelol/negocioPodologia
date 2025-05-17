@@ -1,8 +1,12 @@
 package com.podologia.sistema_clientes.servicio.servicio_service;
 
 
+import com.podologia.sistema_clientes.cita.ICitaRepo;
+import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
+import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.servicio.IServicioRepo;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
+import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import java.util.Optional;
 public class ServicioServiceImpl implements IServicioService {
 
     private final IServicioRepo servicioRepo;
+    private final ICitaRepo citaRepo;
 
     @Override
     public List<ServicioEntity> getServicios() {
@@ -28,50 +33,83 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Transactional
     @Override
-    public void saveServicio(ServicioEntity servicio) {
-           if(servicio == null){
-               log.warn("no puede haber ser nullo el objeto servicio");
-           }else{
-               servicioRepo.save(servicio);
-           }
+    public ServicioEntity saveServicio(ServicioEntity servicio) {
+        // Establecer relación bidireccional detalle-servicio
+        if (servicio.getListDetalle() != null) {
+            for (DetalleEntity detalle : servicio.getListDetalle()) {
+                detalle.setServicio(servicio);
+            }
+        }
+
+        // Guardar y devolver el servicio
+        return servicioRepo.save(servicio);
     }
+
+
+
 
     @Transactional
     @Override
     public void deleteServicio(Long id_servicio) {
-           if(servicioRepo.existsById(id_servicio)){
+           if(!servicioRepo.existsById(id_servicio)){
+
+               log.error("no existe dicho id {}", id_servicio);
+               throw new EntidadNoEncontradaException("servicio con ID " + id_servicio + " no existe.");
+
+           }else{
                servicioRepo.deleteById(id_servicio);
                log.info("el id fue eliminado correctamente: {}",id_servicio);
-           }else{
-               log.error("no existe dicho id {}", id_servicio);
            }
     }
 
     @Override
     public Optional<ServicioEntity> findServicio(Long id_servicio) {
-        Optional<ServicioEntity> servicioId = servicioRepo.findById(id_servicio);
-        if(servicioId.isPresent()){
-            log.info("servicio encontrada con id:{}",id_servicio);
-        }else{
-            log.warn("no se encontro el id {}",id_servicio);
-        }
-        return servicioId;
+             ServicioEntity servicio = servicioRepo.findById(id_servicio)
+                     .orElseThrow(()->{
+                         log.warn("servicio no encontrado con ID: {}", id_servicio);
+                         return new EntidadNoEncontradaException("servicio con ID " + id_servicio + " no encontrado.");
+                     });
+        log.info("servicio encontrado exitosamente con ID: {}", id_servicio);
+        return Optional.of(servicio);
     }
 
+    @Transactional
     @Override
     public void editServicio(Long id_servicio, ServicioEntity servicio) {
-        Optional<ServicioEntity> servicioId = servicioRepo.findById(id_servicio);
-        if(servicioId.isPresent()){
-            servicio.setIdServicio(id_servicio);
-            servicioRepo.save(servicio);
-            log.info("servicio actualizada con el id :{}",id_servicio);
-        }else{
-            log.info("service con el id no hallada :{}",id_servicio);
-        }
+        ServicioEntity servicioEdit = servicioRepo.findById(id_servicio)
+                .orElseThrow(()->{
+                    log.warn("servicio no encontrado con ID: {}", id_servicio);
+                    return new EntidadNoEncontradaException("servicio con ID " + id_servicio + " no encontrado.");
+                });
+        servicio.setIdServicio(id_servicio);
+        servicioRepo.save(servicio);
+        log.info("servicio actualizado con ID: {}", id_servicio);
     }
 
     @Override
     public Optional<ServicioEntity> buscarNombre(String nombre_service) {
-        return Optional.empty();
+         ServicioEntity servicio = servicioRepo.findServicioByNombre(nombre_service)
+                 .orElseThrow(()->{
+                     log.warn("servicio no encontrado con el nombre: {}", nombre_service);
+                     return new EntidadNoEncontradaException("servicio con nombre " + nombre_service + " no encontrado.");
+                 });
+        log.info("servicio encontrado exitosamente con el nombre: {}", nombre_service);
+        return  Optional.of(servicio);
     }
+
+    @Override
+    public void validarDetalles(ServicioEntity servicio) {
+        if (servicio.getListDetalle() == null || servicio.getListDetalle().isEmpty()) {
+            throw new IllegalArgumentException("El servicio debe tener al menos un detalle");
+        }
+
+        for (DetalleEntity detalle : servicio.getListDetalle()) {
+            if (detalle.getCita() == null || detalle.getCita().getIdCita() == null) {
+                throw new IllegalArgumentException("Cada detalle debe tener una cita con ID");
+            }
+        }
+    }
+
+
+
 }

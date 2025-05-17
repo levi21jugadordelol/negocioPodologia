@@ -5,6 +5,7 @@ import com.podologia.sistema_clientes.producto.producto_entity.ProductoEntity;
 import com.podologia.sistema_clientes.producto.producto_service.IProductService;
 import com.podologia.sistema_clientes.productoUtilizado.IProductoUtilizadoRepo;
 import com.podologia.sistema_clientes.productoUtilizado.productoUtilizado_entity.ProductUtilizadoEntity;
+import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,47 +35,55 @@ public class ProductUtilizadoImpl implements IProductUtilizadoService {
     public void saveProductoUtilizado(ProductUtilizadoEntity productUtilizado) {
          if(productUtilizado == null){
              log.warn("no puede haber ser nullo el objeto prod. utilizados");
-         }else{
-             productoUtilizadoRepo.save(productUtilizado);
+             throw new IllegalArgumentException("cita no puede ser null");
          }
+             productoUtilizadoRepo.save(productUtilizado);
+        log.info("productoUtilizado guardada con éxito: {}", productUtilizado);
+
     }
 
     @Transactional
     @Override
     public void deleteProductoUtilizado(Long id_ProductoUtilizado) {
-            if(productoUtilizadoRepo.existsById(id_ProductoUtilizado)){
+            if(!productoUtilizadoRepo.existsById(id_ProductoUtilizado)){
+                log.error("no existe dicho id {}", id_ProductoUtilizado);
+            }else{
                 productoUtilizadoRepo.deleteById(id_ProductoUtilizado);
                 log.info("el id fue eliminado correctamente: {}",id_ProductoUtilizado);
-            }else{
-                log.error("no existe dicho id {}", id_ProductoUtilizado);
             }
     }
 
     @Override
     public Optional<ProductUtilizadoEntity> findProductoUtilizado(Long id_productoUtilizado) {
-        Optional<ProductUtilizadoEntity> prodUtilizaId = productoUtilizadoRepo.findById(id_productoUtilizado);
-        if(prodUtilizaId.isPresent()){
-            log.info("prod utlizado  encontrada con id:{}",id_productoUtilizado);
-        }else{
-            log.warn("no se encontro el id {}",id_productoUtilizado);
-        }
-        return  prodUtilizaId;
+        ProductUtilizadoEntity productUtilizado = productoUtilizadoRepo.findById(id_productoUtilizado)
+                .orElseThrow(()->{
+                    log.warn("producto usado no encontrado con ID: {}", id_productoUtilizado);
+                    return new EntidadNoEncontradaException("producto suado con ID " + id_productoUtilizado + " no encontrado.");
+                });
+        log.info("product usado encontrado exitosamente con ID: {}", id_productoUtilizado);
+        return Optional.of(productUtilizado);
     }
 
+    @Transactional
     @Override
     public void editProductoUtilizado(Long id_productoUtilizadp, ProductUtilizadoEntity productUtilizado) {
-         Optional<ProductUtilizadoEntity> prodUtilizaId = productoUtilizadoRepo.findById(id_productoUtilizadp);
-         if(prodUtilizaId.isPresent()){
-             productUtilizado.setIdProductoUtilizado(id_productoUtilizadp);
-             productoUtilizadoRepo.save(productUtilizado);
-             log.info("product utilizado  con el id :{}",id_productoUtilizadp);
-         }else{
-             log.info("product utilizado no hallada con el id :{}",id_productoUtilizadp);
-         }
+        ProductUtilizadoEntity productUsadoNuevo = productoUtilizadoRepo.findById(id_productoUtilizadp)
+                .orElseThrow(()->{
+                    log.warn("producto usado no encontrado con ID: {}", id_productoUtilizadp);
+                    return new EntidadNoEncontradaException("producto suado con ID " + id_productoUtilizadp + " no encontrado.");
+                });
+        productUtilizado.setIdProductoUtilizado(id_productoUtilizadp);
+        productoUtilizadoRepo.save(productUtilizado);
+        log.info("producto suado actualizado con ID: {}", id_productoUtilizadp);
     }
 
     @Override
     public List<ProductoEntity> buscarProductoUtilizado(Long id_productoEntity) {
-        return productoUtilizadoRepo.buscarProductoUtilizado(id_productoEntity);
+        List<ProductoEntity> listaProductosUsados = productoUtilizadoRepo.buscarProductoUtilizado(id_productoEntity);
+        if(listaProductosUsados.isEmpty()){
+            log.warn("No se encontraron productos usados con el producto con ID: {}", id_productoEntity);
+            throw new EntidadNoEncontradaException("No se encontraron productos  con ID: " + id_productoEntity);
+        }
+        return listaProductosUsados;
     }
 }

@@ -9,15 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("producto")
 public class ProductController {
     private final IProductService productService;
 
-    @PostMapping("producto/crear")
+    @PostMapping("/crear")
     public ResponseEntity<String> saveProducto(@RequestBody ProductoEntity producto){
         productService.saveProduct(producto);
         return  ResponseEntity.status(HttpStatus.CREATED).body("producto creado");

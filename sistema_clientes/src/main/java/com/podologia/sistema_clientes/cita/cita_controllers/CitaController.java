@@ -16,63 +16,58 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
-//RequestMapping("/citas")
+@RequestMapping("citas")
 public class CitaController {
 
     private final ICitaService citaService;
 
     // Crear una cita
-    @PostMapping("citas/crear")
+    @PostMapping("/crear")
     public ResponseEntity<String> saveCita(@RequestBody CitaEntity cita) {
         citaService.saveCita(cita);
         return ResponseEntity.status(HttpStatus.CREATED).body("CITA CREADA");
     }
 
     // Traer todas las citas
-    @GetMapping("citas/todas")
+    @GetMapping("/todas")
     public ResponseEntity<List<CitaEntity>> traerTodasLasCitas() {
         List<CitaEntity> citas = citaService.getCita();
         if (citas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(citas);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(citas);
+        return ResponseEntity.ok(citas);
     }
 
     // Buscar una cita por ID
     //Usa ResponseEntity<?> cuando devuelves más de un tipo de cuerpo (CitaEntity o String). Es una práctica común en controladores REST para manejar tanto respuestas exitosas como errores sin forzar conversiones.
-    @GetMapping("citas/{idCita}")
-    public ResponseEntity<?> buscarCitaPorId(@PathVariable Long idCita) {
-        Optional<CitaEntity> optional = citaService.findCita(idCita);
-        if (optional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(optional.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CITA NO ENCONTRADA");
-        }
+    @GetMapping("/{idCita}")
+    public ResponseEntity<CitaEntity> buscarCitaPorId(@PathVariable Long idCita) {
+        CitaEntity cita = citaService.findCita(idCita).get();
+        return  ResponseEntity.ok(cita);
     }
 
 
     // Buscar citas por cliente
-    @GetMapping("cita/cliente/{clienteId}")
-    public ResponseEntity<Object> buscarCitasPorClienteId(@PathVariable Long clienteId) {
+    @GetMapping("/cliente/{clienteId}")
+    public ResponseEntity<List<CitaEntity>> buscarCitasPorClienteId(@PathVariable Long clienteId) {
         List<CitaEntity> citas = citaService.buscarCitasPorClienteId(clienteId);
-        if (citas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("SIN CITAS PARA ESTE CLIENTE");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(citas);
+        return ResponseEntity.ok(citas);
     }
 
+
     // Editar una cita
-    @PutMapping("cita/editar/{idCita}")
+    @PutMapping("/editar/{idCita}")
     public ResponseEntity<String> editarCita(@PathVariable Long idCita, @RequestBody CitaEntity nuevaCita) {
+        log.info("el id de la cita a editar es : "+idCita);
         citaService.editCita(idCita, nuevaCita);
-        return ResponseEntity.status(HttpStatus.OK).body("CITA EDITADA");
+        return ResponseEntity.ok("Cita editada");
     }
 
     // Eliminar una cita
-    @DeleteMapping("cita/eliminar/{idCita}")
+    @DeleteMapping("/eliminar/{idCita}")
     public ResponseEntity<String> eliminarCita(@PathVariable Long idCita) {
         citaService.deleteCita(idCita);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("CITA ELIMINADA");
+        return ResponseEntity.noContent().build();
     }
 }
 
