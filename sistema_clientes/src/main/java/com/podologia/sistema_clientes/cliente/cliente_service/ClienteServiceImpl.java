@@ -5,10 +5,10 @@ import com.podologia.sistema_clientes.cliente.IClienteRepo;
 import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteDto;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
-import com.podologia.sistema_clientes.shared.util.mapper.ClienteMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +23,7 @@ public class ClienteServiceImpl implements IClienteService{
 
     private final IClienteRepo clienteRepo;
     private final ICitaRepo citaRepo;
-    private  final ClienteMapper clienteMapper;
+
 
     @Override
     public List<ClienteEntity> getCliente() {
