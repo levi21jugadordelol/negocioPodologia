@@ -4,6 +4,8 @@ import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.cliente.cliente_service.IClienteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +15,12 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@Slf4j
+
 @RequestMapping("cliente")
 public class ClienteController {
     private final IClienteService clienteService;
+
+    private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.cliente.cliente_controllers.ClienteController.class);
 
     @PostMapping("/crear")
     public ResponseEntity<String> saveCliente(@RequestBody ClienteEntity cliente){

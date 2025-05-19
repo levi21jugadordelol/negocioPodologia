@@ -15,6 +15,6 @@ public interface IServicioService {
 
     Optional<ServicioEntity> buscarNombre(String nombre_service);
 
-    void validarDetalles(ServicioEntity servicio);
+
 
 }

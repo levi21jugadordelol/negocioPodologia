@@ -2,13 +2,19 @@ package com.podologia.sistema_clientes.cita.cita_service;
 
 import com.podologia.sistema_clientes.cita.ICitaRepo;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
-import com.podologia.sistema_clientes.cliente.IClienteRepo;
-import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteDto;
-import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
-import com.podologia.sistema_clientes.cliente.cliente_service.IClienteService;
+import com.podologia.sistema_clientes.detalleCita.IDetalleRepo;
+import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
+import com.podologia.sistema_clientes.producto.IProductoRepo;
+import com.podologia.sistema_clientes.producto.producto_entity.ProductoEntity;
+import com.podologia.sistema_clientes.productoUtilizado.productoUtilizado_entity.ProductUtilizadoEntity;
+import com.podologia.sistema_clientes.servicio.IServicioRepo;
+import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
+import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionCita;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +22,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
+
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CitaServiceImpl implements ICitaService {
 
     private final ICitaRepo citaRepo;
+    private final ValidacionCita validacionCita;
+    private final IServicioRepo servicioRepo;
+    private final IDetalleRepo detalleRepo;
+    private  final IProductoRepo productoRepo;
 
-
+    private static final Logger log = LoggerFactory.getLogger( com.podologia.sistema_clientes.cita.cita_service.CitaServiceImpl.class);
 
     @Override
     public List<CitaEntity> getCita() {
@@ -35,25 +45,53 @@ public class CitaServiceImpl implements ICitaService {
     @Transactional
     @Override
     public void saveCita(CitaEntity citaEntity) {
-            if(citaEntity == null){
-                log.error("no puede ser nullo en el objeto cita");
-                throw new IllegalArgumentException("cita no puede ser null");
-            }
+
+        validacionCita.existDuenio(citaEntity);
         citaRepo.save(citaEntity);
         log.info("cita guardada con éxito: {}", citaEntity);
+
+    }
+
+    @Transactional
+    @Override
+    public DetalleEntity saveDetalle(Long idCita, DetalleEntity detalle) {
+        validacionCita.existIdCiteToSaveDetail(idCita,detalle);
+
+
+        // Obtener las entidades para asignarlas (ya sabemos que existen por la validación)
+        CitaEntity cita = citaRepo.findById(idCita).get(); // no fallará, ya fue validado
+        ServicioEntity servicio = servicioRepo.findById(detalle.getServicio().getIdServicio()).get(); // tampoco fallará
+
+
+        // Asignamos
+        detalle.setCita(cita);
+        detalle.setServicio(servicio);
+
+        // Asociar los productos utilizados con el detalle
+        if (detalle.getListProductUtilziado() != null) {
+            for (ProductUtilizadoEntity p : detalle.getListProductUtilziado()) {
+                Long productoId = p.getProductoEntity().getIdProducto();
+                ProductoEntity producto = productoRepo.findById(productoId).get(); // ya validado
+
+                p.setProductoEntity(producto); // importante
+                p.setDetalleEntity(detalle);  // relación inversa
+            }
+        }
+
+        // Guardar
+        return detalleRepo.save(detalle);
+
     }
 
     @Transactional
     @Override
     public void deleteCita(Long id_cita) {
-        if(!citaRepo.existsById(id_cita)){
-            log.error("no existe dicho id {}", id_cita);
-            throw new EntidadNoEncontradaException("Cita con ID " + id_cita + " no existe.");
 
-        }else{
+           validacionCita.findIdtoDelete(id_cita);
+
             citaRepo.deleteById(id_cita);
             log.info("el id fue eliminado correctamente: {}",id_cita);
-        }
+
     }
 
     @Override
@@ -67,45 +105,20 @@ public class CitaServiceImpl implements ICitaService {
         return Optional.of(cita);
     }
 
+
+
     @Transactional
     @Override
-    public void editCita(Long id_cita, CitaEntity nuevo_cita) {
-        CitaEntity existente = citaRepo.findById(id_cita)
-                .orElseThrow(() -> {
-                    log.error("No se puede editar, cita no existe con ID: {}", id_cita);
-                    return new EntidadNoEncontradaException("Cita con ID " + id_cita + " no encontrado para edición.");
-                });
+    public void editCita(Long id_cita, CitaEntity nuevosDatos) {
+        log.info("Iniciando edición de cita con ID: {}", id_cita);
 
-        // Proteger campos que podrían ser null
-        if (nuevo_cita.getFechaCita() != null) {
-            existente.setFechaCita(nuevo_cita.getFechaCita());
-        }
+        CitaEntity citaActualziada = validacionCita.validateParametersToEdit(id_cita,nuevosDatos);
 
-        if (nuevo_cita.getEstadoCita() != null) {
-            existente.setEstadoCita(nuevo_cita.getEstadoCita());
-        }
+        citaRepo.save(citaActualziada);
 
-        if (nuevo_cita.getCliente() != null) {
-            existente.setCliente(nuevo_cita.getCliente());
-        } else if (existente.getCliente() == null) {
-            // Esto previene que el cliente quede null por error si ambos son null
-            throw new IllegalArgumentException("El cliente no puede ser null al editar la cita.");
-        }
+        log.info("Cita actualizada con éxito. ID: {}", id_cita);
 
-        if (nuevo_cita.getObservaciones() != null) {
-            existente.setObservaciones(nuevo_cita.getObservaciones());
-        }
 
-        if (nuevo_cita.getTipoCita() != null) {
-            existente.setTipoCita(nuevo_cita.getTipoCita());
-        }
-
-        if (nuevo_cita.getFactura() != null) {
-            existente.setFactura(nuevo_cita.getFactura());
-        }
-
-        citaRepo.save(existente);
-        log.info("Cita actualizada con ID: {}", id_cita);
     }
 
 

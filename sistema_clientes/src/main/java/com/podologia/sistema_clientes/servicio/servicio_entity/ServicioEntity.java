@@ -1,5 +1,6 @@
 package com.podologia.sistema_clientes.servicio.servicio_entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import jakarta.persistence.*;
@@ -23,12 +24,15 @@ public class ServicioEntity {
     private String descripcionServicio;
     private double duracionServicio;
 
+
     @OneToMany(mappedBy = "servicio",
             fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
-    @JsonManagedReference
-    @ToString.Exclude
+   // @JsonManagedReference("servicio-detalle")
+    @JsonIgnore
+    //@JsonManagedReference
+    //@ToString.Exclude
     private Set<DetalleEntity> listDetalle = new HashSet<>();
 
     public void addDetalle(DetalleEntity detalleEntity){

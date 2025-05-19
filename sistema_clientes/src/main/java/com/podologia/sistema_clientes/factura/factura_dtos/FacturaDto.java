@@ -7,7 +7,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class FacturaDto {
     private Long idFactura;
-    private String numeroFactura;
+    private String numeroRecibo;
 
     private String nombreCliente;
     private String apellidoCliente;

@@ -7,8 +7,11 @@ import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.servicio.IServicioRepo;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
+import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionServicio;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,30 +19,27 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
+
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ServicioServiceImpl implements IServicioService {
 
     private final IServicioRepo servicioRepo;
     private final ICitaRepo citaRepo;
+    private final ValidacionServicio validacionServicio;
+
+    private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.servicio.servicio_service.ServicioServiceImpl.class);
 
     @Override
     public List<ServicioEntity> getServicios() {
-       List<ServicioEntity> listaServicio = servicioRepo.findAll();
-        log.info("el total de lista de servicios es : {}",listaServicio.size());
-        return  listaServicio;
+      return  validacionServicio.validateAndReturnServicios();
     }
 
     @Transactional
     @Override
     public ServicioEntity saveServicio(ServicioEntity servicio) {
-        // Establecer relación bidireccional detalle-servicio
-        if (servicio.getListDetalle() != null) {
-            for (DetalleEntity detalle : servicio.getListDetalle()) {
-                detalle.setServicio(servicio);
-            }
-        }
+
+        validacionServicio.validateServicioToSave(servicio);
 
         // Guardar y devolver el servicio
         return servicioRepo.save(servicio);
@@ -75,15 +75,12 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Transactional
     @Override
-    public void editServicio(Long id_servicio, ServicioEntity servicio) {
-        ServicioEntity servicioEdit = servicioRepo.findById(id_servicio)
-                .orElseThrow(()->{
-                    log.warn("servicio no encontrado con ID: {}", id_servicio);
-                    return new EntidadNoEncontradaException("servicio con ID " + id_servicio + " no encontrado.");
-                });
-        servicio.setIdServicio(id_servicio);
-        servicioRepo.save(servicio);
-        log.info("servicio actualizado con ID: {}", id_servicio);
+    public void editServicio(Long id_servicio, ServicioEntity servicioNuevo) {
+       ServicioEntity servicioEditado = validacionServicio.validateParametersToEditService(id_servicio,servicioNuevo);
+
+       servicioRepo.save(servicioEditado);
+
+        log.info("Servicio actualizado correctamente con ID: {}", id_servicio);
     }
 
     @Override
@@ -97,18 +94,7 @@ public class ServicioServiceImpl implements IServicioService {
         return  Optional.of(servicio);
     }
 
-    @Override
-    public void validarDetalles(ServicioEntity servicio) {
-        if (servicio.getListDetalle() == null || servicio.getListDetalle().isEmpty()) {
-            throw new IllegalArgumentException("El servicio debe tener al menos un detalle");
-        }
 
-        for (DetalleEntity detalle : servicio.getListDetalle()) {
-            if (detalle.getCita() == null || detalle.getCita().getIdCita() == null) {
-                throw new IllegalArgumentException("Cada detalle debe tener una cita con ID");
-            }
-        }
-    }
 
 
 

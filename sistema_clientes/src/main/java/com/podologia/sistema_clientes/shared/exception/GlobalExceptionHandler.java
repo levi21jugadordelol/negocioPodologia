@@ -3,6 +3,7 @@ package com.podologia.sistema_clientes.shared.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 //Permite retornar respuestas JSON estándar (timestamp, mensaje, estado).
 //Mejora la experiencia del frontend, que sabrá qué pasó y por qué.
 //Lo usas en sistemas REST modernos donde la API debe devolver información clara
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
@@ -32,6 +33,12 @@ public class GlobalExceptionHandler {
     throws ni hacer try-catch obligatoriamente.
 
     */
+
+  /*  @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<String> handleUnsupportedMediaType(HttpMediaTypeNotSupportedException ex) {
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                .body("Media type no soportado. Asegúrate de usar Content-Type: application/json");
+    } */
 
 
     @ExceptionHandler(EntidadNoEncontradaException.class)

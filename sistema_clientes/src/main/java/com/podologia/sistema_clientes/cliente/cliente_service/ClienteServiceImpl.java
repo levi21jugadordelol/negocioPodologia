@@ -1,6 +1,7 @@
 package com.podologia.sistema_clientes.cliente.cliente_service;
 
 import com.podologia.sistema_clientes.cita.ICitaRepo;
+import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.cliente.IClienteRepo;
 import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteDto;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
@@ -9,6 +10,8 @@ import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaExcept
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
+
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClienteServiceImpl implements IClienteService{
@@ -24,6 +27,7 @@ public class ClienteServiceImpl implements IClienteService{
     private final IClienteRepo clienteRepo;
     private final ICitaRepo citaRepo;
 
+    private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.cliente.cliente_service.ClienteServiceImpl.class);
 
     @Override
     public List<ClienteEntity> getCliente() {
@@ -107,14 +111,24 @@ public class ClienteServiceImpl implements IClienteService{
 
     @Override
     public Optional<ClienteEntity> obtenerClientePorCitaId(Long idCita) {
-        return Optional.of(
-                citaRepo.findClienteByCitaId(idCita)
-                        .orElseThrow(() -> {
-                            log.warn("Cliente no encontrado con cita ID: {}", idCita);
-                            return new EntidadNoEncontradaException("Cliente con cita ID " + idCita + " no encontrado.");
-                        })
-        );
+        // 1. Verifica si la cita existe
+        CitaEntity cita = citaRepo.findById(idCita)
+                .orElseThrow(() -> {
+                    log.warn("No se encontró la cita con ID: {}", idCita);
+                    return new EntidadNoEncontradaException("No existe ninguna cita con ID " + idCita);
+                });
+
+        // 2. Verifica si tiene cliente asignado
+        ClienteEntity cliente = cita.getCliente();
+        if (cliente == null) {
+            log.warn("La cita con ID {} no tiene cliente asignado", idCita);
+            throw new EntidadNoEncontradaException("La cita con ID " + idCita + " no tiene un cliente asociado");
+        }
+
+        // 3. Todo OK, retorna el cliente
+        return Optional.of(cliente);
     }
+
 
 
 }

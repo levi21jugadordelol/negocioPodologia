@@ -1,23 +1,37 @@
 package com.podologia.sistema_clientes.factura.factura_service;
 
+import com.podologia.sistema_clientes.cita.ICitaRepo;
+import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.factura.IFacturaRepo;
 import com.podologia.sistema_clientes.factura.factura_entity.FacturaEntity;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
+import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionFactura;
+import com.podologia.sistema_clientes.shared.util.generarNumeroFactura.ToMakeNumberFacture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
+
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FacturaServiceImpl implements IFacturaService {
 
     private final IFacturaRepo facturaRepo;
+    private final ValidacionFactura validacionFactura;
+    private final ToMakeNumberFacture toMakeNumberFacture;
+    private final ICitaRepo citaRepo;
+
+    private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.factura.factura_service.FacturaServiceImpl.class);
 
     @Override
     public List<FacturaEntity> getFactura() {
@@ -29,13 +43,41 @@ public class FacturaServiceImpl implements IFacturaService {
     @Transactional
     @Override
     public void saveFactura(FacturaEntity facturaEntity) {
-          if(facturaEntity == null){
-              log.warn("no puede haber ser nullo el objeto factura");
-              throw new IllegalArgumentException("factura no puede ser null");
-          }
-          facturaRepo.save(facturaEntity);
-        log.info("factura guardada con éxito: {}", facturaEntity);
+        if (facturaEntity == null) {
+            log.warn("No puede ser null el objeto factura");
+            throw new IllegalArgumentException("Factura no puede ser null");
+        }
+
+        // Validación de negocio
+        validacionFactura.validateToCreate(facturaEntity);
+
+        // **Carga la cita gestionada desde la base de datos:**
+        CitaEntity citaGestionada = citaRepo.findById(facturaEntity.getCitaEntity().getIdCita())
+                .orElseThrow(() -> new EntidadNoEncontradaException("La cita con ID " + facturaEntity.getCitaEntity().getIdCita() + " no existe"));
+        facturaEntity.setCitaEntity(citaGestionada);
+
+        // Fecha de emisión
+        LocalDateTime ahora = LocalDateTime.now();
+        facturaEntity.setFechaEnmision(ahora);
+
+        // Calcular rango del mes para contar facturas
+        LocalDate primerDiaDelMes = ahora.toLocalDate().withDayOfMonth(1);
+        LocalDateTime inicio = primerDiaDelMes.atStartOfDay();
+        LocalDateTime fin = inicio.plusMonths(1);
+
+        // Contar facturas en el mes actual
+        Long contador = facturaRepo.contarFacturasPorMes(inicio, fin);
+        contador = (contador == null) ? 0L : contador;
+
+        // Generar código de recibo
+        String codigoRecibo = toMakeNumberFacture.generarCodigoRecibo(primerDiaDelMes, contador);
+        facturaEntity.setNumeroRecibo(codigoRecibo);
+
+        // Guardar
+        facturaRepo.save(facturaEntity);
+        log.info("Factura guardada correctamente: {}", facturaEntity);
     }
+
 
     @Transactional
     @Override
@@ -63,14 +105,9 @@ public class FacturaServiceImpl implements IFacturaService {
     @Transactional
     @Override
     public void editFactura(Long id_factura, FacturaEntity facturaEntity) {
-        FacturaEntity factura = facturaRepo.findById(id_factura)
-                .orElseThrow(()->{
-                    log.warn("factura no encontrado con ID: {}", id_factura);
-                    return new EntidadNoEncontradaException("factura con ID " + id_factura + " no encontrado.");
-                });
-        facturaEntity.setIdFactura(id_factura);
-        facturaRepo.save(facturaEntity);
-        log.info("factura actualizado con ID: {}", id_factura);
+        FacturaEntity entidadLista = validacionFactura.validateToEdit(id_factura, facturaEntity);
+        facturaRepo.save(entidadLista);
+        log.info("Factura actualizada con ID: {}", id_factura);
     }
 
     @Override

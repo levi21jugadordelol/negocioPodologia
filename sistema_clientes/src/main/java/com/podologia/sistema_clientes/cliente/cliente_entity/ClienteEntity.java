@@ -31,7 +31,8 @@ public class ClienteEntity {
     fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
-
+    //@JsonManagedReference("cliente-cita") //en el lado padre (propiedad que contiene la colección),
+    @JsonIgnore
     private Set<CitaEntity> listaCita = new HashSet<>();
 
     public void addCita(CitaEntity citaEntity){
@@ -43,7 +44,8 @@ public class ClienteEntity {
     fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
-
+   // @JsonManagedReference("cliente-factura")
+    @JsonIgnore
     private Set<FacturaEntity> listaFactura = new HashSet<>();
 
     public void addFactura(FacturaEntity facturaEntity){

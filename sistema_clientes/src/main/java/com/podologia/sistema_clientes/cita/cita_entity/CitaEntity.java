@@ -2,6 +2,7 @@ package com.podologia.sistema_clientes.cita.cita_entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.enume.EstadoCita;
@@ -27,7 +28,7 @@ public class CitaEntity {
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
-    @JsonIgnore
+    //@JsonBackReference("cliente-cita") //en el lado hijo (propiedad que apunta al padre).
     private ClienteEntity cliente;
 
     @Enumerated(EnumType.STRING)
@@ -41,12 +42,17 @@ public class CitaEntity {
     private String observaciones;
 
     @OneToOne(mappedBy = "citaEntity",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+   // @JsonManagedReference
+    @JsonIgnore
     private FacturaEntity factura;
+
+    //@JsonManagedReference
 
     @OneToMany(mappedBy = "cita",
     fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
+    @JsonManagedReference("cita-detalle")
     private Set<DetalleEntity> listaDetalle = new HashSet<>();
 
     public void addDetalle(DetalleEntity detalleEntity){

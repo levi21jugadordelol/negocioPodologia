@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 public interface ProductUtilizadoMapper {
 
     @Mappings({
-            @Mapping(source = "productoEntity.id", target="productoId"),
+            @Mapping(source = "productoEntity.idProducto", target="productoId"),
             @Mapping(source = "productoEntity.nombreProducto", target="nombreProducto")
     })
     ProductoUtilizadoDto toProductUtiliDto(ProductUtilizadoEntity productUtilizadoEntity);

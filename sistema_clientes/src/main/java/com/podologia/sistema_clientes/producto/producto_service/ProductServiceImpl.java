@@ -3,8 +3,11 @@ package com.podologia.sistema_clientes.producto.producto_service;
 import com.podologia.sistema_clientes.producto.IProductoRepo;
 import com.podologia.sistema_clientes.producto.producto_entity.ProductoEntity;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
+import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionProducto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,12 +15,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProductServiceImpl implements IProductService {
 
     private final IProductoRepo productoRepo;
+    private final ValidacionProducto validacionProducto;
+
+    private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.producto.producto_service.ProductServiceImpl.class);
 
     @Override
     public List<ProductoEntity> getProducts() {
@@ -29,10 +34,7 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     @Override
     public void saveProduct(ProductoEntity productoEntity) {
-        if (productoEntity == null) {
-            log.warn("no puede haber ser nullo el objeto producto");
-            throw new IllegalArgumentException("producto no puede ser null");
-        }
+       validacionProducto.validateProductToSave(productoEntity);
         productoRepo.save(productoEntity);
         log.info("producto guardada con éxito: {}", productoEntity);
     }
@@ -63,14 +65,9 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     @Override
     public void editProducto(Long id_producto, ProductoEntity productoEntity) {
-        ProductoEntity producto = productoRepo.findById(id_producto)
-                .orElseThrow(()->{
-                    log.warn("producto no encontrado con ID: {}", id_producto);
-                    return new EntidadNoEncontradaException("producto con ID " + id_producto + " no encontrado.");
-                });
-        productoEntity.setIdProducto(id_producto);
-        productoRepo.save(productoEntity);
-        log.info("producto actualizado con ID: {}", id_producto);
+        ProductoEntity productoEditado = validacionProducto.validateParametersToEditProduct(id_producto, productoEntity);
+        productoRepo.save(productoEditado);
+        log.info("Producto actualizado correctamente con ID: {}", id_producto);
     }
 
     @Override

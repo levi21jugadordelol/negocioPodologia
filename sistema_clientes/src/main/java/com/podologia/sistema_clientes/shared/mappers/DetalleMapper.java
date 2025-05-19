@@ -12,16 +12,14 @@ public interface DetalleMapper {
 
    //Mapea campos de servicio anidados.
    //Mapea la colección listProductUtilziado → productosUtilizados usando automáticamente ProductUtilizadoMapper
-    @Mappings({
-            @Mapping(source = "servicio.id", target="servicioId"),
-            @Mapping(source = "servicio.nombre", target="nombreServicio"),
-            @Mapping(source = "listProductUtilizado", target = "productosUtilizados")
-    })
-    DetalleDto toDetalleDto(DetalleEntity detalleEntity);
+   @Mappings({
+           @Mapping(source = "servicio.idServicio", target="servicioId"),
+           @Mapping(source = "servicio.nombreServicio", target="nombreServicio"),
+           @Mapping(source = "listProductUtilziado", target = "productosUtilizados")
+   })
+   DetalleDto toDetalleDto(DetalleEntity detalleEntity);
 
-    // Ignoramos campos que no se pueden mapear directamente
-    @Mapping(target = "servicio", ignore = true)
-    @Mapping(target = "listProductUtilizado", source = "productosUtilizados")
-    DetalleEntity toDetalleEntity(DetalleDto dto);
-
+ @Mapping(target = "servicio", ignore = true)
+ @Mapping(target = "listProductUtilziado", source = "productosUtilizados")
+ DetalleEntity toDetalleEntity(DetalleDto dto);
 }

@@ -4,7 +4,7 @@ package com.podologia.sistema_clientes.productoUtilizado.prodUtiliDto;
 import jakarta.persistence.Entity;
 import lombok.*;
 
-@Entity
+
 @Getter
 @Setter
 @NoArgsConstructor

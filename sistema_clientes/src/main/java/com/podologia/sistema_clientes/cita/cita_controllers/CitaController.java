@@ -1,31 +1,51 @@
 package com.podologia.sistema_clientes.cita.cita_controllers;
 
-import com.podologia.sistema_clientes.cita.ICitaRepo;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.cita.cita_service.ICitaService;
-import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
+import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
+import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionCita;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@Slf4j
+
 @RequestMapping("citas")
 public class CitaController {
 
     private final ICitaService citaService;
+    private  final ValidacionCita validacionCita;
+
+    private static final Logger log = LoggerFactory.getLogger( com.podologia.sistema_clientes.cita.cita_controllers.CitaController.class);
 
     // Crear una cita
     @PostMapping("/crear")
-    public ResponseEntity<String> saveCita(@RequestBody CitaEntity cita) {
+    public ResponseEntity<?> saveCita(@RequestBody CitaEntity cita) {
+        log.debug("Cita recibida en el controller: {}", cita);
         citaService.saveCita(cita);
-        return ResponseEntity.status(HttpStatus.CREATED).body("CITA CREADA");
+        return ResponseEntity.ok().build();
+
+    }
+
+    //crear detalle
+
+    @PostMapping("/{idCita}/detalles")
+    public ResponseEntity<?> saveDetalles(@PathVariable Long idCita,@RequestBody DetalleEntity detalle) {
+        log.debug("Detalle recibido para la cita {}: {}", idCita, detalle);
+
+        DetalleEntity detalleGuardado = citaService.saveDetalle(idCita, detalle);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(detalleGuardado);
+
     }
 
     // Traer todas las citas
@@ -42,8 +62,10 @@ public class CitaController {
     //Usa ResponseEntity<?> cuando devuelves más de un tipo de cuerpo (CitaEntity o String). Es una práctica común en controladores REST para manejar tanto respuestas exitosas como errores sin forzar conversiones.
     @GetMapping("/{idCita}")
     public ResponseEntity<CitaEntity> buscarCitaPorId(@PathVariable Long idCita) {
-        CitaEntity cita = citaService.findCita(idCita).get();
-        return  ResponseEntity.ok(cita);
+        CitaEntity cita = citaService.findCita(idCita)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cita no encontrada"));
+
+        return ResponseEntity.ok(cita);
     }
 
 
@@ -69,5 +91,7 @@ public class CitaController {
         citaService.deleteCita(idCita);
         return ResponseEntity.noContent().build();
     }
+
+
 }
 

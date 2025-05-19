@@ -1,5 +1,8 @@
 package com.podologia.sistema_clientes.producto.producto_entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.podologia.sistema_clientes.productoUtilizado.productoUtilizado_entity.ProductUtilizadoEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,6 +28,8 @@ public class ProductoEntity {
             fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
+    //@JsonManagedReference("producto-productoutilizado")
+    @JsonIgnore
     private Set<ProductUtilizadoEntity> listProductUtilizado = new HashSet<>();
 
     public void addProductUtilizado(ProductUtilizadoEntity productUtilizadoEntity){

@@ -6,6 +6,8 @@ import com.podologia.sistema_clientes.factura.factura_service.IFacturaService;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,11 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("factura")
 public class FacturaController {
     private final IFacturaService facturaService;
+
+    private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.factura.factura_controllers.FacturaController.class);
 
     @PostMapping("/crear")
     public ResponseEntity<String> saveFactura(@RequestBody FacturaEntity factura){

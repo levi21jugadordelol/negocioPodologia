@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers;
 public interface CitaMapper {
 
   @Mappings({
-          @Mapping(source = "cliente.nombre", target = "nombreCliente"),
+          @Mapping(source = "cliente.nombreCliente", target = "nombreCliente"),
           @Mapping(source = "factura.idFactura", target = "facturaId"),
           @Mapping(source = "listaDetalle", target = "detalles")
   })

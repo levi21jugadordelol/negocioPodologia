@@ -1,6 +1,8 @@
 package com.podologia.sistema_clientes.detalleCita.detalle_entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.productoUtilizado.productoUtilizado_entity.ProductUtilizadoEntity;
 import jakarta.persistence.*;
@@ -23,13 +25,16 @@ public class DetalleEntity {
 
     @ManyToOne
     @JoinColumn(name="cita_id",nullable = false)
-
+    @JsonBackReference("cita-detalle")
+   // @JsonBackReference
     private CitaEntity cita;
 
     @ManyToOne
     @JoinColumn(name = "servicio_id",nullable = false)
-    @ToString.Exclude
-    @JsonBackReference
+   // @ToString.Exclude
+   // @JsonBackReference
+   // @JsonBackReference("servicio-detalle")
+    @JsonIgnore
     private ServicioEntity servicio;
 
     private double duracion_total;
@@ -39,10 +44,12 @@ public class DetalleEntity {
             fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
+    @JsonManagedReference("detalle-producto")
     private Set<ProductUtilizadoEntity> listProductUtilziado = new HashSet<>();
 
     public void addProductUtilizado(ProductUtilizadoEntity productUtilizadoEntity){
         this.listProductUtilziado.add(productUtilizadoEntity);
+        productUtilizadoEntity.setDetalleEntity(this);
     }
 
     @Override
