@@ -1,6 +1,7 @@
 package com.podologia.sistema_clientes.shared.mappers;
 
 import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteDto;
+import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteRequestDto;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import org.mapstruct.Mapper;
 
@@ -8,11 +9,12 @@ import org.mapstruct.Mapper;
 public interface ClienteMapper {
 
 
-    // Entity a DTO
+    // Entity → DTO (para mostrar datos al cliente)
     ClienteDto toClienteDto(ClienteEntity clienteEntity);
 
-    // DTO a Entity (por ejemplo, al crear o editar un cliente)
-    ClienteEntity toClienteEntity(ClienteDto clienteDto);
+
+    // Request DTO → Entity (para crear o actualizar desde petición)
+    ClienteEntity toClienteEntity(ClienteRequestDto requestDto);
 
 }
 

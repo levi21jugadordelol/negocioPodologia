@@ -1,7 +1,10 @@
 package com.podologia.sistema_clientes.cliente.cliente_controllers;
 
+import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteDto;
+import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteRequestDto;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.cliente.cliente_service.IClienteService;
+import com.podologia.sistema_clientes.shared.mappers.ClienteMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -20,18 +23,27 @@ import java.util.Optional;
 public class ClienteController {
     private final IClienteService clienteService;
 
+    private ClienteMapper clienteMapper;
+
     private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.cliente.cliente_controllers.ClienteController.class);
 
     @PostMapping("/crear")
-    public ResponseEntity<String> saveCliente(@RequestBody ClienteEntity cliente){
-        clienteService.saveCliente(cliente);
-        return  ResponseEntity.status(HttpStatus.CREATED).body("cliente creada");
+    public ResponseEntity<String> saveCliente(@RequestBody ClienteRequestDto clienteRequestDto){
+
+        ClienteEntity clienteEntity = clienteMapper.toClienteEntity(clienteRequestDto);
+
+        clienteService.saveCliente(clienteEntity);
+        return  ResponseEntity.status(HttpStatus.CREATED).body("client save");
     }
 
 
     @GetMapping("/todas")
-    public ResponseEntity<List<ClienteEntity>> traerTodosClientes(){
-        List<ClienteEntity> listaClientes = clienteService.getCliente();
+    public ResponseEntity<List<ClienteDto>> traerTodosClientes(){
+        List<ClienteDto> listaClientes = clienteService.getCliente()
+                .stream()
+                .map(clienteMapper::toClienteDto)
+                .toList();
+
         if(listaClientes.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -40,9 +52,9 @@ public class ClienteController {
 
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<ClienteEntity> buscarClientePorId(@PathVariable Long idCliente){
+    public ResponseEntity<ClienteDto> buscarClientePorId(@PathVariable Long idCliente){
         ClienteEntity cliente = clienteService.findCliente(idCliente).get(); // service ya lanza si no existe
-        return ResponseEntity.ok(cliente);
+        return ResponseEntity.ok(clienteMapper.toClienteDto(cliente));
     }
 
 
@@ -54,29 +66,32 @@ public class ClienteController {
 
 
     @PutMapping("/editar/{idCliente}")
-    public ResponseEntity<String> editarCliente(@PathVariable Long idCliente, @RequestBody ClienteEntity clienteNuevo){
+    public ResponseEntity<String> editarCliente(@PathVariable Long idCliente, @RequestBody ClienteRequestDto clienteRequestDto){
         log.info("el id del duenio a editar es : "+idCliente);
-        clienteService.editCliente(idCliente, clienteNuevo);
-        return ResponseEntity.ok("Cliente editado");
+
+        ClienteEntity nuevoCliente = clienteMapper.toClienteEntity(clienteRequestDto);
+
+        clienteService.editCliente(idCliente, nuevoCliente);
+        return ResponseEntity.ok("Client edit");
     }
 
     @GetMapping("/dni/{dni}")
-    public ResponseEntity<ClienteEntity> buscarClientePorDni(@PathVariable String dni) {
+    public ResponseEntity<ClienteDto> buscarClientePorDni(@PathVariable String dni) {
         ClienteEntity cliente = clienteService.buscarClienteDni(dni).get();
-        return ResponseEntity.ok(cliente);
+        return ResponseEntity.ok(clienteMapper.toClienteDto(cliente));
     }
 
 
     @GetMapping("/nombre/{nombre}")
-    public ResponseEntity<ClienteEntity> buscarClientePorNombre(@PathVariable String nombre) {
+    public ResponseEntity<ClienteDto> buscarClientePorNombre(@PathVariable String nombre) {
         ClienteEntity cliente = clienteService.buscarNombreCliente(nombre).get();
-        return ResponseEntity.ok(cliente);
+        return ResponseEntity.ok(clienteMapper.toClienteDto(cliente));
     }
 
     @GetMapping("/cita/{idCita}")
-    public ResponseEntity<ClienteEntity> obtenerClientePorCita(@PathVariable Long idCita) {
+    public ResponseEntity<ClienteDto> obtenerClientePorCita(@PathVariable Long idCita) {
         ClienteEntity cliente = clienteService.obtenerClientePorCitaId(idCita).get();
-        return ResponseEntity.ok(cliente);
+        return ResponseEntity.ok(clienteMapper.toClienteDto(cliente));
     }
 
 

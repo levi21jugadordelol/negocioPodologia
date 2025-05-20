@@ -1,6 +1,7 @@
 package com.podologia.sistema_clientes.shared.mappers;
 
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleDto;
+import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleRequestDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,7 +20,10 @@ public interface DetalleMapper {
    })
    DetalleDto toDetalleDto(DetalleEntity detalleEntity);
 
- @Mapping(target = "servicio", ignore = true)
- @Mapping(target = "listProductUtilziado", source = "productosUtilizados")
- DetalleEntity toDetalleEntity(DetalleDto dto);
+    // RequestDto → Entity para crear
+    @Mapping(target = "idDetalleCita", ignore = true) // lo genera la DB
+    @Mapping(target = "cita", ignore = true) // se asigna en el servicio
+    @Mapping(target = "servicio", ignore = true) // se asigna en el servicio usando servicioId
+    @Mapping(target = "listProductUtilziado", source = "productosUtilizados")
+    DetalleEntity toDetalleEntity(DetalleRequestDto requestDto);
 }

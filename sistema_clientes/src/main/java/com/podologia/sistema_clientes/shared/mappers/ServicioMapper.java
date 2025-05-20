@@ -1,6 +1,7 @@
 package com.podologia.sistema_clientes.shared.mappers;
 
 import com.podologia.sistema_clientes.servicio.servicio_dtos.ServicioDto;
+import com.podologia.sistema_clientes.servicio.servicio_dtos.ServicioRequestDto;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,10 +16,10 @@ public interface ServicioMapper {
     })
     ServicioDto toServicioDto(ServicioEntity servicioEntity);
 
-    @Mappings({
-            @Mapping(source = "listaDetalle", target = "listDetalle", ignore = true) // por ahora se ignora si no se gestiona desde aquí
-    })
-    ServicioEntity toServicioEntity(ServicioDto servicioDto);
+    // DTO request → Entidad (creación o actualización)
+    @Mapping(target = "idServicio", ignore = true) // id lo maneja BD o se setea aparte
+    @Mapping(target = "listDetalle", ignore = true) // se maneja fuera del request DTO
+    ServicioEntity toServicioEntity(ServicioRequestDto requestDto);
 
 }
 

@@ -1,9 +1,12 @@
 package com.podologia.sistema_clientes.factura.factura_controllers;
 
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
+import com.podologia.sistema_clientes.factura.factura_dtos.FacturaDto;
+import com.podologia.sistema_clientes.factura.factura_dtos.FacturaRequestDto;
 import com.podologia.sistema_clientes.factura.factura_entity.FacturaEntity;
 import com.podologia.sistema_clientes.factura.factura_service.IFacturaService;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
+import com.podologia.sistema_clientes.shared.mappers.FacturaMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -20,18 +23,26 @@ import java.util.Optional;
 @RequestMapping("factura")
 public class FacturaController {
     private final IFacturaService facturaService;
+    private final FacturaMapper facturaMapper;
 
     private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.factura.factura_controllers.FacturaController.class);
 
     @PostMapping("/crear")
-    public ResponseEntity<String> saveFactura(@RequestBody FacturaEntity factura){
+    public ResponseEntity<String> saveFactura(@RequestBody FacturaRequestDto facturaRequestDto){
+
+        FacturaEntity factura = facturaMapper.toFacturaEntity(facturaRequestDto);
         facturaService.saveFactura(factura);
-        return  ResponseEntity.status(HttpStatus.CREATED).body("factura creada");
+        return  ResponseEntity.status(HttpStatus.CREATED).body("facture save");
     }
 
     @GetMapping("/todas")
-    public ResponseEntity<List<FacturaEntity>> traerTodasFacturas(){
-        List<FacturaEntity> listaFacturas = facturaService.getFactura();
+    public ResponseEntity<List<FacturaDto>> traerTodasFacturas(){
+        List<FacturaDto> listaFacturas = facturaService.getFactura()
+                .stream()
+                .map(facturaMapper::toFacturaDto)
+                .toList();
+
+
         if(listaFacturas.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -39,9 +50,9 @@ public class FacturaController {
     }
 
     @GetMapping("/{idFactura}")
-    public ResponseEntity<FacturaEntity> buscarFacturaPorId(@PathVariable Long idFactura){
+    public ResponseEntity<FacturaDto> buscarFacturaPorId(@PathVariable Long idFactura){
         FacturaEntity response = facturaService.findFactura(idFactura).get();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(facturaMapper.toFacturaDto(response));
     }
 
     @DeleteMapping("/eliminar/{idFactura}")
@@ -52,27 +63,35 @@ public class FacturaController {
 
 
     @PutMapping("/editar/{idFactura}")
-    public ResponseEntity<String> editarFactura(@PathVariable Long idFactura, @RequestBody FacturaEntity facturaNuevo){
-        facturaService.editFactura(idFactura,facturaNuevo);
-        return ResponseEntity.ok("factura editado");
+    public ResponseEntity<String> editarFactura(@PathVariable Long idFactura, @RequestBody FacturaRequestDto facturaRequestDto){
+
+        FacturaEntity facturaActualizada = facturaMapper.toFacturaEntity(facturaRequestDto);
+
+        facturaService.editFactura(idFactura,facturaActualizada);
+        return ResponseEntity.ok("facture edit");
     }
 
 
     @GetMapping("/codigo/{codigo}")
-    public ResponseEntity<FacturaEntity> buscarFacturaPorCodigo(@PathVariable String codigo) {
+    public ResponseEntity<FacturaDto> buscarFacturaPorCodigo(@PathVariable String codigo) {
         FacturaEntity factura = facturaService.buscarcodigo(codigo).get();
-        return  ResponseEntity.ok(factura);
+        return  ResponseEntity.ok(facturaMapper.toFacturaDto(factura));
     }
 
 
     @GetMapping("/id_cliente/{idCliente}")
-    public List<FacturaEntity> obtenerFacturaPorIdCliente(@PathVariable Long idCliente) {
+    public ResponseEntity<List<FacturaDto>> obtenerFacturaPorIdCliente(@PathVariable Long idCliente) {
         List<FacturaEntity> listaFacturaIdCliente = facturaService.findFacturaCliente(idCliente);
         if(listaFacturaIdCliente.isEmpty()){
             log.warn("No se encontraron factura para el cliente con ID: {}", idCliente);
             throw new EntidadNoEncontradaException("No se encontraron citas para el cliente con ID: " + idCliente);
         }
-        return listaFacturaIdCliente;
+
+        List<FacturaDto> dtoList = listaFacturaIdCliente.stream()
+                .map(facturaMapper::toFacturaDto)
+                .toList();
+
+        return ResponseEntity.ok(dtoList);
     }
 
 

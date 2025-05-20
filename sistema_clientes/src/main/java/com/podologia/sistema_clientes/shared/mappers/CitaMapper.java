@@ -1,6 +1,7 @@
 package com.podologia.sistema_clientes.shared.mappers;
 
 import com.podologia.sistema_clientes.cita.cita_dtos.CitaDto;
+import com.podologia.sistema_clientes.cita.cita_dtos.CitaRequestDto;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,9 +20,16 @@ public interface CitaMapper {
     CitaDto toCitaDto(CitaEntity citaEntity);
 
 
-    @Mapping(target = "cliente", ignore = true) // se setea manualmente en el servicio
-    @Mapping(target = "factura", ignore = true) // por lo general se setea luego
-    CitaEntity toCitaEntity(CitaDto dto);
+
+  // CitaRequestDto → CitaEntity (ingreso)
+  @Mappings({
+          @Mapping(target = "idCita", ignore = true), // lo genera la base de datos
+          @Mapping(target = "cliente", ignore = true), // se setea manualmente en el servicio
+          @Mapping(target = "factura", ignore = true),
+          @Mapping(target = "listaDetalle", source = "detalles")
+  })
+    CitaEntity toCitaEntity(CitaRequestDto requestDto);
+
 
 
 }

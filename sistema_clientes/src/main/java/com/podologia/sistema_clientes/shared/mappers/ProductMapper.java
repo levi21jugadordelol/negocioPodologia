@@ -1,6 +1,7 @@
 package com.podologia.sistema_clientes.shared.mappers;
 
 import com.podologia.sistema_clientes.producto.producto_dtos.ProductDto;
+import com.podologia.sistema_clientes.producto.producto_dtos.ProductRequestDto;
 import com.podologia.sistema_clientes.producto.producto_entity.ProductoEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +14,9 @@ public interface ProductMapper {
     ProductDto toProductDto(ProductoEntity productoEntity);
 
 
-    ProductoEntity toProductEntity(ProductDto productDto);
+    @Mapping(target = "idProducto", ignore = true)
+    @Mapping(target = "listProductUtilizado", ignore = true)
+    ProductoEntity toProductEntity(ProductRequestDto requestDto);
 
 }
 
