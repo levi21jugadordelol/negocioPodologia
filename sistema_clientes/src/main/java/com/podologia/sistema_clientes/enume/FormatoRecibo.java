@@ -1,7 +1,7 @@
 package com.podologia.sistema_clientes.enume;
 
 public enum FormatoRecibo {
-    BOLETA("boleta"),FACTURA("com/podologia/sistema_clientes/factura");
+    BOLETA("boleta"),FACTURA("factura");
 
     private String nombreFormato;
 

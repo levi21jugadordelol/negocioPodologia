@@ -34,11 +34,11 @@ public class GlobalExceptionHandler {
 
     */
 
-  /*  @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+   @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<String> handleUnsupportedMediaType(HttpMediaTypeNotSupportedException ex) {
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                 .body("Media type no soportado. Asegúrate de usar Content-Type: application/json");
-    } */
+    }
 
 
     @ExceptionHandler(EntidadNoEncontradaException.class)
