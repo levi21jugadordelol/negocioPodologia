@@ -1,9 +1,12 @@
 package com.podologia.sistema_clientes.shared.metodoValidaciones;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.podologia.sistema_clientes.cita.ICitaRepo;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.cita.cita_service.CitaServiceImpl;
 import com.podologia.sistema_clientes.cliente.IClienteRepo;
+import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.IDetalleRepo;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.producto.IProductoRepo;
@@ -31,6 +34,7 @@ public class ValidacionCita {
     private final IDetalleRepo detalleRepo;
     private final IServicioRepo servicioRepo;
     private final IProductoRepo productoRepo;
+
 
     private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionCita.class);
 
@@ -71,7 +75,7 @@ public class ValidacionCita {
                 detalle.getIdDetalleCita(),
                 detalle.getServicio() != null ? detalle.getServicio().getIdServicio() : "null",
                 detalle.getMotivo(),
-                detalle.getDuracion_total(),
+                detalle.getDuracionTotal(),
                 detalle.getListProductUtilziado() != null ? detalle.getListProductUtilziado().size() : 0
         );
 
@@ -93,7 +97,7 @@ public class ValidacionCita {
                 });
 
         // Reemplazamos el servicio parcial por el completo
-        detalle.setServicio(servicioReal);
+      //  detalle.setServicio(servicioReal);
 
         if (detalle.getListProductUtilziado() != null) {
             for (ProductUtilizadoEntity p : detalle.getListProductUtilziado()) {
@@ -134,10 +138,17 @@ public class ValidacionCita {
     }
 
 
-    public CitaEntity validateParametersToEdit(Long id_cita,CitaEntity nuevosDatos){
+    public CitaEntity validateParametersToEdit(Long id_cita, CitaEntity nuevosDatos) {
 
-        log.info("Validando existencia y preparando actualización para cita con ID: {}", id_cita);
+        log.info("---- INICIO VALIDACIÓN DE CITA PARA ACTUALIZACIÓN ----");
+        log.info("ID recibido: {}", id_cita);
+        log.info("Cliente recibido en nuevosDatos: {}", nuevosDatos.getCliente());
 
+
+        if (id_cita == null) {
+            log.error("ID de cita es null");
+            throw new ValidacionException("El ID de la cita no puede ser null");
+        }
 
         CitaEntity existente = citaRepo.findById(id_cita)
                 .orElseThrow(() -> {
@@ -145,19 +156,41 @@ public class ValidacionCita {
                     return new EntidadNoEncontradaException("Cita con ID " + id_cita + " no existe.");
                 });
 
-        if (nuevosDatos == null || nuevosDatos.getCliente() == null) {
-            log.error("la entidad cita no existe");
-            throw new ValidacionException("Cita o cliente no pueden ser null");
+        if (nuevosDatos == null) {
+            log.error("El objeto nuevosDatos es null");
+            throw new ValidacionException("Los datos nuevos de la cita no pueden ser null");
         }
 
-        log.info("=== Datos recibidos para actualizar cita ===");
-        log.info("Fecha: {}", nuevosDatos.getFechaCita() != null ? nuevosDatos.getFechaCita() : "no se proporcionó");
-        log.info("Tipo: {}", nuevosDatos.getTipoCita() != null ? nuevosDatos.getTipoCita() : "no se proporcionó");
-        log.info("Estado: {}", nuevosDatos.getEstadoCita() != null ? nuevosDatos.getEstadoCita() : "no se proporcionó");
-        log.info("Observaciones: {}", nuevosDatos.getObservaciones() != null ? nuevosDatos.getObservaciones() : "no se proporcionó");
-        log.info("Cliente ID: {}", nuevosDatos.getCliente().getIdCliente() != null ? nuevosDatos.getCliente().getIdCliente() : "no se proporcionó");
+        // Mostrar los datos que vienen en nuevosDatos por consola sin JSON
+        log.info("Datos recibidos para actualizar cita:");
+        log.info("  Fecha: {}", nuevosDatos.getFechaCita() != null ? nuevosDatos.getFechaCita() : "no se proporcionó");
+        log.info("  Tipo: {}", nuevosDatos.getTipoCita() != null ? nuevosDatos.getTipoCita() : "no se proporcionó");
+        log.info("  Estado: {}", nuevosDatos.getEstadoCita() != null ? nuevosDatos.getEstadoCita() : "no se proporcionó");
+        log.info("  Observaciones: {}", nuevosDatos.getObservaciones() != null ? nuevosDatos.getObservaciones() : "no se proporcionó");
+        if (nuevosDatos.getCliente() != null && nuevosDatos.getCliente().getIdCliente() != null) {
+            log.info("  Cliente ID: {}", nuevosDatos.getCliente().getIdCliente() != null ? nuevosDatos.getCliente().getIdCliente() : "no se proporcionó");
+            log.info("  Cliente nombre: {}", nuevosDatos.getCliente().getNombreCliente() != null ? nuevosDatos.getCliente().getNombreCliente() : "no se proporcionó");
+        } else {
+            log.info("Cliente es null o no tiene ID");
+        }
 
-        // Actualización campo por campo
+        if (nuevosDatos.getCliente() == null || nuevosDatos.getCliente().getIdCliente() == null) {
+            log.error("El cliente dentro de nuevosDatos es null o no tiene ID");
+            throw new ValidacionException("El cliente de la cita no puede ser null y debe tener un ID");
+        }
+
+        Long idCliente = nuevosDatos.getCliente().getIdCliente();
+
+        ClienteEntity clienteExistente = clienteRepo.findById(idCliente)
+                .orElseThrow(() -> {
+                    log.error("No se encontró cliente con ID: {}", idCliente);
+                    return new EntidadNoEncontradaException("Cliente con ID " + idCliente + " no existe.");
+                });
+
+        // Actualiza cliente con el existente de BD
+        existente.setCliente(clienteExistente);
+
+        // Actualiza los campos de la cita existente solo si se proveen en nuevosDatos
         if (nuevosDatos.getFechaCita() != null) {
             existente.setFechaCita(nuevosDatos.getFechaCita());
         }
@@ -170,14 +203,23 @@ public class ValidacionCita {
         if (nuevosDatos.getObservaciones() != null) {
             existente.setObservaciones(nuevosDatos.getObservaciones());
         }
-        if (nuevosDatos.getCliente() != null) {
-            existente.setCliente(nuevosDatos.getCliente());
-        }
 
-        log.info("Cita validada y lista para ser persistida");
+        log.info("✅ Cita con ID {} validada y lista para ser persistida", id_cita);
+
+        // Mostrar estado final del objeto existente (actualizado) también con logs campo por campo
+        log.info("Estado final de la cita actualizada:");
+        log.info("  Fecha: {}", existente.getFechaCita());
+        log.info("  Tipo: {}", existente.getTipoCita());
+        log.info("  Estado: {}", existente.getEstadoCita());
+        log.info("  Observaciones: {}", existente.getObservaciones());
+        log.info("  Cliente ID: {}", existente.getCliente().getIdCliente());
+        log.info("  Cliente nombre: {}", existente.getCliente().getNombreCliente());
+
+        log.info("---- FIN VALIDACIÓN DE CITA ----");
 
         return existente;
-
     }
+
+
 
 }

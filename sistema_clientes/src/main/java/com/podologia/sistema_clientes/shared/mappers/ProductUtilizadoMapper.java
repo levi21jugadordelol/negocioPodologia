@@ -1,6 +1,7 @@
 package com.podologia.sistema_clientes.shared.mappers;
 
 import com.podologia.sistema_clientes.producto.producto_dtos.ProductDto;
+import com.podologia.sistema_clientes.producto.producto_entity.ProductoEntity;
 import com.podologia.sistema_clientes.productoUtilizado.prodUtiliDto.ProductoUtilizadoDto;
 import com.podologia.sistema_clientes.productoUtilizado.prodUtiliDto.ProductoUtilizadoRequestDto;
 import com.podologia.sistema_clientes.productoUtilizado.productoUtilizado_entity.ProductUtilizadoEntity;
@@ -18,10 +19,17 @@ public interface ProductUtilizadoMapper {
     ProductoUtilizadoDto toProductUtiliDto(ProductUtilizadoEntity productUtilizadoEntity);
 
     // Request DTO → Entity
-    @Mapping(target = "productoEntity", ignore = true)
-    @Mapping(target = "detalleEntity", ignore = true) // también se debe ignorar
+    @Mapping(target = "detalleEntity", ignore = true)
+    @Mapping(target = "productoEntity", expression = "java(mapProductoEntity(requestDto.getProductoId()))")
     ProductUtilizadoEntity toEntity(ProductoUtilizadoRequestDto requestDto);
 
+    // método de ayuda
+    default ProductoEntity mapProductoEntity(Long productoId) {
+        if (productoId == null) return null;
+        ProductoEntity p = new ProductoEntity();
+        p.setIdProducto(productoId);
+        return p;
+    }
 
 }
 

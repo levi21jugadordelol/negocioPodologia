@@ -48,9 +48,6 @@ public class ValidacionFactura {
         log.info("Cita validado correctamente con ID: {}", idCita);
 
 
-
-
-
     }
 
 

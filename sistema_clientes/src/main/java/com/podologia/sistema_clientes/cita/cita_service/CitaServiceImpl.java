@@ -1,8 +1,12 @@
 package com.podologia.sistema_clientes.cita.cita_service;
 
 import com.podologia.sistema_clientes.cita.ICitaRepo;
+import com.podologia.sistema_clientes.cita.cita_dtos.CitaRequestDto;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
+import com.podologia.sistema_clientes.cliente.IClienteRepo;
+import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.IDetalleRepo;
+import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleRequestDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.producto.IProductoRepo;
 import com.podologia.sistema_clientes.producto.producto_entity.ProductoEntity;
@@ -10,6 +14,9 @@ import com.podologia.sistema_clientes.productoUtilizado.productoUtilizado_entity
 import com.podologia.sistema_clientes.servicio.IServicioRepo;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
+import com.podologia.sistema_clientes.shared.exception.ValidacionException;
+import com.podologia.sistema_clientes.shared.mappers.CitaMapper;
+import com.podologia.sistema_clientes.shared.mappers.DetalleMapper;
 import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionCita;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +40,10 @@ public class CitaServiceImpl implements ICitaService {
     private final IServicioRepo servicioRepo;
     private final IDetalleRepo detalleRepo;
     private  final IProductoRepo productoRepo;
+    private final IClienteRepo clienteRepo;
+    private final CitaMapper citaMapper;
+    private  final DetalleMapper detalleMapper;
+
 
     private static final Logger log = LoggerFactory.getLogger( com.podologia.sistema_clientes.cita.cita_service.CitaServiceImpl.class);
 
@@ -70,11 +82,19 @@ public class CitaServiceImpl implements ICitaService {
         // Asociar los productos utilizados con el detalle
         if (detalle.getListProductUtilziado() != null) {
             for (ProductUtilizadoEntity p : detalle.getListProductUtilziado()) {
-                Long productoId = p.getProductoEntity().getIdProducto();
-                ProductoEntity producto = productoRepo.findById(productoId).get(); // ya validado
+                // Protección ante nulos
+                if (p.getProductoEntity() == null || p.getProductoEntity().getIdProducto() == null) {
+                    throw new ValidacionException("Cada producto utilizado debe tener un producto con ID válido.");
+                }
 
-                p.setProductoEntity(producto); // importante
-                p.setDetalleEntity(detalle);  // relación inversa
+                Long productoId = p.getProductoEntity().getIdProducto();
+
+                // Reemplazamos el objeto ProductoEntity parcial por el real desde BD
+                ProductoEntity producto = productoRepo.findById(productoId)
+                        .orElseThrow(() -> new EntidadNoEncontradaException("Producto con ID " + productoId + " no existe."));
+
+                p.setProductoEntity(producto);     // Relación directa
+                p.setDetalleEntity(detalle);       // Relación inversa
             }
         }
 
@@ -107,19 +127,67 @@ public class CitaServiceImpl implements ICitaService {
 
 
 
-    @Transactional
+  /*  @Transactional
     @Override
     public void editCita(Long id_cita, CitaEntity nuevosDatos) {
         log.info("Iniciando edición de cita con ID: {}", id_cita);
 
         CitaEntity citaActualziada = validacionCita.validateParametersToEdit(id_cita,nuevosDatos);
 
+        // Obtener ClienteEntity con clienteId del DTO
+        ClienteEntity cliente = clienteRepo.findById(nuevosDatos.getCliente().getIdCliente())
+                .orElseThrow(() -> new EntidadNoEncontradaException("Cliente no encontrado"));
+
+        // Setear cliente en la cita actualizada
+        citaActualziada.setCliente(cliente);
+
         citaRepo.save(citaActualziada);
 
         log.info("Cita actualizada con éxito. ID: {}", id_cita);
 
 
+    } */
+
+    @Transactional
+    @Override
+    public void editCita(Long id_cita, CitaRequestDto nuevosDatosDto) {
+        log.info("Iniciando edición de cita con ID: {}", id_cita);
+
+        CitaEntity citaActual = citaRepo.findById(id_cita)
+                .orElseThrow(() -> new EntidadNoEncontradaException("Cita no encontrada"));
+
+        // Actualiza campos simples usando mapper
+        citaMapper.updateCitaEntityFromDto(nuevosDatosDto, citaActual);
+
+        // Setea cliente explícitamente
+        ClienteEntity cliente = clienteRepo.findById(nuevosDatosDto.getClienteId())
+                .orElseThrow(() -> new EntidadNoEncontradaException("Cliente no encontrado"));
+        citaActual.setCliente(cliente);
+
+        log.info("Tamaño actual de la lista de detalles: {}",
+                citaActual.getListaDetalle() != null ? citaActual.getListaDetalle().size() : "null");
+
+        if (citaActual.getListaDetalle() == null) {
+            log.warn("La lista de detalles está en null. Se inicializa manualmente para evitar NullPointerException.");
+            citaActual.setListaDetalle(new ArrayList<>());
+        }
+
+        // Actualizar detalles
+        citaActual.getListaDetalle().clear();
+
+        if (nuevosDatosDto.getDetalles() != null) {
+            for (DetalleRequestDto detalleDto : nuevosDatosDto.getDetalles()) {
+                DetalleEntity detalle = detalleMapper.toDetalleEntity(detalleDto);
+                citaActual.addDetalle(detalle);
+            }
+        }
+
+        citaRepo.save(citaActual);
+
+        log.info("Cita actualizada con éxito. ID: {}", id_cita);
     }
+
+
 
 
     @Override

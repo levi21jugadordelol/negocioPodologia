@@ -45,7 +45,7 @@ public class ProductController {
         return ResponseEntity.ok(productosDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("id/{id}")
     public ResponseEntity<ProductDto> obtenerProductoPorId(@PathVariable Long id) {
         return productService.findProduct(id)
                 .map(productMapper::toProductDto)
@@ -54,7 +54,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/buscar")
+    @GetMapping("/buscarNombre")
     public ResponseEntity<ProductDto> buscarProductoPorNombre(@RequestParam String nombre) {
         return productService.buscarProducto(nombre)
                 .map(productMapper::toProductDto)

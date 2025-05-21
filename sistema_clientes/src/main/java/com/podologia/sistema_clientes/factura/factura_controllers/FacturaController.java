@@ -30,8 +30,14 @@ public class FacturaController {
     @PostMapping("/crear")
     public ResponseEntity<String> saveFactura(@RequestBody FacturaRequestDto facturaRequestDto){
 
+        log.info("📥 [FacturaController] Recibiendo request DTO: {}", facturaRequestDto);
+
         FacturaEntity factura = facturaMapper.toFacturaEntity(facturaRequestDto);
-        facturaService.saveFactura(factura);
+        log.info("🛠️ [FacturaController] Entidad mapeada: {}", factura);
+
+        facturaService.saveFactura(facturaRequestDto);
+        log.info("✅ [FacturaController] Factura guardada con éxito.");
+
         return  ResponseEntity.status(HttpStatus.CREATED).body("facture save");
     }
 
@@ -63,12 +69,17 @@ public class FacturaController {
 
 
     @PutMapping("/editar/{idFactura}")
-    public ResponseEntity<String> editarFactura(@PathVariable Long idFactura, @RequestBody FacturaRequestDto facturaRequestDto){
+    public ResponseEntity<Void> editarFactura(@PathVariable Long idFactura, @RequestBody FacturaRequestDto facturaRequestDto){
 
-        FacturaEntity facturaActualizada = facturaMapper.toFacturaEntity(facturaRequestDto);
+        log.info("➡️ [EDIT FACTURA] Iniciando edición de factura con ID: {}", idFactura);
+        log.info("📦 [REQUEST DATA] DTO recibido: {}", facturaRequestDto);
 
-        facturaService.editFactura(idFactura,facturaActualizada);
-        return ResponseEntity.ok("facture edit");
+      //  FacturaEntity facturaActualizada = facturaMapper.toFacturaEntity(facturaRequestDto);
+
+        facturaService.editFactura(idFactura,facturaRequestDto);
+
+        log.info("✅ [EDIT FACTURA] Edición completada para factura con ID: {}", idFactura);
+        return ResponseEntity.noContent().build();
     }
 
 

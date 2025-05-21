@@ -23,7 +23,7 @@ import java.util.Optional;
 public class ClienteController {
     private final IClienteService clienteService;
 
-    private ClienteMapper clienteMapper;
+    private final ClienteMapper clienteMapper;
 
     private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.cliente.cliente_controllers.ClienteController.class);
 

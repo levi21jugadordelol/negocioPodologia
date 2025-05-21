@@ -4,6 +4,7 @@ import com.podologia.sistema_clientes.cita.cita_dtos.CitaDto;
 import com.podologia.sistema_clientes.cita.cita_dtos.CitaRequestDto;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.cita.cita_service.ICitaService;
+import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleRequestDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
@@ -31,8 +32,8 @@ public class CitaController {
 
     private final ICitaService citaService;
     private  final ValidacionCita validacionCita;
-    private CitaMapper citaMapper;
-    private DetalleMapper detalleMapper;
+    private final CitaMapper citaMapper;
+    private final DetalleMapper detalleMapper;
 
     private static final Logger log = LoggerFactory.getLogger( com.podologia.sistema_clientes.cita.cita_controllers.CitaController.class);
 
@@ -43,8 +44,19 @@ public class CitaController {
 
         // Mapea de DTO a Entity
         CitaEntity citaEntity = citaMapper.toCitaEntity(citaRequestDto);
+        // 2. Asignar manualmente el cliente basado en clienteId
+        if (citaRequestDto.getClienteId() != null) {
+            ClienteEntity cliente = new ClienteEntity();
+            cliente.setIdCliente(citaRequestDto.getClienteId());
+            citaEntity.setCliente(cliente);
+        } else {
+            // Aquí podrías lanzar excepción o devolver error si clienteId es obligatorio
+            return ResponseEntity.badRequest().body("clienteId es obligatorio");
+        }
 
+        // 3. Guardar la cita
         citaService.saveCita(citaEntity);
+
         return ResponseEntity.ok().build();
 
     }
@@ -118,9 +130,12 @@ public class CitaController {
     public ResponseEntity<String> editarCita(@PathVariable Long idCita, @RequestBody CitaRequestDto nuevaCitaDto) {
         log.info("el id de la cita a editar es : "+idCita);
 
-        CitaEntity citaEntity = citaMapper.toCitaEntity(nuevaCitaDto);
+        log.info("DTO recibido completo: {}", nuevaCitaDto);
+        log.info("Cliente dentro del DTO: {}", nuevaCitaDto.getClienteId());
 
-        citaService.editCita(idCita, citaEntity);
+      //  CitaEntity citaEntity = citaMapper.toCitaEntity(nuevaCitaDto);
+
+        citaService.editCita(idCita, nuevaCitaDto);
 
         return ResponseEntity.ok("Cita editada");
     }

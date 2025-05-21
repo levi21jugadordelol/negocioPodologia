@@ -21,9 +21,11 @@ import java.util.*;
 @AllArgsConstructor
 @Builder
 @ToString(exclude = {"cliente", "factura", "listaDetalle"})
+@Table(name = "cita_entity")
 public class CitaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_cita")
     private Long idCita;
 
     @ManyToOne
@@ -53,11 +55,16 @@ public class CitaEntity {
     cascade = CascadeType.ALL,
     orphanRemoval = true)
     @JsonManagedReference("cita-detalle")
-    private Set<DetalleEntity> listaDetalle = new HashSet<>();
+    private List<DetalleEntity> listaDetalle = new ArrayList<>();
 
     public void addDetalle(DetalleEntity detalleEntity){
         this.listaDetalle.add(detalleEntity);
         detalleEntity.setCita(this);
+    }
+
+    public void removeDetalle(DetalleEntity detalleEntity){
+        this.listaDetalle.remove(detalleEntity);
+        detalleEntity.setCita(null);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.podologia.sistema_clientes.cita.cita_dtos.CitaRequestDto;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
@@ -30,6 +31,14 @@ public interface CitaMapper {
   })
     CitaEntity toCitaEntity(CitaRequestDto requestDto);
 
+  // NUEVO método para actualizar entidad existente con datos del DTO
+  @Mappings({
+          @Mapping(target = "idCita", ignore = true), // no tocar ID
+          @Mapping(target = "cliente", ignore = true), // se setea manual
+          @Mapping(target = "factura", ignore = true),
+          @Mapping(target = "listaDetalle", ignore = true)
+  })
+  void updateCitaEntityFromDto(CitaRequestDto requestDto, @MappingTarget CitaEntity entity);
 
 
 }

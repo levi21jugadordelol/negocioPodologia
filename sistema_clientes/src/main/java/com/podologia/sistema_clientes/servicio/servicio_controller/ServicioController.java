@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/servicios")
+@RequestMapping("/servicio")
 @RequiredArgsConstructor
 
 public class ServicioController {
@@ -48,7 +48,7 @@ public class ServicioController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/listarServicios")
     public ResponseEntity<?> listarServicios() {
         List<ServicioEntity> servicios = servicioService.getServicios();
         if (servicios.isEmpty()) {
@@ -90,7 +90,7 @@ public class ServicioController {
         }
     }
 
-    @GetMapping("/buscar")
+    @GetMapping("/buscarNombre")
     public ResponseEntity<?> buscarPorNombre(@RequestParam String nombre) {
         try {
             ServicioEntity servicio = servicioService.buscarNombre(nombre).orElse(null);

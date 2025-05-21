@@ -3,6 +3,7 @@ package com.podologia.sistema_clientes.shared.mappers;
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleRequestDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
+import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -21,9 +22,19 @@ public interface DetalleMapper {
    DetalleDto toDetalleDto(DetalleEntity detalleEntity);
 
     // RequestDto → Entity para crear
-    @Mapping(target = "idDetalleCita", ignore = true) // lo genera la DB
-    @Mapping(target = "cita", ignore = true) // se asigna en el servicio
-    @Mapping(target = "servicio", ignore = true) // se asigna en el servicio usando servicioId
-    @Mapping(target = "listProductUtilziado", source = "productosUtilizados")
+    @Mappings({
+            @Mapping(target = "idDetalleCita", ignore = true),
+            @Mapping(target = "cita", ignore = true),
+            @Mapping(target = "servicio", expression = "java(mapServicio(requestDto.getServicioId()))"),
+            @Mapping(target = "listProductUtilziado", source = "productosUtilizados"),
+            @Mapping(target = "duracionTotal", source = "duracionTotal") // ✅ ESTA LÍNEA FALTABA
+    })
     DetalleEntity toDetalleEntity(DetalleRequestDto requestDto);
+
+    default ServicioEntity mapServicio(Long servicioId) {
+        if (servicioId == null) return null;
+        ServicioEntity servicio = new ServicioEntity();
+        servicio.setIdServicio(servicioId);
+        return servicio;
+    }
 }

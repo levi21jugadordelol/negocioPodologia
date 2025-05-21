@@ -37,7 +37,7 @@ public class DetalleEntity {
     @JsonIgnore
     private ServicioEntity servicio;
 
-    private double duracion_total;
+    private double duracionTotal;
     private String motivo;
 
     @OneToMany(mappedBy = "detalleEntity",
@@ -50,6 +50,11 @@ public class DetalleEntity {
     public void addProductUtilizado(ProductUtilizadoEntity productUtilizadoEntity){
         this.listProductUtilziado.add(productUtilizadoEntity);
         productUtilizadoEntity.setDetalleEntity(this);
+    }
+
+    public void removeProductUtilizado(ProductUtilizadoEntity producto) {
+        this.listProductUtilziado.remove(producto);
+        producto.setDetalleEntity(null);
     }
 
     @Override
