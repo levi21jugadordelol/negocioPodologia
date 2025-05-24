@@ -20,15 +20,27 @@
   <body>
     <main class="d-flex">
       <!-- === SIDEBAR === -->
-      <aside class="sidebar">
+      <aside class="sidebar" style="background-color: lightslategray">
         <div class="sidebar-top text-center">
           <h3>👤 Juan Pérez</h3>
           <p>Admin</p>
         </div>
 
-        <ul class="menu">
-          <li id="btn-clientes">👥 Clientes</li>
-          <li id="btn-citas">📅 Citas</li>
+        <ul class="menu list-unstyled">
+          <li>
+            <button
+              type="button"
+              id="btn-clientes"
+              class="btn w-100 text-start"
+            >
+              👥 Clientes
+            </button>
+          </li>
+          <li>
+            <button type="button" id="btn-citas" class="btn w-100 text-start">
+              📅 Citas
+            </button>
+          </li>
         </ul>
 
         <div class="sidebar-bottom">

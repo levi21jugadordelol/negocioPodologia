@@ -1,4 +1,6 @@
 import crearModalNuevoCliente from "./crearModalNuevoCliente.js";
+import { tableCita } from "./windowForCite.js";
+import { tableClient } from "./windowForClient.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   crearModalNuevoCliente(
@@ -7,4 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ".close",
     ".enviar"
   );
+  tableCita("#btn-citas", "#vista-citas");
+  tableClient("#btn-clientes", "#vista-clientes");
 });
