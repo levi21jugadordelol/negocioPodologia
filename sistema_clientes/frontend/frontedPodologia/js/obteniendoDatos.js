@@ -1,6 +1,7 @@
 import { Cliente } from "./clases/cliente.js";
 import { enviandoDatos } from "./enviandoDatos.js";
 import { enviarClienteApi } from "./conexion/enviarClienteApi.js"; // Asegúrate de importar esto
+import { addIdToTable } from "./addIdToCita.js";
 
 export const datosCliente = [];
 
@@ -28,12 +29,18 @@ export const infoDatos = async () => {
     console.log("Cliente agregado:", cliente);
 
     // ✅ Enviamos al backend usando el método toBackendJson()
+    // const respuesta = await enviarClienteApi(cliente.toBackendJson());
     const respuesta = await enviarClienteApi(cliente.toBackendJson());
+
+    console.log("Respuesta de enviarClienteApi:", respuesta);
+    console.log("Respuesta.id:", respuesta.id);
 
     if (respuesta.error) {
       alert("❌ Error al enviar al backend: " + respuesta.mensaje);
     } else {
       alert("✅ Cliente enviado exitosamente.");
+      // ¡Importante! Llamas a addIdToTable y le pasas el idCliente
+      addIdToTable(respuesta);
     }
   } catch (error) {
     alert("❌ Error al crear cliente: " + error.message);

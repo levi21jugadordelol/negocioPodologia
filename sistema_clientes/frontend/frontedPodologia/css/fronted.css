@@ -97,3 +97,35 @@ html {
   width: 100%;
   max-width: 600px;
 }
+
+/*botones de editar crear y eliminar*/
+
+.action-button {
+  padding: 6px 12px;
+  margin: 0 5px 5px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Colores específicos */
+.action-button.green {
+  background-color: #28a745;
+  color: white;
+}
+
+.action-button.red {
+  background-color: #dc3545;
+  color: white;
+}
+
+.action-button.black {
+  background-color: #343a40;
+  color: white;
+}
+
+.action-button:hover {
+  opacity: 0.9;
+}
