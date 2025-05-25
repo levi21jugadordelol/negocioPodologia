@@ -45,6 +45,15 @@
               📅 Citas
             </button>
           </li>
+          <li>
+            <button
+              type="button"
+              id="btn-servicios"
+              class="btn w-100 text-start"
+            >
+              🛠️ Servicios
+            </button>
+          </li>
         </ul>
 
         <div class="sidebar-bottom">
@@ -83,7 +92,7 @@
         </div>
 
         <!-- === Vista de Citas === -->
-        <div id="vista-citas" class="section">
+        <div id="vista-citas" class="section active">
           <h2>Citas</h2>
           <div class="table-responsive">
             <table id="tabla-citas" class="table table-bordered">
@@ -98,6 +107,31 @@
                 </tr>
               </thead>
               <tbody id="tabla-citas">
+                <!-- Datos dinámicos -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- === Vista de servicio === -->
+        <div id="vista-servicio" class="section active">
+          <h2>Clientes</h2>
+          <button class="btn btn-primary my-3 btn_nuevo_servicio">
+            👤 Nuevo servicio
+          </button>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Nombre del servicio</th>
+                  <th>precio del servicio</th>
+                  <th>descripcion del servicio</th>
+                  <th>duracion del servicio</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-servicio">
                 <!-- Datos dinámicos -->
               </tbody>
             </table>
