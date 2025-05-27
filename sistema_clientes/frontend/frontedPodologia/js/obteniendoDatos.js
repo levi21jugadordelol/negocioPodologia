@@ -37,6 +37,7 @@ export const infoDatos = async () => {
       alert("❌ Error al enviar al backend: " + respuesta.mensaje);
     } else {
       alert("✅ Cliente enviado exitosamente.");
+      cliente.id = respuesta; // o cliente.idCliente = respuesta;
     }
   } catch (error) {
     alert("❌ Error al crear cliente: " + error.message);

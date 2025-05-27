@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -29,13 +31,25 @@ public class ClienteController {
     private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.cliente.cliente_controllers.ClienteController.class);
 
     @PostMapping("/crear")
-    public ResponseEntity<String> saveCliente(@RequestBody ClienteRequestDto clienteRequestDto){
+    public ResponseEntity<Map<String, Object>> saveCliente(@RequestBody ClienteRequestDto clienteRequestDto) {
+
+        /*Map<String, Object> nos permite enviar:
+         - "mensaje"	"Cliente guardado con éxito"
+         - "idCliente"	clienteEntity.getIdCliente() (por ejemplo 42)
+         */
 
         ClienteEntity clienteEntity = clienteMapper.toClienteEntity(clienteRequestDto);
-
         clienteService.saveCliente(clienteEntity);
-        return  ResponseEntity.status(HttpStatus.CREATED).body("client save");
+
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("mensaje", "Cliente guardado con éxito");
+        response.put("idCliente", clienteEntity.getIdCliente()); // ← incluye el ID
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
 
     @GetMapping("/todas")

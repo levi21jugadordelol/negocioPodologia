@@ -8,6 +8,8 @@ import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleRequestDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
+import com.podologia.sistema_clientes.enume.EstadoCita;
+import com.podologia.sistema_clientes.enume.TipoCita;
 import com.podologia.sistema_clientes.shared.mappers.CitaMapper;
 import com.podologia.sistema_clientes.shared.mappers.DetalleMapper;
 import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionCita;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 @RestController
 
 @RequestMapping("citas")
+@CrossOrigin(origins = "*")
 public class CitaController {
 
     private final ICitaService citaService;
@@ -44,22 +48,27 @@ public class CitaController {
 
         // Mapea de DTO a Entity
         CitaEntity citaEntity = citaMapper.toCitaEntity(citaRequestDto);
-        // 2. Asignar manualmente el cliente basado en clienteId
+
+        // Asignar manualmente el cliente basado en clienteId
         if (citaRequestDto.getClienteId() != null) {
             ClienteEntity cliente = new ClienteEntity();
             cliente.setIdCliente(citaRequestDto.getClienteId());
             citaEntity.setCliente(cliente);
         } else {
-            // Aquí podrías lanzar excepción o devolver error si clienteId es obligatorio
-            return ResponseEntity.badRequest().body("clienteId es obligatorio");
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "clienteId es obligatorio")
+            );
         }
 
-        // 3. Guardar la cita
+        // Guardar la cita
         citaService.saveCita(citaEntity);
 
-        return ResponseEntity.ok().build();
-
+        // Respuesta con JSON válido
+        return ResponseEntity.ok(
+                Map.of("mensaje", "Cita guardada exitosamente")
+        );
     }
+
 
     //crear detalle
 
@@ -123,6 +132,17 @@ public class CitaController {
 
         return ResponseEntity.ok(citaResponse);
     }
+
+    @GetMapping("/tipos")
+    public TipoCita[] obtenerTiposCita() {
+        return TipoCita.values(); // [CONTROL, EVALUACION, URGENCIA]
+    }
+
+    @GetMapping("/estados")
+    public EstadoCita[] obtenerEstadosCita() {
+        return EstadoCita.values(); // [PROGRAMADA, ATENDIDA, CANCELADA]
+    }
+
 
 
     // Editar una cita

@@ -2,13 +2,24 @@ import {
   llenarComboEstadoCita,
   llenarComboTipoCita,
 } from "./conexion/fillComboFromBackend.js";
+import { llenarComboServicio } from "./conexion/fillComboServiceFromBackend.js";
 
 export const addIdToTable = async (idCliente) => {
   const d = document;
   console.log("ID recibido:", idCliente);
+
   const $tableCita = d.querySelector("#tabla-citas tbody");
 
-  $tableCita.innerHTML = "";
+  // 🔒 Verificar si el cliente ya tiene una cita en la tabla
+  //esto hace que tenga varios id de cliente y que no se pisen
+  const idYaExiste = [...$tableCita.querySelectorAll("tr")].some(
+    (fila) => fila.children[1].textContent === idCliente
+  );
+
+  if (idYaExiste) {
+    alert("Este cliente ya tiene una cita pendiente en la tabla.");
+    return;
+  }
 
   // Crear nueva fila
   const fila = d.createElement("tr");
@@ -25,13 +36,13 @@ export const addIdToTable = async (idCliente) => {
   // 👤 Cliente (oculto, pero se enviará)
   const tdClienteVisible = d.createElement("td");
   tdClienteVisible.textContent = idCliente; // Muestra el id en la tabla
+
   fila.appendChild(tdClienteVisible);
 
   // Servicio
   const tdServicio = d.createElement("td");
   const selectServicio = d.createElement("select");
   selectServicio.className = "form-select";
-  selectServicio.innerHTML = `<option disabled selected>Seleccione servicio</option>`; // luego lo llenarás
   tdServicio.appendChild(selectServicio);
   fila.appendChild(tdServicio);
 
@@ -58,6 +69,33 @@ export const addIdToTable = async (idCliente) => {
   tdObs.appendChild(inputObs);
   fila.appendChild(tdObs);
 
+  // Acciones (Guardar, Editar, Eliminar)
+  const tdAcciones = d.createElement("td");
+
+  const btnGuardar = d.createElement("button");
+  btnGuardar.textContent = "Guardar";
+  btnGuardar.className = "btn btn-success btn-sm me-1";
+  btnGuardar.classList.add("btn-guardar-cita");
+  // Aquí puedes agregarle evento click si quieres
+
+  const btnEditar = d.createElement("button");
+  btnEditar.textContent = "Editar";
+  btnEditar.className = "btn btn-warning btn-sm me-1";
+  btnEditar.classList.add("btn-editar-cita");
+
+  const btnEliminar = d.createElement("button");
+  btnEliminar.textContent = "Eliminar";
+  btnEliminar.className = "btn btn-danger btn-sm";
+  btnEliminar.classList.add("btn-eliminar-cita");
+
+  // Agrega los botones a la celda
+  tdAcciones.appendChild(btnGuardar);
+  tdAcciones.appendChild(btnEditar);
+  tdAcciones.appendChild(btnEliminar);
+
+  // Añade la celda de acciones a la fila
+  fila.appendChild(tdAcciones);
+
   // Agregar fila a tabla
   $tableCita.appendChild(fila);
 
@@ -70,4 +108,5 @@ export const addIdToTable = async (idCliente) => {
   // Llenar combos dinámicos
   await llenarComboEstadoCita(selectEstado);
   await llenarComboTipoCita(selectTipo);
+  await llenarComboServicio(selectServicio);
 };

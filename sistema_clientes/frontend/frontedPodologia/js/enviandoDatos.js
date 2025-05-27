@@ -7,7 +7,17 @@ export const enviandoDatos = () => {
   tableDatesUser.innerHTML = "";
 
   datosCliente.forEach((cliente) => {
+    console.log(
+      "Cliente id:",
+      cliente.id,
+      "Cliente idCliente:",
+      cliente.idCliente
+    );
     const fila = d.createElement("tr");
+
+    // Aquí asignamos el ID del cliente al data-id de la fila
+    // fila.dataset.id = cliente.id;
+    fila.dataset.id = cliente.idCliente || cliente.id || "";
 
     fila.innerHTML = `
       <td>${cliente.nombre}</td>

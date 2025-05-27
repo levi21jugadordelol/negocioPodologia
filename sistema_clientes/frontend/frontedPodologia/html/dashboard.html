@@ -54,6 +54,24 @@
               🛠️ Servicios
             </button>
           </li>
+          <li>
+            <button
+              type="button"
+              id="btn-productos"
+              class="btn w-100 text-start"
+            >
+              🧴 Productos
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              id="btn-facturas"
+              class="btn w-100 text-start"
+            >
+              🧾 Facturas
+            </button>
+          </li>
         </ul>
 
         <div class="sidebar-bottom">
@@ -92,8 +110,9 @@
         </div>
 
         <!-- === Vista de Citas === -->
-        <div id="vista-citas" class="section active">
+        <div id="vista-citas" class="section">
           <h2>Citas</h2>
+
           <div class="table-responsive">
             <table id="tabla-citas" class="table table-bordered">
               <thead class="table-dark">
@@ -104,6 +123,7 @@
                   <th>Tipo</th>
                   <th>Estado</th>
                   <th>Observaciones</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody id="tabla-citas">
@@ -114,8 +134,8 @@
         </div>
 
         <!-- === Vista de servicio === -->
-        <div id="vista-servicio" class="section active">
-          <h2>Clientes</h2>
+        <div id="vista-servicio" class="section">
+          <h2>Servicios</h2>
           <button class="btn btn-primary my-3 btn_nuevo_servicio">
             👤 Nuevo servicio
           </button>
@@ -139,7 +159,7 @@
         </div>
       </section>
 
-      <!-- === VENTANA MODAL === -->
+      <!-- === VENTANA MODAL cliente=== -->
       <div id="modal" class="modal-overlay translate">
         <form
           id="form_cliente"
@@ -171,6 +191,60 @@
           <div class="mb-3">
             <label for="modal_dni" class="form-label">DNI:</label>
             <input id="modal_dni" type="text" class="form-control" />
+          </div>
+
+          <div class="mb-3 text-center">
+            <button type="button" class="btn btn-primary enviar">
+              Guardar
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-danger close position-absolute top-0 end-0 m-2"
+          >
+            ✖
+          </button>
+        </form>
+      </div>
+
+      <!-- === VENTANA MODAL servicio=== -->
+      <div id="modal_servicio" class="modal-overlay_service translate">
+        <form
+          id="form_servicio"
+          class="modal-content form-control w-75"
+          data-id=""
+        >
+          <h1 class="text-center">Creando Registro</h1>
+
+          <div class="mb-3">
+            <label for="modal_nombreServicio" class="form-label"
+              >Nombre del servicio:</label
+            >
+            <input id="modal_nombreServicio" type="text" class="form-control" />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_precio" class="form-label">precio:</label>
+            <input id="modal_precio" type="number" class="form-control" />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_descripcion" class="form-label"
+              >descripcion:</label
+            >
+            <input id="modal_descripcion" type="text" class="form-control" />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_duracion" class="form-label">duracion:</label>
+            <input
+              id="modal_duracion"
+              type="number"
+              min="1"
+              class="form-control"
+              placeholder="Duración en minutos"
+            />
           </div>
 
           <div class="mb-3 text-center">
