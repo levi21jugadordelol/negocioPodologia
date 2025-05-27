@@ -81,7 +81,7 @@
         </div>
       </aside>
 
-      <!-- === CONTENIDO PRINCIPAL === -->
+      <!-- === CONTENIDO VISIBLE PRINCIPAL === -->
       <section class="main flex-grow-1 p-4 overflow-auto">
         <!-- === Vista de Clientes === -->
         <div id="vista-clientes" class="section active">
@@ -139,7 +139,6 @@
           <button class="btn btn-primary my-3 btn_nuevo_servicio">
             👤 Nuevo servicio
           </button>
-
           <div class="table-responsive">
             <table class="table table-bordered">
               <thead class="table-dark">
@@ -152,6 +151,30 @@
                 </tr>
               </thead>
               <tbody id="tabla-servicio">
+                <!-- Datos dinámicos -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- === Vista de Productos === -->
+        <div id="vista-productos" class="section">
+          <h2>Productos</h2>
+          <button class="btn btn-primary my-3 btn_nuevo_producto">
+            🧴 Nuevo Producto
+          </button>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Nombre del producto</th>
+                  <th>Stock</th>
+                  <th>Tipo de producto</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-productos">
                 <!-- Datos dinámicos -->
               </tbody>
             </table>
@@ -245,6 +268,54 @@
               class="form-control"
               placeholder="Duración en minutos"
             />
+          </div>
+
+          <div class="mb-3 text-center">
+            <button type="button" class="btn btn-primary enviar">
+              Guardar
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-danger close position-absolute top-0 end-0 m-2"
+          >
+            ✖
+          </button>
+        </form>
+      </div>
+
+      <!-- === VENTANA MODAL producto === -->
+      <div id="modal_producto" class="modal-overlay_product translate">
+        <form
+          id="form_producto"
+          class="modal-content form-control w-75"
+          data-id=""
+        >
+          <h1 class="text-center">Creando Producto</h1>
+
+          <div class="mb-3">
+            <label for="modal_nombreProducto" class="form-label"
+              >Nombre del producto:</label
+            >
+            <input id="modal_nombreProducto" type="text" class="form-control" />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_stock" class="form-label">Stock:</label>
+            <input
+              id="modal_stock"
+              type="number"
+              min="0"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_tipoProducto" class="form-label"
+              >Tipo de producto:</label
+            >
+            <input id="modal_tipoProducto" type="text" class="form-control" />
           </div>
 
           <div class="mb-3 text-center">

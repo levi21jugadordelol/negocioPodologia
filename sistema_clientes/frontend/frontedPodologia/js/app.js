@@ -6,6 +6,8 @@ import { tableCita } from "./windowForCite.js";
 import { tableClient } from "./windowForClient.js";
 import { invocateDivServicio } from "./windowToServicio.js";
 import { infoCita } from "./saveDate.js";
+import { openWindowProduct } from "./openWindowProduct.js";
+import { openModalProducto } from "./openModalProducto.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   crearModalNuevoCliente(
@@ -25,4 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
     ".enviar"
   );
   infoCita(".btn-guardar-cita");
+  openWindowProduct("#btn-productos", "#vista-productos");
+  openModalProducto(
+    ".btn_nuevo_producto",
+    "#modal_producto",
+    ".close",
+    ".enviar"
+  );
 });
