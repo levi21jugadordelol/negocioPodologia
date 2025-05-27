@@ -119,6 +119,16 @@ public class CitaController {
         return ResponseEntity.ok(citaDto);
     }
 
+    //GET /clientes?estado=programada
+    @GetMapping("/clientes")
+    public ResponseEntity<List<CitaDto>> listaClienteProgramadas(@RequestParam EstadoCita estado) {
+        List<CitaDto> citas = citaService.getListPendiente(estado);
+        // 🔍 LOG PARA VERIFICAR LO QUE SE TRAE
+        citas.forEach(cita -> log.info("CitaDTO: {}", cita));
+
+        return ResponseEntity.ok(citas); // Si está vacía, devuelve 200 con []
+    }
+
 
     // Buscar citas por cliente
     @GetMapping("/cliente/{clienteId}")
@@ -159,6 +169,8 @@ public class CitaController {
 
         return ResponseEntity.ok("Cita editada");
     }
+
+
 
     // Eliminar una cita
     @DeleteMapping("/eliminar/{idCita}")

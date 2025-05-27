@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class CitaRequestDto {
     private Long clienteId;
     private String tipoCita;

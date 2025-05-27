@@ -112,7 +112,9 @@
         <!-- === Vista de Citas === -->
         <div id="vista-citas" class="section">
           <h2>Citas</h2>
-
+          <button class="btn btn-primary my-3 btn_verPendientes">
+            👤 lista pendientes
+          </button>
           <div class="table-responsive">
             <table id="tabla-citas" class="table table-bordered">
               <thead class="table-dark">
@@ -175,6 +177,30 @@
                 </tr>
               </thead>
               <tbody id="tabla-productos">
+                <!-- Datos dinámicos -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- === Vista de clientes pendientes === -->
+        <div id="vista-clientes-pendientes" class="section">
+          <h2>Citas Programadas</h2>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Fecha</th>
+                  <th>Cliente</th>
+                  <th>Servicio</th>
+                  <th>Tipo</th>
+                  <th>Observaciones</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-citas-programadas">
                 <!-- Datos dinámicos -->
               </tbody>
             </table>

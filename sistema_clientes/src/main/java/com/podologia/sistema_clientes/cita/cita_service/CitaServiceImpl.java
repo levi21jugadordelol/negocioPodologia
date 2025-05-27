@@ -1,6 +1,7 @@
 package com.podologia.sistema_clientes.cita.cita_service;
 
 import com.podologia.sistema_clientes.cita.ICitaRepo;
+import com.podologia.sistema_clientes.cita.cita_dtos.CitaDto;
 import com.podologia.sistema_clientes.cita.cita_dtos.CitaRequestDto;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.cliente.IClienteRepo;
@@ -8,6 +9,7 @@ import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.IDetalleRepo;
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleRequestDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
+import com.podologia.sistema_clientes.enume.EstadoCita;
 import com.podologia.sistema_clientes.producto.IProductoRepo;
 import com.podologia.sistema_clientes.producto.producto_entity.ProductoEntity;
 import com.podologia.sistema_clientes.productoUtilizado.productoUtilizado_entity.ProductUtilizadoEntity;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -198,6 +201,19 @@ public class CitaServiceImpl implements ICitaService {
             throw new EntidadNoEncontradaException("No se encontraron citas para el cliente con ID: " + clienteId);
         }
         return citas;
+    }
+
+    @Override
+    public List<CitaDto> getListPendiente(EstadoCita estadoCita) {
+        List<CitaEntity> listaPendiente = citaRepo.getListPendiente(estadoCita);
+        if(listaPendiente.isEmpty()){
+            log.warn("no hay nada en la lista: {}", listaPendiente.size());
+            throw new EntidadNoEncontradaException("No se encontraron citas con estado: " + estadoCita);
+
+        }
+        return listaPendiente.stream()
+                .map(citaMapper::toCitaDto) // Aquí se usa el mapper
+                .collect(Collectors.toList());
     }
 
 }

@@ -8,6 +8,7 @@ import { invocateDivServicio } from "./windowToServicio.js";
 import { infoCita } from "./saveDate.js";
 import { openWindowProduct } from "./openWindowProduct.js";
 import { openModalProducto } from "./openModalProducto.js";
+import { openTablePending } from "./cliente_pendientes/openTablePending.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   crearModalNuevoCliente(
@@ -34,4 +35,5 @@ document.addEventListener("DOMContentLoaded", () => {
     ".close",
     ".enviar"
   );
+  openTablePending(".btn_verPendientes", "#vista-clientes-pendientes");
 });
