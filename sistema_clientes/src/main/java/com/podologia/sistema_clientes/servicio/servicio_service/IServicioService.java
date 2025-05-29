@@ -15,6 +15,7 @@ public interface IServicioService {
 
     Optional<ServicioEntity> buscarNombre(String nombre_service);
 
+    Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita);
 
 
 }

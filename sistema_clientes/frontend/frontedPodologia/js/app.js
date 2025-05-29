@@ -9,6 +9,7 @@ import { infoCita } from "./saveDate.js";
 import { openWindowProduct } from "./openWindowProduct.js";
 import { openModalProducto } from "./openModalProducto.js";
 import { openTablePending } from "./cliente_pendientes/openTablePending.js";
+import { openModalDetailsService } from "./cliente_pendientes/openModalDetailsService.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   crearModalNuevoCliente(
@@ -36,4 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ".enviar"
   );
   openTablePending(".btn_verPendientes", "#vista-clientes-pendientes");
+  openModalDetailsService(
+    ".click_finalizar",
+    "#modal_detalle",
+    ".close",
+    ".enviar"
+  );
 });

@@ -358,6 +358,97 @@
           </button>
         </form>
       </div>
+
+      <!-- === VENTANA MODAL DETALLE CITA === -->
+      <div id="modal_detalle" class="modal-overlay_product translate">
+        <form
+          id="form_detalle"
+          class="modal-content form-control w-75"
+          data-id=""
+        >
+          <h1 class="text-center">Agregar Detalle de Cita</h1>
+
+          <!-- SERVICIO ID -->
+          <div class="mb-3">
+            <label class="form-label">Servicio:</label>
+            <input
+              type="text"
+              id="modal_servicio_nombre"
+              class="form-control"
+              readonly
+            />
+            <!-- Campo oculto que contiene el ID real que se enviará -->
+            <input type="hidden" id="modal_servicio_id" />
+          </div>
+
+          <!-- DURACIÓN TOTAL -->
+          <div class="mb-3">
+            <label for="modal_duracion" class="form-label"
+              >Duración Total (minutos):</label
+            >
+            <input
+              id="modal_duracion"
+              type="number"
+              min="0"
+              class="form-control"
+            />
+          </div>
+
+          <!-- MOTIVO -->
+          <div class="mb-3">
+            <label for="modal_motivo" class="form-label">Motivo:</label>
+            <textarea id="modal_motivo" class="form-control"></textarea>
+          </div>
+
+          <!-- PRODUCTOS UTILIZADOS -->
+          <div class="mb-3">
+            <label class="form-label">Productos Utilizados:</label>
+            <div id="productos_container">
+              <!-- Una fila de producto utilizado -->
+              <div class="producto_item d-flex mb-2 gap-2">
+                <select class="form-control producto_id">
+                  <option value="">Seleccione producto</option>
+                  <!-- cargar con JS -->
+                </select>
+                <input
+                  type="number"
+                  class="form-control cantidad_utilizada"
+                  min="1"
+                  placeholder="Cantidad"
+                />
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm remove_producto"
+                >
+                  ✖
+                </button>
+              </div>
+            </div>
+            <div class="text-end">
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                id="add_producto"
+              >
+                + Agregar producto
+              </button>
+            </div>
+          </div>
+
+          <!-- BOTONES -->
+          <div class="mb-3 text-center">
+            <button type="button" class="btn btn-primary enviar">
+              Guardar Detalle
+            </button>
+          </div>
+          <button
+            type="button"
+            class="btn btn-danger close position-absolute top-0 end-0 m-2"
+          >
+            ✖
+          </button>
+        </form>
+      </div>
     </main>
 
     <!-- Scripts -->

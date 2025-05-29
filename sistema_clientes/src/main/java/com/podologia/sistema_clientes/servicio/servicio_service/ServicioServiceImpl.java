@@ -3,6 +3,7 @@ package com.podologia.sistema_clientes.servicio.servicio_service;
 
 import com.podologia.sistema_clientes.cita.ICitaRepo;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
+import com.podologia.sistema_clientes.detalleCita.IDetalleRepo;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.servicio.IServicioRepo;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
@@ -27,6 +28,7 @@ public class ServicioServiceImpl implements IServicioService {
     private final IServicioRepo servicioRepo;
     private final ICitaRepo citaRepo;
     private final ValidacionServicio validacionServicio;
+    private final IDetalleRepo detalleRepo;
 
     private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.servicio.servicio_service.ServicioServiceImpl.class);
 
@@ -94,8 +96,17 @@ public class ServicioServiceImpl implements IServicioService {
         return  Optional.of(servicio);
     }
 
+    @Override
+    public Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita) {
+        ServicioEntity servicio = detalleRepo.findUnicoServicioByCitaId(idCita)
+                .orElseThrow(() -> {
+                    log.warn("No se encontró servicio para la cita con ID: {}", idCita);
+                    return new EntidadNoEncontradaException("No se encontró servicio para la cita con ID " + idCita);
+                });
 
-
+        log.info("Servicio encontrado para la cita con ID: {}", idCita);
+        return Optional.of(servicio);
+    }
 
 
 }

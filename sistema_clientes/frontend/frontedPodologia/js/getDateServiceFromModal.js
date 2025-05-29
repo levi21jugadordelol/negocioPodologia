@@ -47,7 +47,7 @@ export const infoDatosService = async () => {
     if (respuestaService.error) {
       alert("❌ Error al enviar al backend: " + respuestaService.mensaje);
     } else {
-      alert("✅ Cliente enviado exitosamente.");
+      alert("✅ servicio enviado exitosamente.");
     }
   } catch (e) {
     alert("❌ Error al crear cliente: " + e.message);

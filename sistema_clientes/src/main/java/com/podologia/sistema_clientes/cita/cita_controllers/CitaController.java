@@ -10,6 +10,7 @@ import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleRequestDto
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.enume.EstadoCita;
 import com.podologia.sistema_clientes.enume.TipoCita;
+import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import com.podologia.sistema_clientes.shared.mappers.CitaMapper;
 import com.podologia.sistema_clientes.shared.mappers.DetalleMapper;
 import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionCita;
@@ -177,6 +178,17 @@ public class CitaController {
     public ResponseEntity<String> eliminarCita(@PathVariable Long idCita) {
         citaService.deleteCita(idCita);
         return ResponseEntity.noContent().build();
+    }
+
+
+    //endpint test para que cita obtenga sus servicios
+    @GetMapping("/{id}/servicio")
+    public ResponseEntity <ServicioEntity> getServicioDePrimeraCita(@PathVariable Long id) {
+        Optional<ServicioEntity> servicioOptional = citaService.obtenerServicioPorIdCita(id);
+
+        return servicioOptional
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 

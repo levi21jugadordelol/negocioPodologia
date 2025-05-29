@@ -6,6 +6,7 @@ import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.enume.EstadoCita;
+import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,6 @@ public interface ICitaService {
    void editCita(Long id_cita, CitaRequestDto citaRequestDto);
    List<CitaEntity> buscarCitasPorClienteId(Long clienteId);
    List<CitaDto> getListPendiente(EstadoCita estadoCita);
-
+    Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita);
 
 }

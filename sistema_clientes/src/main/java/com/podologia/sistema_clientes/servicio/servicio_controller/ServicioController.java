@@ -99,5 +99,23 @@ public class ServicioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
+
+    @GetMapping("/buscarPorIdCita/{idCita}")
+    public ResponseEntity<?> buscarServicioPorIdCita(@PathVariable Long idCita) {
+        try {
+            ServicioEntity servicio = servicioService.obtenerServicioPorIdCita(idCita)
+                    .orElse(null);
+
+            if (servicio == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró un servicio para la cita con ID: " + idCita);
+            }
+
+            ServicioDto servicioDto = servicioMapper.toServicioDto(servicio);
+            return ResponseEntity.ok(servicioDto);
+        } catch (EntidadNoEncontradaException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
 }
 

@@ -216,4 +216,17 @@ public class CitaServiceImpl implements ICitaService {
                 .collect(Collectors.toList());
     }
 
+   @Override
+    public Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita) {
+        Optional<ServicioEntity> servicio = detalleRepo.findUnicoServicioByCitaId(idCita);
+
+        if (servicio.isPresent()) {
+            System.out.println(">>> SERVICIO CARGADO: " + servicio.get().getNombreServicio());
+        } else {
+            System.out.println(">>> NO SE ENCONTRÓ SERVICIO PARA CITA ID: " + idCita);
+        }
+
+        return servicio;
+    }
+
 }

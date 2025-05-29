@@ -33,8 +33,8 @@ public class DetalleEntity {
     @JoinColumn(name = "servicio_id",nullable = false)
    // @ToString.Exclude
    // @JsonBackReference
-   // @JsonBackReference("servicio-detalle")
-    @JsonIgnore
+    @JsonBackReference("servicio-detalle")
+    //@JsonIgnore
     private ServicioEntity servicio;
 
     private double duracionTotal;
