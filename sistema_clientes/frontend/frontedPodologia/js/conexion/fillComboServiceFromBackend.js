@@ -7,7 +7,14 @@ export const llenarComboServicio = async (select) => {
 
     const servicios = await response.json();
 
-    select.innerHTML = "<option disabled selected>Seleccione servicio</option>";
+    select.innerHTML = ""; // Limpia primero
+
+    const opcionDefault = document.createElement("option");
+    opcionDefault.value = "";
+    opcionDefault.disabled = true;
+    opcionDefault.selected = true;
+    opcionDefault.textContent = "Seleccione servicio";
+    select.appendChild(opcionDefault);
 
     servicios.forEach((servicio) => {
       const option = document.createElement("option");

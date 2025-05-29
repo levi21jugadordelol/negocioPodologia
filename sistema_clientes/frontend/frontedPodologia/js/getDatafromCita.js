@@ -29,6 +29,7 @@ export const getDataFromCita = async () => {
   try {
     const cita = new Cita(
       idCliente,
+      parseInt(selectServicio?.value || "0"), // ✅ Aquí va el id del servicio
       selectTipo?.value || "",
       inputFecha?.value || "",
       selectEstado?.value || "",
@@ -37,9 +38,11 @@ export const getDataFromCita = async () => {
     );
 
     datosCita.push(cita);
-    console.log("✅ Cita creada correctamente:", cita);
+    console.log("✅ Cita formada correctamente:", cita);
 
     const respuesta = await enviarCitaApi(cita.toBackendJson());
+
+    console.log("cita creada correctamente: ", respuesta.mensaje);
   } catch (e) {
     alert("❌ Error al crear cita: " + e.message);
     console.error("Detalle del error:", e);

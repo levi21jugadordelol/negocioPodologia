@@ -21,6 +21,8 @@ export const addIdToTable = async (idCliente) => {
     return;
   }
 
+  console.log("📋 Agregando fila para cliente:", idCliente);
+
   // Crear nueva fila
   const fila = d.createElement("tr");
 
@@ -45,6 +47,7 @@ export const addIdToTable = async (idCliente) => {
   selectServicio.className = "form-select";
   tdServicio.appendChild(selectServicio);
   fila.appendChild(tdServicio);
+  console.log("🛠️ Combo de Servicio creado (vacío aún).");
 
   // Tipo de cita (llenado dinámico)
   const tdTipo = d.createElement("td");
