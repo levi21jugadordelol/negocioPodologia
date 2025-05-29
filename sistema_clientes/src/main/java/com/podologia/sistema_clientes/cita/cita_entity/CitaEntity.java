@@ -8,6 +8,7 @@ import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.enume.EstadoCita;
 import com.podologia.sistema_clientes.enume.TipoCita;
 import com.podologia.sistema_clientes.factura.factura_entity.FacturaEntity;
+import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,11 @@ public class CitaEntity {
     @JoinColumn(name = "cliente_id")
     //@JsonBackReference("cliente-cita") //en el lado hijo (propiedad que apunta al padre).
     private ClienteEntity cliente;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "servicio_id")
+    private ServicioEntity servicio;
+
 
     @Enumerated(EnumType.STRING)
     private TipoCita tipoCita;

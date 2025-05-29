@@ -3,6 +3,7 @@ package com.podologia.sistema_clientes.shared.mappers;
 import com.podologia.sistema_clientes.cita.cita_dtos.CitaDto;
 import com.podologia.sistema_clientes.cita.cita_dtos.CitaRequestDto;
 import com.podologia.sistema_clientes.cita.cita_entity.CitaEntity;
+import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -16,6 +17,7 @@ public interface CitaMapper {
   @Mappings({
           @Mapping(source = "cliente.nombreCliente", target = "nombreCliente"),
           @Mapping(source = "factura.idFactura", target = "facturaId"),
+        //  @Mapping(source = "servicio.idServicio", target = "servicioId"),
           @Mapping(source = "listaDetalle", target = "detalles")
   })
     CitaDto toCitaDto(CitaEntity citaEntity);
@@ -24,12 +26,20 @@ public interface CitaMapper {
 
   // CitaRequestDto → CitaEntity (ingreso)
   @Mappings({
-          @Mapping(target = "idCita", ignore = true), // lo genera la base de datos
-          @Mapping(target = "cliente", ignore = true), // se setea manualmente en el servicio
+          @Mapping(target = "idCita", ignore = true),
+          @Mapping(target = "cliente", ignore = true),
           @Mapping(target = "factura", ignore = true),
-          @Mapping(target = "listaDetalle", source = "detalles")
+          @Mapping(target = "listaDetalle", source = "detalles"),
+          @Mapping(target = "servicio", expression = "java(mapServicio(requestDto.getServicioId()))")
+
   })
     CitaEntity toCitaEntity(CitaRequestDto requestDto);
+  default ServicioEntity mapServicio(Long id) {
+    if (id == null) return null;
+    ServicioEntity servicio = new ServicioEntity();
+    servicio.setIdServicio(id);
+    return servicio;
+  }
 
   // NUEVO método para actualizar entidad existente con datos del DTO
   @Mappings({

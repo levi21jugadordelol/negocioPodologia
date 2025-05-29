@@ -16,6 +16,7 @@ import java.util.List;
 @ToString
 public class CitaRequestDto {
     private Long clienteId;
+    private Long servicioId;
     private String tipoCita;
     private LocalDateTime fechaCita;
     private String estadoCita;
