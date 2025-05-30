@@ -24,7 +24,14 @@ public interface ICitaRepo extends JpaRepository<CitaEntity,Long> {
     Optional<ClienteEntity> findClienteByCitaId(@Param("idCita") Long idCita);
 
     //obtener todos las citas en estado pendiente
-    @Query("SELECT c FROM CitaEntity c WHERE c.estadoCita = :estadoCita")
-    List<CitaEntity> getListPendiente(@Param("estadoCita") EstadoCita estadoCita);
+  /*  @Query("SELECT c FROM CitaEntity c WHERE c.estadoCita = :estadoCita")
+    List<CitaEntity> getListPendiente(@Param("estadoCita") EstadoCita estadoCita);*/
+
+    @Query("""
+                     SELECT DISTINCT c FROM CitaEntity c
+                     JOIN FETCH c.servicio s
+                     WHERE c.estadoCita = :estado
+    """)
+    List<CitaEntity> getListPendiente(@Param("estado") EstadoCita estado);
 
 }

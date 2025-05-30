@@ -2,6 +2,7 @@ package com.podologia.sistema_clientes.cita.cita_dtos;
 
 
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleDto;
+import com.podologia.sistema_clientes.servicio.servicio_dtos.ServicioDto;
 import jakarta.persistence.Entity;
 import lombok.*;
 
@@ -29,5 +30,7 @@ public class CitaDto {
 
     private List<DetalleDto> detalles;
 
+    // ✅ Agregado:
+    private ServicioDto servicioDto;
 
 }

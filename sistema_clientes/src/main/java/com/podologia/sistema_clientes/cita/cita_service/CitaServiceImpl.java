@@ -211,6 +211,12 @@ public class CitaServiceImpl implements ICitaService {
             throw new EntidadNoEncontradaException("No se encontraron citas con estado: " + estadoCita);
 
         }
+
+
+        // ✅ AQUI AGREGA ESTA LINEA DE DEBUG:
+        log.info(">>> Cita servicio: {}", listaPendiente.get(0).getServicio());
+
+
         return listaPendiente.stream()
                 .map(citaMapper::toCitaDto) // Aquí se usa el mapper
                 .collect(Collectors.toList());

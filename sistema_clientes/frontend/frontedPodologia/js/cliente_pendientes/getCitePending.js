@@ -2,14 +2,18 @@ import { BASE_URL } from "../config/configuracion.js";
 
 const d = document;
 
+// Obtener las citas programadas
 export const getCitePending = async () => {
   try {
-    console.log("🔄 Iniciando solicitud de citas programadas...");
+    console.log("🔄 Solicitando citas programadas...");
+
     const response = await fetch(
       `${BASE_URL}/citas/clientes?estado=PROGRAMADA`
     );
-    const estado = await response.json();
-    console.log("✅ Respuesta recibida:", estado);
+    const citas = await response.json();
+
+    console.log(`✅ ${citas.length} citas recibidas`);
+    console.log("✅ Respuesta recibida:", citas);
 
     const $contenidoTablaPendiente = document.getElementById(
       "tabla-citas-programadas"
@@ -17,73 +21,30 @@ export const getCitePending = async () => {
     $contenidoTablaPendiente.innerHTML = "";
     console.log("🧹 Tabla limpiada, procesando citas...");
 
-    for (const cita of estado) {
+    for (const cita of citas) {
       const row = document.createElement("tr");
 
-      // Celda: ID
-      const tdId = document.createElement("td");
-      tdId.textContent = cita.idCita;
-      row.appendChild(tdId);
+      row.appendChild(crearCelda(cita.idCita));
+      row.appendChild(crearCelda(cita.nombreCliente));
+      row.appendChild(crearCelda(cita.tipoCita));
+      row.appendChild(crearCelda(cita.fechaCita));
+      row.appendChild(crearCelda(cita.estadoCita));
+      row.appendChild(crearCelda(cita.observaciones || "-"));
 
-      // Celda: Cliente
-      const tdCliente = document.createElement("td");
-      tdCliente.textContent = cita.nombreCliente;
-      row.appendChild(tdCliente);
-
-      // Celda: Tipo
-      const tdTipo = document.createElement("td");
-      tdTipo.textContent = cita.tipoCita;
-      row.appendChild(tdTipo);
-
-      // Celda: Fecha
-      const tdFecha = document.createElement("td");
-      tdFecha.textContent = cita.fechaCita;
-      row.appendChild(tdFecha);
-
-      // Celda: Estado
-      const tdEstado = document.createElement("td");
-      tdEstado.textContent = cita.estadoCita;
-      row.appendChild(tdEstado);
-
-      // Celda: Observaciones
-      const tdObs = document.createElement("td");
-      tdObs.textContent = cita.observaciones || "-";
-      row.appendChild(tdObs);
-
-      // Obtener servicioId (si no está en cita.servicio)
-      let servicioId;
-      if (cita.servicio && cita.servicio.idServicio) {
-        servicioId = cita.servicio.idServicio;
-        console.log("🧩 Servicio en cita:", servicioId);
-      } else {
-        try {
-          const servicioRes = await fetch(
-            `${BASE_URL}/servicio/buscarPorIdCita/${cita.idCita}`
-          );
-          if (servicioRes.ok) {
-            const servicio = await servicioRes.json();
-            servicioId = servicio.idServicio;
-            console.log("🧩 Servicio recuperado:", servicioId);
-          } else {
-            console.warn(`⚠️ Servicio no encontrado para cita ${cita.idCita}`);
-          }
-        } catch (err) {
-          console.error(
-            `❌ Error al buscar servicio para cita ${cita.idCita}:`,
-            err
-          );
-        }
-      }
-
-      // Celda: Acciones
       const tdAcciones = document.createElement("td");
 
       const btnFinalizar = document.createElement("button");
       btnFinalizar.textContent = "Finalizado";
       btnFinalizar.classList.add("action-button", "click_finalizar", "green");
       btnFinalizar.dataset.idCita = cita.idCita;
-      if (servicioId) {
-        btnFinalizar.dataset.servicioId = servicioId;
+
+      // ✅ Usa el servicio incluido directamente
+      if (cita?.servicioDto?.idServicio) {
+        console.log("🧩 Servicio incluido:", cita.servicioDto.idServicio);
+        btnFinalizar.dataset.servicioId = cita.servicioDto.idServicio;
+        btnFinalizar.dataset.servicioNombre = cita.servicioDto.nombreServicio;
+      } else {
+        console.warn(`⚠️ No se encontró servicio en la cita ${cita.idCita}`);
       }
 
       const btnEliminar = document.createElement("button");
@@ -95,11 +56,18 @@ export const getCitePending = async () => {
       row.appendChild(tdAcciones);
 
       $contenidoTablaPendiente.appendChild(row);
-      console.log("✅ Fila agregada con botones.");
     }
+
+    console.log("✅ Tabla completada");
   } catch (e) {
-    console.error("❌ Error al cargar estados de cita:", e);
+    console.error("❌ Error general en getCitePending:", e);
   }
+};
+
+const crearCelda = (texto) => {
+  const td = document.createElement("td");
+  td.textContent = texto;
+  return td;
 };
 
 /*export const getCitePending = async () => {

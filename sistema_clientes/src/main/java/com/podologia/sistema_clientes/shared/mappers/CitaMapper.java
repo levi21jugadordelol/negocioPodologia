@@ -11,13 +11,15 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper(componentModel = "spring", uses = {DetalleMapper.class})
+@Mapper(componentModel = "spring", uses = {DetalleMapper.class, ServicioMapper.class})
+
 public interface CitaMapper {
 
   @Mappings({
           @Mapping(source = "cliente.nombreCliente", target = "nombreCliente"),
           @Mapping(source = "factura.idFactura", target = "facturaId"),
         //  @Mapping(source = "servicio.idServicio", target = "servicioId"),
+          @Mapping(source = "servicio", target = "servicioDto"),
           @Mapping(source = "listaDetalle", target = "detalles")
   })
     CitaDto toCitaDto(CitaEntity citaEntity);

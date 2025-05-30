@@ -11,9 +11,7 @@ import org.mapstruct.Mappings;
 public interface ServicioMapper {
 
 
-    @Mappings({
-            @Mapping(source = "listDetalle", target = "listaDetalle") // entidad → dto
-    })
+    @Mapping(target = "listaDetalle", ignore = true)
     ServicioDto toServicioDto(ServicioEntity servicioEntity);
 
     // DTO request → Entidad (creación o actualización)
