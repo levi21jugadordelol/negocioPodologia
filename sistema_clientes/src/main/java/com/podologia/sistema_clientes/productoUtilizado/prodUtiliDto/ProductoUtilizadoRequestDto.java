@@ -9,5 +9,5 @@ import lombok.*;
 @Builder
 public class ProductoUtilizadoRequestDto {
     private Long productoId;
-    private int cantidadUtilizada;
+   // private int cantidadUtilizada;
 }

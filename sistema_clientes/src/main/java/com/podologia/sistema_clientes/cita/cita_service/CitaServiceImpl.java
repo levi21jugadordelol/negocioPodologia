@@ -27,9 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,41 +68,34 @@ public class CitaServiceImpl implements ICitaService {
     @Transactional
     @Override
     public DetalleEntity saveDetalle(Long idCita, DetalleEntity detalle) {
-        validacionCita.existIdCiteToSaveDetail(idCita,detalle);
+        validacionCita.existIdCiteToSaveDetail(idCita, detalle);
 
+        CitaEntity cita = citaRepo.findById(idCita).get();
+        ServicioEntity servicio = servicioRepo.findById(detalle.getServicio().getIdServicio()).get();
 
-        // Obtener las entidades para asignarlas (ya sabemos que existen por la validación)
-        CitaEntity cita = citaRepo.findById(idCita).get(); // no fallará, ya fue validado
-        ServicioEntity servicio = servicioRepo.findById(detalle.getServicio().getIdServicio()).get(); // tampoco fallará
-
-
-        // Asignamos
         detalle.setCita(cita);
         detalle.setServicio(servicio);
 
-        // Asociar los productos utilizados con el detalle
         if (detalle.getListProductUtilziado() != null) {
+            Set<ProductUtilizadoEntity> nuevosProductos = new HashSet<>();
+
             for (ProductUtilizadoEntity p : detalle.getListProductUtilziado()) {
-                // Protección ante nulos
                 if (p.getProductoEntity() == null || p.getProductoEntity().getIdProducto() == null) {
                     throw new ValidacionException("Cada producto utilizado debe tener un producto con ID válido.");
                 }
 
-                Long productoId = p.getProductoEntity().getIdProducto();
+                ProductoEntity producto = productoRepo.findById(p.getProductoEntity().getIdProducto())
+                        .orElseThrow(() -> new EntidadNoEncontradaException("Producto con ID " + p.getProductoEntity().getIdProducto() + " no existe."));
 
-                // Reemplazamos el objeto ProductoEntity parcial por el real desde BD
-                ProductoEntity producto = productoRepo.findById(productoId)
-                        .orElseThrow(() -> new EntidadNoEncontradaException("Producto con ID " + productoId + " no existe."));
+                p.setProductoEntity(producto);
 
-                p.setProductoEntity(producto);     // Relación directa
-                p.setDetalleEntity(detalle);       // Relación inversa
+                detalle.addProductUtilizado(p); // ✅ AQUÍ SE INCLUYE en la colección del detalle
             }
         }
 
-        // Guardar
         return detalleRepo.save(detalle);
-
     }
+
 
     @Transactional
     @Override

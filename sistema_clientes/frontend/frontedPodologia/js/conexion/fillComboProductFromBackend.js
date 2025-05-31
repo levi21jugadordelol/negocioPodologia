@@ -1,6 +1,6 @@
 import { BASE_URL } from "../config/configuracion.js";
 
-export const fillComboProductFromBackend = async (select) => {
+export const fillComboProductFromBackend = async (selected) => {
   try {
     const response = await fetch(`${BASE_URL}/producto/listar`);
 
@@ -8,13 +8,14 @@ export const fillComboProductFromBackend = async (select) => {
 
     const productos = await response.json();
 
-    select.innerHTML = "<option disabled selected>Seleccione servicio</option>";
+    selected.innerHTML =
+      "<option disabled selected>Seleccione producto</option>";
 
     productos.forEach((producto) => {
       const option = document.createElement("option");
       option.value = producto.idProducto;
       option.textContent = producto.nombreProducto;
-      select.appendChild(option);
+      selected.appendChild(option);
     });
   } catch (error) {
     console.error("Error al cargar productos:", error);

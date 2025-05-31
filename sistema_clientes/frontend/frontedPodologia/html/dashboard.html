@@ -191,8 +191,9 @@
             <table class="table table-bordered">
               <thead class="table-dark">
                 <tr>
-                  <th>ID Servicio</th>
+                  <th>ID cita</th>
                   <th>Cliente</th>
+                  <th>servicio id</th>
                   <th>Tipo</th>
                   <th>Fecha</th>
                   <th>Estado</th>
@@ -291,7 +292,6 @@
             <input
               id="modal_duracion"
               type="number"
-              min="1"
               class="form-control"
               placeholder="Duración en minutos"
             />
@@ -384,13 +384,12 @@
 
           <!-- DURACIÓN TOTAL -->
           <div class="mb-3">
-            <label for="modal_duracion" class="form-label"
+            <label for="modal_duracion_detalle" class="form-label"
               >Duración Total (minutos):</label
             >
             <input
-              id="modal_duracion"
+              id="modal_duracion_detalle"
               type="number"
-              min="0"
               class="form-control"
             />
           </div>
@@ -408,21 +407,8 @@
               <!-- Una fila de producto utilizado -->
               <div class="producto_item d-flex mb-2 gap-2">
                 <select class="form-control producto_id">
-                  <option value="">Seleccione producto</option>
                   <!-- cargar con JS -->
                 </select>
-                <input
-                  type="number"
-                  class="form-control cantidad_utilizada"
-                  min="1"
-                  placeholder="Cantidad"
-                />
-                <button
-                  type="button"
-                  class="btn btn-danger btn-sm remove_producto"
-                >
-                  ✖
-                </button>
               </div>
             </div>
             <div class="text-end">
@@ -438,7 +424,7 @@
 
           <!-- BOTONES -->
           <div class="mb-3 text-center">
-            <button type="button" class="btn btn-primary enviar">
+            <button type="submit" class="btn btn-primary enviar">
               Guardar Detalle
             </button>
           </div>

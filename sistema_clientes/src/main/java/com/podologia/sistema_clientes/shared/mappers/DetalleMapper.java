@@ -17,7 +17,8 @@ public interface DetalleMapper {
    @Mappings({
            @Mapping(source = "servicio.idServicio", target="servicioId"),
            @Mapping(source = "servicio.nombreServicio", target="nombreServicio"),
-           @Mapping(source = "listProductUtilziado", target = "productosUtilizados")
+           @Mapping(source = "listProductUtilziado", target = "productosUtilizados"),
+           @Mapping(source = "duracionTotal", target = "duracionTotal") // ✅ ESTA ES LA LÍNEA CLAVE QUE FALTA
    })
    DetalleDto toDetalleDto(DetalleEntity detalleEntity);
 

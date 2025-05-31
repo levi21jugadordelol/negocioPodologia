@@ -86,7 +86,9 @@ public class CitaController {
         // Mapear entidad guardada a DTO de respuesta
         DetalleDto detalleDto = detalleMapper.toDetalleDto(detalleGuardado);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(detalleGuardado);
+       // return ResponseEntity.status(HttpStatus.CREATED).body(detalleGuardado);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(detalleDto);
 
     }
 

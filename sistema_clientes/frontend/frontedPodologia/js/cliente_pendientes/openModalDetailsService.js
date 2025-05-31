@@ -1,5 +1,5 @@
 import { postDataDetails } from "./postDataDetails.js";
-
+import { comboProductBeforeEvent } from "./ComboProductBeforeEvent.js";
 let currentCitaId = null;
 
 const d = document;
@@ -30,6 +30,7 @@ export const openModalDetailsService = (
 
       d.getElementById("modal_servicio_id").value = servicioId;
       d.getElementById("modal_servicio_nombre").value = servicioNombre;
+      comboProductBeforeEvent();
 
       console.log("Servicio cargado:", servicioId, servicioNombre);
     }
@@ -39,8 +40,6 @@ export const openModalDetailsService = (
     }
     if (e.target.matches(btn_save_details)) {
       e.preventDefault();
-      console.log("enviando datos producto");
-      console.log("Enviando detalle para cita:", currentCitaId);
       postDataDetails(currentCitaId);
     }
   });

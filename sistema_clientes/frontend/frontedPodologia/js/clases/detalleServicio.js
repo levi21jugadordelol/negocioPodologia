@@ -5,11 +5,23 @@ export class DetalleServicio {
     this._validarCadena(motivo, "motivo");
     this._validarArray(productosUtilizados, "productos utilizados");
 
+    // Validar que cada producto tenga al menos un productoId válido
+    productosUtilizados.forEach((producto, i) => {
+      if (
+        !producto ||
+        typeof producto !== "object" ||
+        typeof producto.productoId !== "number" ||
+        isNaN(producto.productoId) ||
+        producto.productoId <= 0
+      ) {
+        throw new Error(`Producto en posición ${i} no es válido`);
+      }
+    });
+
     this.servicioId = servicioId;
     this.duracionTotal = duracionTotal;
     this.motivo = motivo;
-    this.productosUtilizados = productosUtilizados; // array de objetos con productoId y cantidad
-
+    this.productosUtilizados = productosUtilizados; // [{ productoId }]
     this.extraData = new Map(); // extensible
   }
 
@@ -20,16 +32,13 @@ export class DetalleServicio {
       motivo: this.motivo,
       productosUtilizados: this.productosUtilizados.map((p) => ({
         productoId: p.productoId,
-        cantidadUtilizada: p.cantidadUtilizada,
       })),
     };
   }
 
-  agregarProducto(productoId, cantidadUtilizada) {
+  agregarProducto(productoId) {
     this._validarNumero(productoId, "ID del producto");
-    this._validarNumero(cantidadUtilizada, "cantidad utilizada");
-
-    this.productosUtilizados.push({ productoId, cantidadUtilizada });
+    this.productosUtilizados.push({ productoId });
   }
 
   agregarDatoExtra(key, value) {
