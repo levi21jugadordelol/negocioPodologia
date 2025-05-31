@@ -70,8 +70,11 @@ public class CitaServiceImpl implements ICitaService {
     public DetalleEntity saveDetalle(Long idCita, DetalleEntity detalle) {
         validacionCita.existIdCiteToSaveDetail(idCita, detalle);
 
-        CitaEntity cita = citaRepo.findById(idCita).get();
-        ServicioEntity servicio = servicioRepo.findById(detalle.getServicio().getIdServicio()).get();
+        CitaEntity cita = citaRepo.findById(idCita)
+                .orElseThrow(() -> new EntidadNoEncontradaException("Cita no encontrada con ID: " + idCita));
+
+        ServicioEntity servicio = servicioRepo.findById(detalle.getServicio().getIdServicio())
+                .orElseThrow(() -> new EntidadNoEncontradaException("Servicio no encontrado"));
 
         detalle.setCita(cita);
         detalle.setServicio(servicio);
@@ -89,12 +92,13 @@ public class CitaServiceImpl implements ICitaService {
 
                 p.setProductoEntity(producto);
 
-                detalle.addProductUtilizado(p); // ✅ AQUÍ SE INCLUYE en la colección del detalle
+                detalle.addProductUtilizado(p);
             }
         }
 
         return detalleRepo.save(detalle);
     }
+
 
 
     @Transactional

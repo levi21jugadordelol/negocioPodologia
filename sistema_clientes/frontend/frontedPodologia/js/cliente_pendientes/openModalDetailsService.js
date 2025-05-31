@@ -1,15 +1,17 @@
 import { postDataDetails } from "./postDataDetails.js";
 import { comboProductBeforeEvent } from "./ComboProductBeforeEvent.js";
+import { fillComboProductFromBackend } from "../conexion/fillComboProductFromBackend.js";
 let currentCitaId = null;
 
 const d = document;
+export let productosUtilizados = [];
 export const openModalDetailsService = (
   buton_open_details,
   modal_details,
   close_modal,
   btn_save_details
 ) => {
-  d.addEventListener("click", (e) => {
+  d.addEventListener("click", async (e) => {
     // Abrir modal con ID
     if (e.target.matches(buton_open_details)) {
       //dataset es una propiedad especial de los elementos del DOM que te permite acceder a todos los atributos que empiezan con data- en tu HTML.
@@ -22,6 +24,8 @@ export const openModalDetailsService = (
       $modalDetails.classList.remove("translate");
       // 🟡 Guardar el ID de la cita en variable
       currentCitaId = e.target.dataset.idCita;
+      // Limpiar productos previos
+      productosUtilizados.length = 0;
 
       console.log("Cita activa:", currentCitaId);
       // ⬇️ INYECTAR el ID y nombre del servicio en el modal
@@ -30,6 +34,12 @@ export const openModalDetailsService = (
 
       d.getElementById("modal_servicio_id").value = servicioId;
       d.getElementById("modal_servicio_nombre").value = servicioNombre;
+
+      d.getElementById("lista_productos").innerHTML = "";
+
+      //comboProductBeforeEvent();
+      await fillComboProductFromBackend(d.getElementById("select_producto"));
+
       comboProductBeforeEvent();
 
       console.log("Servicio cargado:", servicioId, servicioNombre);
@@ -40,7 +50,7 @@ export const openModalDetailsService = (
     }
     if (e.target.matches(btn_save_details)) {
       e.preventDefault();
-      postDataDetails(currentCitaId);
+      postDataDetails(currentCitaId, productosUtilizados);
     }
   });
 };

@@ -8,6 +8,8 @@ export const fillComboProductFromBackend = async (selected) => {
 
     const productos = await response.json();
 
+    console.log("selected:", selected);
+
     selected.innerHTML =
       "<option disabled selected>Seleccione producto</option>";
 
