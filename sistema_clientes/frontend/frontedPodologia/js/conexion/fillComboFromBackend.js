@@ -5,11 +5,14 @@ export const llenarComboEstadoCita = async (select) => {
     const response = await fetch(`${BASE_URL}/citas/estados`);
     const estados = await response.json();
 
+    console.log("Estados recibidos del backend:", estados);
     select.innerHTML = "<option disabled selected>Seleccione estado</option>";
+
     estados.forEach((estado) => {
       const option = document.createElement("option");
-      option.value = estado;
-      option.textContent = estado.charAt(0) + estado.slice(1).toLowerCase(); // Capitaliza
+      option.value = estado.codigo;
+      option.textContent =
+        estado.valor.charAt(0) + estado.valor.slice(1).toLowerCase(); // Capitaliza
       select.appendChild(option);
     });
   } catch (error) {

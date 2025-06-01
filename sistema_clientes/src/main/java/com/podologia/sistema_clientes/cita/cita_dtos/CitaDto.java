@@ -20,7 +20,6 @@ public class CitaDto {
     private Long idCita;
     private String nombreCliente;
 
-    private String tipoCita;
     private LocalDateTime fechaCita;
     private String estadoCita;
 

@@ -1,7 +1,4 @@
-import {
-  llenarComboEstadoCita,
-  llenarComboTipoCita,
-} from "./conexion/fillComboFromBackend.js";
+import { llenarComboEstadoCita } from "./conexion/fillComboFromBackend.js";
 import { llenarComboServicio } from "./conexion/fillComboServiceFromBackend.js";
 
 export const addIdToTable = async (idCliente) => {
@@ -48,13 +45,6 @@ export const addIdToTable = async (idCliente) => {
   tdServicio.appendChild(selectServicio);
   fila.appendChild(tdServicio);
   console.log("🛠️ Combo de Servicio creado (vacío aún).");
-
-  // Tipo de cita (llenado dinámico)
-  const tdTipo = d.createElement("td");
-  const selectTipo = d.createElement("select");
-  selectTipo.className = "form-select";
-  tdTipo.appendChild(selectTipo);
-  fila.appendChild(tdTipo);
 
   // Estado (llenado dinámico)
   const tdEstado = d.createElement("td");
@@ -110,6 +100,5 @@ export const addIdToTable = async (idCliente) => {
 
   // Llenar combos dinámicos
   await llenarComboEstadoCita(selectEstado);
-  await llenarComboTipoCita(selectTipo);
   await llenarComboServicio(selectServicio);
 };

@@ -1,12 +1,10 @@
 package com.podologia.sistema_clientes.cita.cita_entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.enume.EstadoCita;
-import com.podologia.sistema_clientes.enume.TipoCita;
 import com.podologia.sistema_clientes.factura.factura_entity.FacturaEntity;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import jakarta.persistence.*;
@@ -38,9 +36,6 @@ public class CitaEntity {
     @JoinColumn(name = "servicio_id")
     private ServicioEntity servicio;
 
-
-    @Enumerated(EnumType.STRING)
-    private TipoCita tipoCita;
 
     private LocalDateTime fechaCita;
 

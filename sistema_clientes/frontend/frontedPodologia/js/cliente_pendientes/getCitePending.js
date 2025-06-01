@@ -27,7 +27,6 @@ export const getCitePending = async () => {
       row.appendChild(crearCelda(cita.idCita));
       row.appendChild(crearCelda(cita.nombreCliente));
       row.appendChild(crearCelda(cita.servicioDto?.idServicio || "-"));
-      row.appendChild(crearCelda(cita.tipoCita));
       row.appendChild(crearCelda(cita.fechaCita));
       row.appendChild(crearCelda(cita.estadoCita));
       row.appendChild(crearCelda(cita.observaciones || "-"));

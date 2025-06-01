@@ -9,13 +9,11 @@ import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_dtos.DetalleRequestDto;
 import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.enume.EstadoCita;
-import com.podologia.sistema_clientes.enume.TipoCita;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import com.podologia.sistema_clientes.shared.mappers.CitaMapper;
 import com.podologia.sistema_clientes.shared.mappers.DetalleMapper;
 import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionCita;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -146,14 +145,15 @@ public class CitaController {
         return ResponseEntity.ok(citaResponse);
     }
 
-    @GetMapping("/tipos")
-    public TipoCita[] obtenerTiposCita() {
-        return TipoCita.values(); // [CONTROL, EVALUACION, URGENCIA]
-    }
 
     @GetMapping("/estados")
-    public EstadoCita[] obtenerEstadosCita() {
-        return EstadoCita.values(); // [PROGRAMADA, ATENDIDA, CANCELADA]
+    public List<Map<String, String>> obtenerEstadosCita() {
+        return Arrays.stream(EstadoCita.values())
+                .map(e -> Map.of(
+                        "codigo", e.name(),
+                        "valor", e.getEstadoCita()
+                ))
+                .collect(Collectors.toList());
     }
 
 

@@ -2,20 +2,17 @@ export class Cita {
   constructor(
     clienteId,
     servicioId,
-    tipoCita,
     fechaCita,
     estadoCita,
     observaciones = "",
     detalles = []
   ) {
     this._validarId(clienteId);
-    this._validarCadena(tipoCita, "Tipo de cita");
     this._validarFecha(fechaCita);
     this._validarCadena(estadoCita, "Estado de cita");
 
     this.clienteId = clienteId;
     this.servicioId = servicioId;
-    this.tipoCita = tipoCita;
     this.fechaCita = this._formatearFechaISO(fechaCita);
     this.estadoCita = estadoCita;
     this.observaciones = observaciones;
@@ -26,7 +23,6 @@ export class Cita {
     return {
       clienteId: this.clienteId,
       servicioId: this.servicioId,
-      tipoCita: this.tipoCita,
       fechaCita: this.fechaCita, // en formato ISO LocalDateTime
       estadoCita: this.estadoCita,
       observaciones: this.observaciones,

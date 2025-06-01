@@ -164,7 +164,7 @@ public class ValidacionCita {
         // Mostrar los datos que vienen en nuevosDatos por consola sin JSON
         log.info("Datos recibidos para actualizar cita:");
         log.info("  Fecha: {}", nuevosDatos.getFechaCita() != null ? nuevosDatos.getFechaCita() : "no se proporcionó");
-        log.info("  Tipo: {}", nuevosDatos.getTipoCita() != null ? nuevosDatos.getTipoCita() : "no se proporcionó");
+
         log.info("  Estado: {}", nuevosDatos.getEstadoCita() != null ? nuevosDatos.getEstadoCita() : "no se proporcionó");
         log.info("  Observaciones: {}", nuevosDatos.getObservaciones() != null ? nuevosDatos.getObservaciones() : "no se proporcionó");
         if (nuevosDatos.getCliente() != null && nuevosDatos.getCliente().getIdCliente() != null) {
@@ -194,9 +194,7 @@ public class ValidacionCita {
         if (nuevosDatos.getFechaCita() != null) {
             existente.setFechaCita(nuevosDatos.getFechaCita());
         }
-        if (nuevosDatos.getTipoCita() != null) {
-            existente.setTipoCita(nuevosDatos.getTipoCita());
-        }
+
         if (nuevosDatos.getEstadoCita() != null) {
             existente.setEstadoCita(nuevosDatos.getEstadoCita());
         }
@@ -209,7 +207,6 @@ public class ValidacionCita {
         // Mostrar estado final del objeto existente (actualizado) también con logs campo por campo
         log.info("Estado final de la cita actualizada:");
         log.info("  Fecha: {}", existente.getFechaCita());
-        log.info("  Tipo: {}", existente.getTipoCita());
         log.info("  Estado: {}", existente.getEstadoCita());
         log.info("  Observaciones: {}", existente.getObservaciones());
         log.info("  Cliente ID: {}", existente.getCliente().getIdCliente());

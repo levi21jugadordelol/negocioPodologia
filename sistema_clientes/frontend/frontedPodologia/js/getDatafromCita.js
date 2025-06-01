@@ -7,13 +7,18 @@ export const getDataFromCita = async () => {
   //alert("hola desde el metodo getDataFromCita");
   const d = document;
   const fila = d.querySelector("#tabla-citas tbody tr");
+  console.log("fila tendria: ", fila);
   if (!fila) return null;
 
   const inputFecha = fila.querySelector(".fecha-cita");
+  console.log("input fecha tendria: ", inputFecha);
   const selectServicio = fila.querySelector("td:nth-child(3) select");
-  const selectTipo = fila.querySelector("td:nth-child(4) select");
-  const selectEstado = fila.querySelector("td:nth-child(5) select");
-  const inputObs = fila.querySelector("td:nth-child(6) input");
+  console.log("select servicio tendria: ", selectServicio);
+  //const selectTipo = fila.querySelector("td:nth-child(4) select");
+  const selectEstado = fila.querySelector("td:nth-child(4) select");
+  console.log("select estado tendria: ", selectEstado);
+  const inputObs = fila.querySelector("td:nth-child(5) input");
+  console.log("input obs tendria: ", inputObs);
 
   const tdCliente = fila.querySelector("td:nth-child(2)");
   const idCliente = parseInt(tdCliente?.textContent.trim(), 10);
@@ -22,19 +27,18 @@ export const getDataFromCita = async () => {
   console.log("📅 Fecha ingresada:", inputFecha?.value);
   console.log("👤 ID del cliente:", idCliente);
   console.log("💼 Servicio seleccionado:", selectServicio?.value);
-  console.log("📌 Tipo de cita:", selectTipo?.value);
+  //console.log("📌 Tipo de cita:", selectTipo?.value);
   console.log("📄 Estado de cita:", selectEstado?.value);
   console.log("📝 Observaciones:", inputObs?.value);
 
   try {
     const cita = new Cita(
-      idCliente,
-      parseInt(selectServicio?.value || "0"), // ✅ Aquí va el id del servicio
-      selectTipo?.value || "",
-      inputFecha?.value || "",
-      selectEstado?.value || "",
-      inputObs?.value || ""
-      // detalles por defecto es []
+      idCliente, // clienteId
+      parseInt(selectServicio?.value || "0"), // servicioId
+      inputFecha?.value || "", // fechaCita
+      selectEstado?.value || "", // estadoCita
+      inputObs?.value || "", // observaciones
+      [] // detalles (si hay)
     );
 
     datosCita.push(cita);
