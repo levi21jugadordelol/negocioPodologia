@@ -10,8 +10,15 @@ import { openWindowProduct } from "./openWindowProduct.js";
 import { openModalProducto } from "./openModalProducto.js";
 import { openTablePending } from "./cliente_pendientes/openTablePending.js";
 import { openModalDetailsService } from "./cliente_pendientes/openModalDetailsService.js";
+import { cargarClientesDesdeLocalStorage } from "./localStorage/cargarClientesDesdeLocalStorage.js";
+import { enviandoDatos } from "./enviandoDatos.js";
+import { cargarCitasDesdeLocalStorage } from "./localStorage/cargarCitasDesdeLocalStorage.js";
+import { datosCliente } from "./obteniendoDatos.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  cargarClientesDesdeLocalStorage(); // 👈 cargar desde localStorage
+  cargarCitasDesdeLocalStorage();
+  enviandoDatos(datosCliente);
   crearModalNuevoCliente(
     ".btn_nuevo_cliente",
     ".modal-overlay",
@@ -44,3 +51,5 @@ document.addEventListener("DOMContentLoaded", () => {
     ".enviar"
   );
 });
+
+tableCita("#btn-citas", "#vista-citas");

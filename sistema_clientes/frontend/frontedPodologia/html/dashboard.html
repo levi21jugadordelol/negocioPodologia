@@ -112,8 +112,17 @@
         <!-- === Vista de Citas === -->
         <div id="vista-citas" class="section">
           <h2>Citas</h2>
-          <button class="btn btn-primary my-3 btn_verPendientes">
-            👤 lista pendientes
+
+          <button class="btn btn-warning my-3 btn_verPendientes">
+            ⏳ Citas pendientes
+          </button>
+
+          <button class="btn btn-success my-3 btn_verFinalizadas">
+            ✅ Citas finalizadas
+          </button>
+
+          <button class="btn btn-danger my-3 btn_verCanceladas">
+            ❌ Citas canceladas
           </button>
           <div class="table-responsive">
             <table id="tabla-citas" class="table table-bordered">
@@ -127,7 +136,7 @@
                   <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody id="tabla-citas">
+              <tbody id="tbody-citas">
                 <!-- Datos dinámicos -->
               </tbody>
             </table>
@@ -185,6 +194,32 @@
         <!-- === Vista de clientes pendientes === -->
         <div id="vista-clientes-pendientes" class="section">
           <h2>Citas Programadas</h2>
+
+          <!-- Buscadores -->
+          <!-- Buscadores con botones -->
+          <div class="mb-3 d-flex gap-3 align-items-center">
+            <input
+              type="text"
+              id="input-dni"
+              class="form-control"
+              placeholder="Buscar por DNI"
+              style="width: 30%"
+            />
+            <button id="btn-buscar-dni" class="btn btn-primary">
+              Buscar DNI
+            </button>
+
+            <input
+              type="text"
+              id="input-nombre"
+              class="form-control"
+              placeholder="Buscar por Nombre del Cliente"
+              style="width: 30%"
+            />
+            <button id="btn-buscar-nombre" class="btn btn-primary">
+              Buscar Nombre
+            </button>
+          </div>
 
           <div class="table-responsive">
             <table class="table table-bordered">

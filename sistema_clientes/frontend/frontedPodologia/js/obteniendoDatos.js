@@ -1,6 +1,7 @@
 import { Cliente } from "./clases/cliente.js";
 import { enviandoDatos } from "./enviandoDatos.js";
 import { enviarClienteApi } from "./conexion/enviarClienteApi.js"; // Asegúrate de importar esto
+import { cargarClientesDesdeLocalStorage } from "./localStorage/cargarClientesDesdeLocalStorage.js";
 
 export const datosCliente = [];
 
@@ -39,10 +40,18 @@ export const infoDatos = async () => {
       alert("✅ Cliente enviado exitosamente.");
       cliente.id = respuesta; // o cliente.idCliente = respuesta;
     }
+
+    // 🔁 Volvemos a leer desde localStorage para estar seguros
+    // Ya no uses "listaClientes"
+    const clientesActuales = JSON.parse(localStorage.getItem("clientes")) || [];
+    clientesActuales.push(cliente); // sin ID todavía
+    localStorage.setItem("clientes", JSON.stringify(clientesActuales));
+    cargarClientesDesdeLocalStorage(datosCliente);
+    enviandoDatos(datosCliente);
   } catch (error) {
     alert("❌ Error al crear cliente: " + error.message);
   }
   console.log("📋 Lista de clientes:", datosCliente);
   $formCliente.reset();
-  enviandoDatos();
+  // enviandoDatos();
 };
