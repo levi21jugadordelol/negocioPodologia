@@ -22,6 +22,7 @@ public interface ICitaService {
    List<CitaDto> getListPendiente(EstadoCita estadoCita);
    List<CitaDto> buscarCitaFiltradaDni(EstadoCita estadoCita, String dni);
    List<CitaDto> buscarCitaFiltradaNombre(EstadoCita estadoCita, String nombre);
+   List<CitaDto> filtrarCitas(EstadoCita estado, String dni, String nombre);
     Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita);
 
 }

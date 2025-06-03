@@ -75,7 +75,7 @@ public class ClienteServiceImpl implements IClienteService{
 
     @Transactional
     @Override
-    public void editCliente(Long id_cliente, ClienteEntity cliente) {
+    public ClienteEntity editCliente(Long id_cliente, ClienteEntity cliente) {
         ClienteEntity existente = clienteRepo.findById(id_cliente)
                 .orElseThrow(() -> {
                     log.error("No se puede editar, cliente no existe con ID: {}", id_cliente);
@@ -83,8 +83,9 @@ public class ClienteServiceImpl implements IClienteService{
                 });
 
         cliente.setIdCliente(id_cliente);
-        clienteRepo.save(cliente);
+        ClienteEntity actualizado = clienteRepo.save(cliente);
         log.info("Cliente actualizado con ID: {}", id_cliente);
+        return actualizado;
     }
 
     @Override

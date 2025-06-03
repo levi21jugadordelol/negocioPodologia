@@ -120,7 +120,7 @@ public class CitaController {
 
         return ResponseEntity.ok(citaDto);
     }
-
+/*
     //GET /clientes?estado=programada
     @GetMapping("/clientes")
     public ResponseEntity<List<CitaDto>> listaClienteProgramadas(@RequestParam EstadoCita estado) {
@@ -150,6 +150,16 @@ public class CitaController {
             @RequestParam(required = false) String nombre) {
         List<CitaDto> citas = citaService.buscarCitaFiltradaNombre(estado, nombre);
         return ResponseEntity.ok(citas);
+    }
+*/
+
+    @GetMapping("/clientes")
+    public ResponseEntity<List<CitaDto>> obtenerCitasFiltradas(
+            @RequestParam EstadoCita estado,
+            @RequestParam(required = false) String dni,
+            @RequestParam(required = false) String nombre) {
+        List<CitaDto> resultado = citaService.filtrarCitas(estado, dni, nombre);
+        return ResponseEntity.ok(resultado);
     }
 
 

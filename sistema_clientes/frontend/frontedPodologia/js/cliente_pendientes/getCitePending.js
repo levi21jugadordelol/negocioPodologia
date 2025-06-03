@@ -3,13 +3,16 @@ import { BASE_URL } from "../config/configuracion.js";
 const d = document;
 
 // Obtener las citas programadas
-export const getCitePending = async () => {
+export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
   try {
     console.log("🔄 Solicitando citas programadas...");
 
-    const response = await fetch(
-      `${BASE_URL}/citas/clientes?estado=PROGRAMADA`
-    );
+    // Construir URL con filtros opcionales
+    let url = `${BASE_URL}/citas/clientes?estado=PROGRAMADA`;
+    if (dni) url += `&dni=${encodeURIComponent(dni)}`;
+    else if (nombre) url += `&nombre=${encodeURIComponent(nombre)}`;
+
+    const response = await fetch(url);
     const citas = await response.json();
 
     console.log(`✅ ${citas.length} citas recibidas`);

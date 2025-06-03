@@ -81,13 +81,16 @@ public class ClienteController {
 
 
     @PutMapping("/editar/{idCliente}")
-    public ResponseEntity<String> editarCliente(@PathVariable Long idCliente, @RequestBody ClienteRequestDto clienteRequestDto){
+    public ResponseEntity<ClienteDto> editarCliente(@PathVariable Long idCliente, @RequestBody ClienteRequestDto clienteRequestDto){
         log.info("el id del duenio a editar es : "+idCliente);
 
         ClienteEntity nuevoCliente = clienteMapper.toClienteEntity(clienteRequestDto);
 
-        clienteService.editCliente(idCliente, nuevoCliente);
-        return ResponseEntity.ok("Client edit");
+        ClienteEntity actualziado =clienteService.editCliente(idCliente, nuevoCliente);
+
+        ClienteDto clienteDto = clienteMapper.toClienteDto(actualziado);
+
+        return ResponseEntity.ok(clienteDto);
     }
 
     @GetMapping("/dni/{dni}")

@@ -249,6 +249,18 @@ public class CitaServiceImpl implements ICitaService {
     }
 
     @Override
+    public List<CitaDto> filtrarCitas(EstadoCita estado, String dni, String nombre) {
+        if (dni != null && !dni.isBlank()) {
+            return buscarCitaFiltradaDni(estado, dni);
+        } else if (nombre != null && !nombre.isBlank()) {
+            return buscarCitaFiltradaNombre(estado, nombre);
+        } else {
+            return getListPendiente(estado);
+        }
+    }
+
+
+    @Override
     public Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita) {
         Optional<ServicioEntity> servicio = detalleRepo.findUnicoServicioByCitaId(idCita);
 

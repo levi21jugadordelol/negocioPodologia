@@ -3,7 +3,7 @@ import { Cliente } from "../clases/cliente.js";
 
 const STORAGE_KEY = "clientes";
 
-class ClienteStorage {
+export class ClienteStorage {
   //static #instancia;
 
   constructor() {
@@ -15,12 +15,18 @@ class ClienteStorage {
 
   guardarCliente(cliente) {
     const clientes = this.obtenerClientes();
-    const index = clientes.findIndex((c) => c.id === cliente.id);
+
+    // Prioriza coincidencia por idCliente, luego por id
+    const index = clientes.findIndex((c) =>
+      c.idCliente ? c.idCliente === cliente.idCliente : c.id === cliente.id
+    );
+
     if (index >= 0) {
-      clientes[index] = cliente; // actualiza
+      clientes[index] = cliente; // actualizar
     } else {
-      clientes.push(cliente); // nuevo
+      clientes.push(cliente); // agregar nuevo
     }
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(clientes));
   }
 

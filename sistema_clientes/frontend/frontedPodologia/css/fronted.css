@@ -112,6 +112,23 @@ html {
   pointer-events: all;
 }
 
+/* modal para edit cliente */
+.modal-overlay_edit {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+  pointer-events: all;
+}
+
 /* Clase que oculta el modal */
 .translate {
   transform: scale(0);
@@ -120,6 +137,12 @@ html {
 }
 
 .modal-overlay.translate {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-overlay_edit.translate {
   transform: translateY(-100%);
   opacity: 0;
   pointer-events: none;

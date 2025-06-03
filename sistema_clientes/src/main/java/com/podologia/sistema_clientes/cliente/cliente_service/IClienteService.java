@@ -12,7 +12,7 @@ public interface IClienteService {
     void saveCliente(ClienteEntity clienteEntity);
     void deleteCliente(Long id_cliente);
     Optional<ClienteEntity> findCliente(Long id_cliente);
-    void editCliente(Long id_cliente,ClienteEntity cliente);
+    ClienteEntity editCliente(Long id_cliente,ClienteEntity cliente);
     Optional<ClienteEntity> buscarClienteDni(String dni_cliente);
     Optional<ClienteEntity> buscarNombreCliente(String nombre_cliente);
     Optional<ClienteEntity> obtenerClientePorCitaId(Long cita_id);
