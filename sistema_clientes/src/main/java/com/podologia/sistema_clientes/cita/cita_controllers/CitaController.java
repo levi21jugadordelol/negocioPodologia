@@ -131,6 +131,28 @@ public class CitaController {
         return ResponseEntity.ok(citas); // Si está vacía, devuelve 200 con []
     }
 
+    //GET /clientes?estado=programada y dni
+
+    @GetMapping("/clientes")
+    public ResponseEntity<List<CitaDto>> listaClienteProgramadasDni(
+            @RequestParam EstadoCita estado,
+            @RequestParam(required = false) String dni)
+            {
+        List<CitaDto> citas = citaService.buscarCitaFiltradaDni(estado, dni);
+        return ResponseEntity.ok(citas);
+    }
+
+    //GET /clientes?estado=programada y nombre
+
+    @GetMapping("/clientes")
+    public ResponseEntity<List<CitaDto>> listaClienteProgramadasNombre(
+            @RequestParam EstadoCita estado,
+            @RequestParam(required = false) String nombre) {
+        List<CitaDto> citas = citaService.buscarCitaFiltradaNombre(estado, nombre);
+        return ResponseEntity.ok(citas);
+    }
+
+
 
     // Buscar citas por cliente
     @GetMapping("/cliente/{clienteId}")

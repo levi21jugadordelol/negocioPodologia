@@ -217,7 +217,38 @@ public class CitaServiceImpl implements ICitaService {
                 .collect(Collectors.toList());
     }
 
-   @Override
+    @Override
+    public List<CitaDto> buscarCitaFiltradaDni(EstadoCita estadoCita, String dni) {
+        List<CitaEntity> listaPendienteDni = citaRepo.buscarPorEstadoYDni(estadoCita, dni);
+
+        if(listaPendienteDni.isEmpty()){
+            log.warn("no hay nada en la lista: {}", listaPendienteDni.size());
+            throw new EntidadNoEncontradaException("No se encontraron citas con el dni : " + dni);
+
+        }
+
+        return listaPendienteDni.stream()
+                .map(citaMapper::toCitaDto)
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<CitaDto> buscarCitaFiltradaNombre(EstadoCita estadoCita, String nombre) {
+       List<CitaEntity> listaPendienteNombre = citaRepo.buscarPorEstadoYNombre(estadoCita, nombre);
+
+       if(listaPendienteNombre.isEmpty()){
+           log.warn("no hay nada en la lista: {}", listaPendienteNombre.size());
+           throw new EntidadNoEncontradaException("No se encontraron citas con el nombre del cliente : " + nombre);
+       }
+
+       return listaPendienteNombre.stream()
+               .map(citaMapper::toCitaDto)
+               .collect(Collectors.toList());
+
+    }
+
+    @Override
     public Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita) {
         Optional<ServicioEntity> servicio = detalleRepo.findUnicoServicioByCitaId(idCita);
 

@@ -20,6 +20,8 @@ public interface ICitaService {
    void editCita(Long id_cita, CitaRequestDto citaRequestDto);
    List<CitaEntity> buscarCitasPorClienteId(Long clienteId);
    List<CitaDto> getListPendiente(EstadoCita estadoCita);
+   List<CitaDto> buscarCitaFiltradaDni(EstadoCita estadoCita, String dni);
+   List<CitaDto> buscarCitaFiltradaNombre(EstadoCita estadoCita, String nombre);
     Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita);
 
 }
