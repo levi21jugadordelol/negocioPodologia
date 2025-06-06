@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface ICitaService {
     List<CitaEntity> getCita();
-   void saveCita(CitaEntity citaEntity);
+   CitaEntity saveCita(CitaEntity citaEntity);
    DetalleEntity saveDetalle(Long idCita, DetalleEntity detalle);
    void deleteCita(Long id_cita);
    Optional<CitaEntity> findCita(long id_cita);

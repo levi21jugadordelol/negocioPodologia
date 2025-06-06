@@ -57,11 +57,12 @@ public class CitaServiceImpl implements ICitaService {
 
     @Transactional
     @Override
-    public void saveCita(CitaEntity citaEntity) {
+    public CitaEntity saveCita(CitaEntity citaEntity) {
 
         validacionCita.existDuenio(citaEntity);
-        citaRepo.save(citaEntity);
-        log.info("cita guardada con éxito: {}", citaEntity);
+        CitaEntity citaGuardada = citaRepo.save(citaEntity); // importante capturar el retorno
+        log.info("cita guardada con éxito: {}", citaGuardada);
+        return citaGuardada;
 
     }
 

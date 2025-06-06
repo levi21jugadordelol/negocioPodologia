@@ -21,16 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
 
-@RequestMapping("citas")
+@RequestMapping("/citas")
 @CrossOrigin(origins = "*")
 public class CitaController {
 
@@ -61,11 +58,12 @@ public class CitaController {
         }
 
         // Guardar la cita
-        citaService.saveCita(citaEntity);
+        CitaEntity citaGuardada = citaService.saveCita(citaEntity);
 
         // Respuesta con JSON válido
         return ResponseEntity.ok(
-                Map.of("mensaje", "Cita guardada exitosamente")
+                Map.of("mensaje", "Cita guardada exitosamente",
+                        "idCita", citaGuardada.getIdCita())
         );
     }
 
@@ -192,7 +190,7 @@ public class CitaController {
 
     // Editar una cita
     @PutMapping("/editar/{idCita}")
-    public ResponseEntity<String> editarCita(@PathVariable Long idCita, @RequestBody CitaRequestDto nuevaCitaDto) {
+    public ResponseEntity<Map<String, Object>> editarCita(@PathVariable Long idCita, @RequestBody CitaRequestDto nuevaCitaDto) {
         log.info("el id de la cita a editar es : "+idCita);
 
         log.info("DTO recibido completo: {}", nuevaCitaDto);
@@ -202,7 +200,11 @@ public class CitaController {
 
         citaService.editCita(idCita, nuevaCitaDto);
 
-        return ResponseEntity.ok("Cita editada");
+        Map<String, Object> respuesta = new HashMap<>();
+        respuesta.put("mensaje", "Cita editada");
+        respuesta.put("id_cita", idCita);
+
+        return ResponseEntity.ok(respuesta);
     }
 
 
