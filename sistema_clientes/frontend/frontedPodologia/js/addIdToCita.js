@@ -69,7 +69,11 @@ export const addIdToTable = async (idCliente) => {
   btnGuardar.textContent = "Guardar";
   btnGuardar.className = "btn btn-success btn-sm me-1";
   btnGuardar.classList.add("btn-guardar-cita");
-  // Aquí puedes agregarle evento click si quieres
+
+  const btnGuardarEdit = document.createElement("button");
+  btnGuardarEdit.textContent = "Guardar cambios";
+  btnGuardarEdit.className =
+    "btn btn-primary btn-sm me-1 btn-guardar-edit d-none"; // empieza oculto
 
   const btnEditar = d.createElement("button");
   btnEditar.textContent = "Editar";
@@ -82,7 +86,9 @@ export const addIdToTable = async (idCliente) => {
   btnEliminar.classList.add("btn-eliminar-cita");
 
   // Agrega los botones a la celda
+
   tdAcciones.appendChild(btnGuardar);
+  tdAcciones.appendChild(btnGuardarEdit);
   tdAcciones.appendChild(btnEditar);
   tdAcciones.appendChild(btnEliminar);
 

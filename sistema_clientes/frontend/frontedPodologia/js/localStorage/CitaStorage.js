@@ -27,8 +27,8 @@ class CitaStorage {
     const lista = data ? JSON.parse(data) : [];
     return lista.map((obj) => {
       const cita = new Cita(
-        obj.clienteId,
-        obj.servicioId,
+        Number(obj.clienteId),
+        Number(obj.servicioId),
         obj.fechaCita,
         obj.estadoCita,
         obj.observaciones,

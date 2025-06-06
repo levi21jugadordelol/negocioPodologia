@@ -1,4 +1,5 @@
 import { capturaInfoClientEdit } from "./capturarInfoClientEdit.js";
+import { getDataClientToEdit } from "./getDataClientToEdit.js";
 
 const d = document;
 
@@ -20,8 +21,10 @@ export const edit_cliente = (
       const fila = e.target.closest("tr");
       const idCliente = fila?.dataset.id;
       console.log("el id del cliente desde el lugar del evento : ", idCliente);
-      const $form = document.getElementById("form_cliente_edit");
+      /*const $form = document.getElementById("form_cliente_edit");
       $form.dataset.id = idCliente;
+      //enviamos el id a la  ventana modal */
+      getDataClientToEdit(idCliente);
     }
     if (e.target.matches(cerrar)) {
       const $modal_edit = d.querySelector(ventana_edit_cliente);

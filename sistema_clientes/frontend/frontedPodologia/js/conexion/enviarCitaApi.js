@@ -28,7 +28,7 @@ export async function enviarCitaApi(cita) {
     citaStorage.guardar(citaConId);
 
     alert("✅ Cita guardado exitosamente");
-    return { exito: true, mensaje: citaGuardado.mensaje };
+    return { exito: true, idCita, mensaje: citaGuardado.mensaje };
   } catch (e) {
     console.error("❌ Error al enviar cita:", e.message);
     alert("❌ Error al guardar cita");

@@ -16,15 +16,22 @@ export class ClienteStorage {
   guardarCliente(cliente) {
     const clientes = this.obtenerClientes();
 
-    // Prioriza coincidencia por idCliente, luego por id
-    const index = clientes.findIndex((c) =>
-      c.idCliente ? c.idCliente === cliente.idCliente : c.id === cliente.id
+    const id = cliente.idCliente || cliente.id;
+
+    const index = clientes.findIndex(
+      (c) =>
+        (c.idCliente && String(c.idCliente) === String(id)) ||
+        (c.id && String(c.id) === String(id))
     );
 
+    // Garantiza consistencia de claves
+    cliente.idCliente = id;
+    cliente.id = id;
+
     if (index >= 0) {
-      clientes[index] = cliente; // actualizar
+      clientes[index] = cliente;
     } else {
-      clientes.push(cliente); // agregar nuevo
+      clientes.push(cliente);
     }
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(clientes));
@@ -46,8 +53,8 @@ export class ClienteStorage {
           obj.celular,
           obj.dni
         );
-        cliente.id = obj.id;
-        cliente.idCliente = obj.idCliente;
+        cliente.id = obj.idCliente || obj.id;
+        cliente.idCliente = obj.idCliente || obj.id;
         return cliente;
       });
   }

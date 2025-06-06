@@ -16,10 +16,12 @@ import { cargarCitasDesdeLocalStorage } from "./localStorage/cargarCitasDesdeLoc
 import { datosCliente } from "./obteniendoDatos.js";
 import { event_busqueda_filtro } from "./citas/event_busqueda_filtro.js";
 import { edit_cliente } from "./cliente/edit_cliente.js";
+import { evento_edit } from "./citas/evento_citas/evento_edit.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  localStorage.removeItem("citasStorage");
   cargarClientesDesdeLocalStorage(); // 👈 cargar desde localStorage
-  cargarCitasDesdeLocalStorage();
+  // cargarCitasDesdeLocalStorage();
   enviandoDatos(datosCliente);
   crearModalNuevoCliente(
     ".btn_nuevo_cliente",
@@ -54,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   event_busqueda_filtro("#btn-buscar-dni", "#btn-buscar-nombre");
   edit_cliente(".click_editar", ".modal-overlay_edit", ".close", ".enviar");
+  evento_edit(".btn-editar-cita", ".btn-guardar-cita");
 });
 
 tableCita("#btn-citas", "#vista-citas");

@@ -7,6 +7,8 @@ export class Cita {
     observaciones = "",
     detalles = []
   ) {
+    clienteId = Number(clienteId); // 👈 fuerza conversión segura
+    servicioId = Number(servicioId); // 👈 igual aquí
     this._validarId(clienteId);
     this._validarFecha(fechaCita);
     this._validarCadena(estadoCita, "Estado de cita");

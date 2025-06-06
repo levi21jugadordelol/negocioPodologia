@@ -11,14 +11,6 @@ export const capturaInfoClientEdit = async () => {
 
   console.log(id_cliente);
 
-  /*const cliente = {
-    nombre: document.getElementById("modal_nombre_edit").value.trim(),
-    apellido: document.getElementById("modal_apellido_edit").value.trim(),
-    correo: document.getElementById("modal_correo_edit").value.trim(),
-    celular: document.getElementById("modal_celular_edit").value.trim(),
-    dni: document.getElementById("modal_dni_edit").value.trim(),
-  }; */
-
   const nombre = document.getElementById("modal_nombre_edit").value.trim();
   const apellido = document.getElementById("modal_apellido_edit").value.trim();
   const correo = document.getElementById("modal_correo_edit").value.trim();
