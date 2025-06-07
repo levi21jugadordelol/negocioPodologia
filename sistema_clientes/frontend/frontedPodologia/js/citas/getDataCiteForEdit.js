@@ -9,12 +9,19 @@ const d = document;
 export const getDataCiteDorEdit = async (fila, id_cita) => {
   try {
     console.log("==============info de cita para el edit==============");
-    const $form_cita = d.getElementById("tabla-citas");
-
-    console.log("la captura de la tabla citas es: ", $form_cita);
 
     // Suponiendo que este método se llama desde un click en el botón editar
     const datos = getDatosDeFila(fila);
+
+    console.log(
+      "el numero de id cliente desde 'getDataCiteDorEdit' es: ",
+      datos.idCliente
+    );
+
+    console.log(
+      "el tipo de dato que es el id cliente es : ",
+      typeof datos.clienteId
+    );
 
     const cita = new Cita(
       datos.idCliente,
@@ -31,11 +38,14 @@ export const getDataCiteDorEdit = async (fila, id_cita) => {
 
     console.log("la cita editado es : ", citaBackend);
 
+    console.log("📌 Tipo de clienteId:", typeof citaBackend.clienteId);
+    console.log("📌 Tipo de servicioId:", typeof citaBackend.servicioId);
+    console.log("📌 citaBackend completo:", citaBackend);
+
     await enviarEditCitaApi(id_cita, citaBackend);
     const citasActualizadas = citaStorage.obtenerTodos();
     console.log("📦 Citas actualizadas localStorage:", citasActualizadas);
   } catch (error) {
     console.warn("el error es: ", error.message);
   }
-  $form.reset();
 };

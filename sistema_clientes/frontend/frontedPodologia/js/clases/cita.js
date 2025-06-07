@@ -7,7 +7,9 @@ export class Cita {
     observaciones = "",
     detalles = []
   ) {
-    clienteId = Number(clienteId); // 👈 fuerza conversión segura
+    console.log("🧪 clienteId recibido:", clienteId);
+    clienteId = Number(clienteId);
+    console.log("🔁 clienteId convertido a número:", clienteId);
     servicioId = Number(servicioId); // 👈 igual aquí
     this._validarId(clienteId);
     this._validarFecha(fechaCita);

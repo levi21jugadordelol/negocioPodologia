@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--BoxIcons-->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/loginStyle.css" />
+    <title>Login</title>
+  </head>
+  <body>
+    <!--No olvidar las etiquetas de apertura y de cierre-->
+    <div class="container">
+      <div class="form-box">
+        <!--Formulario del Login-->
+        <form action="">
+          <h1>Iniciar Sesion</h1>
+          <!--Titulo-->
+          <!--Campo de texto para el usuario-->
+          <div class="input-box">
+            <input
+              type="text"
+              name="txtUsuario"
+              id="txtUsuario"
+              placeholder="Usuario"
+            />
+            <i class="bx bx-user"></i>
+          </div>
+          <div class="input-box">
+            <input
+              type="Password"
+              name="txtPassword"
+              id="txtPassword"
+              placeholder="Password"
+            />
+            <i class="bx bx-lock-alt"></i>
+          </div>
+          <div class="forgot-link">
+            <a href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+          <button type="button" class="btn">Iniciar Sesion</button>
+          <p>o Iniciar Sesion con las Plataformas Sociales</p>
+          <div class="social-icons">
+            <a href="#"><i class="bx bxl-google"></i></a>
+            <a href="#"><i class="bx bxl-facebook-circle"></i></a>
+            <a href="#"><i class="bx bxl-github"></i></a>
+            <a href="#"><i class="bx bxl-linkedin"></i></a>
+          </div>
+        </form>
+      </div>
+      <!--Segunda seccion-->
+      <div class="register-panel">
+        <h1>Hola, Bienvenido!</h1>
+        <p>¿No tienes una Cuenta?</p>
+        <button class="btn register-btn">Registrarse</button>
+      </div>
+    </div>
+  </body>
+</html>

@@ -21,7 +21,7 @@ import { evento_edit } from "./citas/evento_citas/evento_edit.js";
 document.addEventListener("DOMContentLoaded", () => {
   localStorage.removeItem("citasStorage");
   cargarClientesDesdeLocalStorage(); // 👈 cargar desde localStorage
-  // cargarCitasDesdeLocalStorage();
+  cargarCitasDesdeLocalStorage();
   enviandoDatos(datosCliente);
   crearModalNuevoCliente(
     ".btn_nuevo_cliente",

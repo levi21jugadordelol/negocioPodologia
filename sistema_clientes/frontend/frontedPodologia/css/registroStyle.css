@@ -1,0 +1,39 @@
+body {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  font-family: "Inter", sans-serif;
+}
+
+.card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+  border-radius: 12px;
+  padding-left: 2.5rem;
+}
+
+.btn-primary {
+  background-color: #6f42c1;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #5936a1;
+}
+
+.input-group {
+  position: relative;
+}
+
+.form-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6f42c1;
+  font-size: 1.2rem;
+}
