@@ -8,6 +8,7 @@ export async function enviarEditClienteApi(idCliente, clienteBackend) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
       },
       body: JSON.stringify(clienteBackend),
     });

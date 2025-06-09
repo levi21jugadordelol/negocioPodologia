@@ -10,6 +10,7 @@ export async function enviarClienteApi(cliente) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
       },
       body: JSON.stringify(cliente),
     });

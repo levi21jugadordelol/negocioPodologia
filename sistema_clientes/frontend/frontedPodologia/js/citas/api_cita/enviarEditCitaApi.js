@@ -13,6 +13,7 @@ export async function enviarEditCitaApi(id_cita, citaBackend) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
       },
       body: JSON.stringify(citaBackend),
     });

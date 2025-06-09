@@ -17,6 +17,7 @@ import { datosCliente } from "./obteniendoDatos.js";
 import { event_busqueda_filtro } from "./citas/event_busqueda_filtro.js";
 import { edit_cliente } from "./cliente/edit_cliente.js";
 import { evento_edit } from "./citas/evento_citas/evento_edit.js";
+import { event_formulario } from "./usuario/evento_usuario/event_form.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   localStorage.removeItem("citasStorage");

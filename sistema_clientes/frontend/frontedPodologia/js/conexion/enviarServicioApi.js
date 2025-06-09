@@ -9,6 +9,7 @@ export async function enviarCitaApi(servicioData) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
       },
       body: JSON.stringify(servicioData),
     });

@@ -14,6 +14,7 @@ export async function enviarProductoApi(productoData) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
       },
       body: JSON.stringify(productoData),
     });

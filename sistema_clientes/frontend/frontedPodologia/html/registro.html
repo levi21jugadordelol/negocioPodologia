@@ -26,7 +26,7 @@
           <div class="card shadow-sm">
             <div class="card-body">
               <h3 class="card-title text-center mb-4">Crear Cuenta</h3>
-              <form action="/auth/register" method="POST">
+              <form id="form_registro" action="/auth/register" method="POST">
                 <div class="mb-3">
                   <label for="nombre" class="form-label">Nombre</label>
                   <input
@@ -81,7 +81,7 @@
                     required
                   />
                 </div>
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="button" class="btn_registro btn-primary w-100">
                   Registrarse
                 </button>
               </form>
@@ -99,5 +99,6 @@
       integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
       crossorigin="anonymous"
     ></script>
+    <script type="module" src="../js/app_registro.js"></script>
   </body>
 </html>

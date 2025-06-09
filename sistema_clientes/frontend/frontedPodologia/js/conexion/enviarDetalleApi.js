@@ -7,6 +7,7 @@ export async function enviarDetalleApi(idCita, detalle) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
       },
       body: JSON.stringify(detalle),
     });
