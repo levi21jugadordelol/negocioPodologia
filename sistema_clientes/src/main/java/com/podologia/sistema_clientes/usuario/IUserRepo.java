@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface IUserRepo  extends JpaRepository<UsuarioEntity,Long> {
 
-    @Query("SELECT c from UsuarioEntity c WHERE email = :email AND password = :password")
+    @Query("SELECT c from UsuarioEntity c WHERE email = :email AND contrasenia = :contrasenia")
     List<UsuarioEntity>  findByEmailAndPassword(@Param("email") String email,
-                                                @Param("password") String password);
+                                                @Param("contrasenia") String contrasenia);
 
 }

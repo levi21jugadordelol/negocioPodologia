@@ -1,12 +1,16 @@
 package com.podologia.sistema_clientes.usuario.usuario_controllers;
 
 
+import com.podologia.sistema_clientes.usuario.dto.UsuarioDto;
 import com.podologia.sistema_clientes.usuario.usuario_entity.UsuarioEntity;
 import com.podologia.sistema_clientes.usuario.usuario_service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,9 +41,13 @@ public class UserController {
     }
 
     @PostMapping("/user") // Agregar cliente
-    public void register(@RequestBody UsuarioEntity user) {
+    public ResponseEntity<Map<String, String>> register(@RequestBody UsuarioDto user) {
         //service.addUser(user);
         userService.addUser(user);
+        Map<String, String> response = new HashMap<>();
+        response.put("mensaje", "Usuario registrado correctamente");
+
+        return ResponseEntity.ok(response); // Devuelve JSON válido
     }
 
     @PutMapping("/user/{id}") // Modificar cliente

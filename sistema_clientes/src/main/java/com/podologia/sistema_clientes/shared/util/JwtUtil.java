@@ -5,14 +5,22 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.podologia.sistema_clientes.usuario.usuario_entity.UsuarioEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
+@RequiredArgsConstructor
 public class JwtUtil {
 
-    private static final Algorithm algorithm = Algorithm.HMAC256(secretKey.getSecret());
+    private final secretKey key;
 
-    public static String generateToken(UsuarioEntity user) {
+  //  private static final Algorithm algorithm = Algorithm.HMAC256(key.getSecret());
+
+    public  String generateToken(UsuarioEntity user) {
+        Algorithm algorithm = Algorithm.HMAC256(key.getSecret());
+
         String token = JWT.create()
                 .withIssuer("ATLAcademy")
                 .withClaim("userId", user.getIdUsuario())
@@ -28,7 +36,8 @@ public class JwtUtil {
     }
 
     // Decodifica un token JWT y extrae el userId del reclamo.
-    public static String getUserIdByToken(String token) {
+    public  String getUserIdByToken(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(key.getSecret());
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer("ATLAcademy")
                 .build();
