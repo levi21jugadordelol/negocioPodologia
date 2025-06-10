@@ -7,14 +7,22 @@ import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteDto;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
 
+import com.podologia.sistema_clientes.shared.mappers.ClienteMapper;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +34,7 @@ public class ClienteServiceImpl implements IClienteService{
 
     private final IClienteRepo clienteRepo;
     private final ICitaRepo citaRepo;
+    private final ClienteMapper clienteMapper;
 
     private static final Logger log = LoggerFactory.getLogger(com.podologia.sistema_clientes.cliente.cliente_service.ClienteServiceImpl.class);
 
@@ -35,6 +44,54 @@ public class ClienteServiceImpl implements IClienteService{
          log.info("el total de clientes es: {}",listaClientes.size());
          return listaClientes;
     }
+
+    @Override
+    public void exportExcel(HttpServletResponse response) {
+        try {
+            // 1. Obtener los datos
+          //  final List<ClienteDto> clientes = clienteService.obtenerClientes(); // usa DTOs, no entidades
+            final List<ClienteDto> clientes = this.obtenerClientes();
+
+            // 2. Crear workbook y hoja
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Clientes");
+
+            // 3. Crear cabecera
+            Row header = sheet.createRow(0);
+            header.createCell(0).setCellValue("ID");
+            header.createCell(1).setCellValue("Nombre");
+            header.createCell(2).setCellValue("Apellido");
+            header.createCell(3).setCellValue("DNI");
+            header.createCell(4).setCellValue("Celular");
+            header.createCell(5).setCellValue("Correo");
+
+            // 4. Llenar los datos
+            int rowNum = 1;
+            for (ClienteDto cliente : clientes) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(cliente.getIdCliente());
+                row.createCell(1).setCellValue(cliente.getNombreCliente());
+                row.createCell(2).setCellValue(cliente.getApellidoCliente());
+                row.createCell(3).setCellValue(cliente.getDniCliente());
+                row.createCell(4).setCellValue(cliente.getCellCliente());
+                row.createCell(5).setCellValue(cliente.getCorreoCliente());
+            }
+
+            // 5. Configurar headers de la respuesta
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=clientes.xlsx");
+
+            // 6. Escribir y cerrar
+            ServletOutputStream outputStream = response.getOutputStream();
+            workbook.write(outputStream);
+            workbook.close();
+            outputStream.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error al exportar Excel", e);
+        }
+    }
+
 
     @Transactional
     @Override
@@ -130,6 +187,13 @@ public class ClienteServiceImpl implements IClienteService{
         return Optional.of(cliente);
     }
 
+    @Override
+    public List<ClienteDto> obtenerClientes() {
+        List<ClienteEntity> entidades = clienteRepo.findAll();
+        return entidades.stream()
+                .map(clienteMapper::toClienteDto)
+                .toList(); // o .collect(Collectors.toList())
+    }
 
 
 }
