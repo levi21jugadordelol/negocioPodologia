@@ -18,6 +18,7 @@ import { event_busqueda_filtro } from "./citas/event_busqueda_filtro.js";
 import { edit_cliente } from "./cliente/edit_cliente.js";
 import { evento_edit } from "./citas/evento_citas/evento_edit.js";
 import { event_formulario } from "./usuario/evento_usuario/event_form.js";
+import { mostrarListaClientes } from "./cliente/mostrarListaCliente.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   localStorage.removeItem("citasStorage");
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ".btn_nuevo_cliente",
     ".modal-overlay",
     ".close",
-    ".enviar"
+    ".button_enviar_cliente"
   );
   tableCita("#btn-citas", "#vista-citas");
   sendClientToCita(".click_createCite", "#vista-citas", "#vista-clientes"); //click_createCite, button creado en sendInfoToTable y vista-citas, id dentro del html para el div donde esta citas
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ".btn_nuevo_servicio",
     ".modal-overlay_service",
     ".close",
-    ".enviar"
+    ".btn_enviar_servicio"
   );
   infoCita(".btn-guardar-cita");
   openWindowProduct("#btn-productos", "#vista-productos");
@@ -46,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ".btn_nuevo_producto",
     "#modal_producto",
     ".close",
-    ".enviar"
+    ".btn_enviar_producto"
   );
   openTablePending(".btn_verPendientes", "#vista-clientes-pendientes");
   openModalDetailsService(
@@ -56,8 +57,14 @@ document.addEventListener("DOMContentLoaded", () => {
     ".enviar"
   );
   event_busqueda_filtro("#btn-buscar-dni", "#btn-buscar-nombre");
-  edit_cliente(".click_editar", ".modal-overlay_edit", ".close", ".enviar");
+  edit_cliente(
+    ".click_editar",
+    ".modal-overlay_edit",
+    ".close",
+    ".btn_enviar_edit_cliente"
+  );
   evento_edit(".btn-editar-cita", ".btn-guardar-cita");
+  mostrarListaClientes(".btn_listaCliente");
 });
 
 tableCita("#btn-citas", "#vista-citas");

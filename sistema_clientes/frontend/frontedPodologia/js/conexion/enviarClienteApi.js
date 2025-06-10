@@ -20,6 +20,7 @@ export async function enviarClienteApi(cliente) {
     }
 
     const clienteGuardado = await respuesta.json(); // ⬅️ recibe el objeto con el id
+
     const { idCliente } = clienteGuardado;
 
     console.log(clienteGuardado.idCliente);
