@@ -2,7 +2,12 @@ import { BASE_URL } from "../config/configuracion.js";
 
 export const fillComboProductFromBackend = async (selected) => {
   try {
-    const response = await fetch(`${BASE_URL}/producto/listar`);
+    const response = await fetch(`${BASE_URL}/producto/listar`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
+      },
+    });
 
     if (!response.ok) throw new Error("error al obtener productos");
 

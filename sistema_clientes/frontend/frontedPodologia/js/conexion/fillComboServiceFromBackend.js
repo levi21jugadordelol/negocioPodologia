@@ -2,7 +2,12 @@ import { BASE_URL } from "../config/configuracion.js";
 
 export const llenarComboServicio = async (select) => {
   try {
-    const response = await fetch(`${BASE_URL}/servicio/listarServicios`);
+    const response = await fetch(`${BASE_URL}/servicio/listarServicios`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
+      },
+    });
     if (!response.ok) throw new Error("Error al obtener servicios");
 
     const servicios = await response.json();

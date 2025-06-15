@@ -11,8 +11,14 @@ export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
     let url = `${BASE_URL}/citas/clientes?estado=PROGRAMADA`;
     if (dni) url += `&dni=${encodeURIComponent(dni)}`;
     else if (nombre) url += `&nombre=${encodeURIComponent(nombre)}`;
+    console.log("valor de la url de programada es: ", url);
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
+      },
+    });
     const citas = await response.json();
 
     console.log(`✅ ${citas.length} citas recibidas`);

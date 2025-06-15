@@ -1,10 +1,7 @@
-//import { datosCliente } from "./obteniendoDatos.js";
-import { mapCliente } from "./cliente/metodo/mapCliente.js";
-
-export const enviandoDatos = (clientes = []) => {
+export const enviandoListaTotalClientes = (clientes = []) => {
   console.log("📤 Enviando datos para pintar tabla:", clientes);
   const d = document;
-  const tableDatesUser = d.getElementById("tabla-clientes");
+  const tableDatesUser = d.getElementById("tabla-clientes-totales");
 
   tableDatesUser.innerHTML = "";
 
@@ -40,7 +37,7 @@ export const enviandoDatos = (clientes = []) => {
     );
 
     botonEditar.classList.add("click_editar", "green");
-    buttonDeleteClient.classList.add("click_delete_cliente", "red");
+    buttonDeleteClient.classList.add("click_delete_cliente_total", "red");
     buttonCreateCiteToClient.classList.add("click_createCite", "black");
 
     celdaAcciones.appendChild(botonEditar);

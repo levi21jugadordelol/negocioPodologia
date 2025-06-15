@@ -4,7 +4,12 @@ import { addIdToTable } from "./addIdToCita.js";
 import { BASE_URL } from "./config/configuracion.js";
 
 const validarCliente = async (id) => {
-  const res = await fetch(`${BASE_URL}/cliente/${id}`);
+  const res = await fetch(`${BASE_URL}/cliente/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${sessionStorage.token}`,
+    },
+  });
   if (!res.ok) throw new Error("Cliente no encontrado");
   return await res.json();
 };

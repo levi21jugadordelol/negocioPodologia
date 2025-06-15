@@ -2,7 +2,12 @@ import { BASE_URL } from "../config/configuracion.js";
 
 export const llenarComboEstadoCita = async (select) => {
   try {
-    const response = await fetch(`${BASE_URL}/citas/estados`);
+    const response = await fetch(`${BASE_URL}/citas/estados`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.token}`,
+      },
+    });
     const estados = await response.json();
 
     console.log("Estados recibidos del backend:", estados);

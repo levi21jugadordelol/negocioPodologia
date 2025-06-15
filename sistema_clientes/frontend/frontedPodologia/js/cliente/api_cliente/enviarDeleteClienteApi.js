@@ -17,6 +17,7 @@ export async function enviarDeleteClienteApi(idCliente) {
     }
     clienteStorage.eliminarClientePorId(idCliente);
     console.log("🗑️ Cliente eliminado también de localStorage");
+    return { success: true, id: idCliente };
   } catch (error) {
     console.error("❌ Error al eliminar cliente:", error.message);
     alert("❌ Error al eliminar cliente");

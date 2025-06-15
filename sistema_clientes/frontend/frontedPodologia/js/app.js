@@ -19,12 +19,21 @@ import { edit_cliente } from "./cliente/edit_cliente.js";
 import { evento_edit } from "./citas/evento_citas/evento_edit.js";
 import { event_formulario } from "./usuario/evento_usuario/event_form.js";
 import { mostrarListaClientes } from "./cliente/mostrarListaCliente.js";
+import { cerrandoSession } from "./closeSession/cerrandoSession.js";
+import { cargarClientesDelDia } from "./cliente/cargarClienteDelDia.js";
+import { evento_excel } from "./cliente/evento_excel.js";
+import { eventoEliminarCliente } from "./cliente/eventoEliminarCliente.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("🚀 DOM listo, inicializando app...");
+
   localStorage.removeItem("citasStorage");
+  const clientesDelDia = await cargarClientesDelDia();
+  console.log("📅 Clientes cargados al iniciar:", clientesDelDia); // 👈
   cargarClientesDesdeLocalStorage(); // 👈 cargar desde localStorage
   cargarCitasDesdeLocalStorage();
-  enviandoDatos(datosCliente);
+  console.log("📦 datosCliente actuales:", datosCliente); // 👈 ¿está vacío?
+  //enviandoDatos(datosCliente);
   crearModalNuevoCliente(
     ".btn_nuevo_cliente",
     ".modal-overlay",
@@ -49,7 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
     ".close",
     ".btn_enviar_producto"
   );
-  openTablePending(".btn_verPendientes", "#vista-clientes-pendientes");
+  openTablePending(
+    ".btn_verPendientes",
+    "#vista-clientes-pendientes",
+    ".btn_verFinalizadas",
+    "#vista-clientes-finalizadas"
+  );
   openModalDetailsService(
     ".click_finalizar",
     "#modal_detalle",
@@ -64,7 +78,14 @@ document.addEventListener("DOMContentLoaded", () => {
     ".btn_enviar_edit_cliente"
   );
   evento_edit(".btn-editar-cita", ".btn-guardar-cita");
-  mostrarListaClientes(".btn_listaCliente");
+  mostrarListaClientes(
+    ".btn_listaCliente",
+    "#vista-clientes-totales",
+    ".click_delete_cliente_total"
+  );
+  evento_excel(".btn_enviarExcel");
+  eventoEliminarCliente(".click_delete_cliente");
+  cerrandoSession("#btn_cerrarSession");
 });
 
 tableCita("#btn-citas", "#vista-citas");

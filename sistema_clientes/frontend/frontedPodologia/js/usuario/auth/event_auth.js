@@ -7,6 +7,7 @@ export const event_login = (button_login) => {
     if (e.target.matches(button_login)) {
       //  alert("funciona el buton de login");
       const datosAuth = capturandoValoresLogin();
+
       enviarAuthApi(datosAuth);
     }
   });
