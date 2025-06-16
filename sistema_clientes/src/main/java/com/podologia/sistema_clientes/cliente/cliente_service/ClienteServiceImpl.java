@@ -22,7 +22,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,17 +49,11 @@ public class ClienteServiceImpl implements IClienteService{
     }
 
     @Override
-    public void exportExcel(HttpServletResponse response) {
-        try {
-            // 1. Obtener los datos
-          //  final List<ClienteDto> clientes = clienteService.obtenerClientes(); // usa DTOs, no entidades
-            final List<ClienteDto> clientes = this.obtenerClientes();
-
-            // 2. Crear workbook y hoja
-            Workbook workbook = new XSSFWorkbook();
+    public ByteArrayOutputStream generarExcelClientes() {
+        try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Clientes");
 
-            // 3. Crear cabecera
+            // Crear cabecera
             Row header = sheet.createRow(0);
             header.createCell(0).setCellValue("ID");
             header.createCell(1).setCellValue("Nombre");
@@ -65,7 +62,9 @@ public class ClienteServiceImpl implements IClienteService{
             header.createCell(4).setCellValue("Celular");
             header.createCell(5).setCellValue("Correo");
 
-            // 4. Llenar los datos
+            // Obtener datos
+            List<ClienteDto> clientes = this.obtenerClientes();
+
             int rowNum = 1;
             for (ClienteDto cliente : clientes) {
                 Row row = sheet.createRow(rowNum++);
@@ -77,20 +76,15 @@ public class ClienteServiceImpl implements IClienteService{
                 row.createCell(5).setCellValue(cliente.getCorreoCliente());
             }
 
-            // 5. Configurar headers de la respuesta
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition", "attachment; filename=clientes.xlsx");
-
-            // 6. Escribir y cerrar
-            ServletOutputStream outputStream = response.getOutputStream();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
-            workbook.close();
-            outputStream.close();
+            return outputStream;
 
         } catch (IOException e) {
-            throw new RuntimeException("Error al exportar Excel", e);
+            throw new RuntimeException("Error generando Excel", e);
         }
     }
+
 
 
     @Transactional
@@ -194,6 +188,21 @@ public class ClienteServiceImpl implements IClienteService{
                 .map(clienteMapper::toClienteDto)
                 .toList(); // o .collect(Collectors.toList())
     }
+
+    @Override
+    public List<ClienteEntity> guardarClientePorDia(LocalDate fecha) {
+        //Convierte la fecha a un LocalDateTime en la hora inicial del día: 00:00:00.000
+        LocalDateTime inicio = fecha.atStartOfDay();
+
+        /*fecha.plusDays(1).atStartOfDay() → Esto te da el inicio del día siguiente (ej. 2025-06-09T00:00)
+
+       .minusNanos(1) → Le resta 1 nanosegundo para obtener el último instante del día original,
+       es decir: 2025-06-08T23:59:59.999999999*/
+        LocalDateTime fin = fecha.plusDays(1).atStartOfDay().minusNanos(1);
+
+        return clienteRepo.getClientXday(inicio, fin);
+    }
+
 
 
 }

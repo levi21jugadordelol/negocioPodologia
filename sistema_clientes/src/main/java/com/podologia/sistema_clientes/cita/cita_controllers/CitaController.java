@@ -118,38 +118,7 @@ public class CitaController {
 
         return ResponseEntity.ok(citaDto);
     }
-/*
-    //GET /clientes?estado=programada
-    @GetMapping("/clientes")
-    public ResponseEntity<List<CitaDto>> listaClienteProgramadas(@RequestParam EstadoCita estado) {
-        List<CitaDto> citas = citaService.getListPendiente(estado);
-        // 🔍 LOG PARA VERIFICAR LO QUE SE TRAE
-        citas.forEach(cita -> log.info("CitaDTO: {}", cita));
 
-        return ResponseEntity.ok(citas); // Si está vacía, devuelve 200 con []
-    }
-
-    //GET /clientes?estado=programada y dni
-
-    @GetMapping("/clientes")
-    public ResponseEntity<List<CitaDto>> listaClienteProgramadasDni(
-            @RequestParam EstadoCita estado,
-            @RequestParam(required = false) String dni)
-            {
-        List<CitaDto> citas = citaService.buscarCitaFiltradaDni(estado, dni);
-        return ResponseEntity.ok(citas);
-    }
-
-    //GET /clientes?estado=programada y nombre
-
-    @GetMapping("/clientes")
-    public ResponseEntity<List<CitaDto>> listaClienteProgramadasNombre(
-            @RequestParam EstadoCita estado,
-            @RequestParam(required = false) String nombre) {
-        List<CitaDto> citas = citaService.buscarCitaFiltradaNombre(estado, nombre);
-        return ResponseEntity.ok(citas);
-    }
-*/
 
     @GetMapping("/clientes")
     public ResponseEntity<List<CitaDto>> obtenerCitasFiltradas(
@@ -178,12 +147,16 @@ public class CitaController {
 
     @GetMapping("/estados")
     public List<Map<String, String>> obtenerEstadosCita() {
-        return Arrays.stream(EstadoCita.values())
+        List<Map<String, String>> estados = Arrays.stream(EstadoCita.values())
                 .map(e -> Map.of(
                         "codigo", e.name(),
                         "valor", e.getEstadoCita()
                 ))
                 .collect(Collectors.toList());
+
+        log.info("Estados de cita disponibles: {}", estados);
+
+        return estados;
     }
 
 

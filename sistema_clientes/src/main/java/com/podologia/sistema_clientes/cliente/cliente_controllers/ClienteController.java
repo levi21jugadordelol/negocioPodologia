@@ -5,16 +5,21 @@ import com.podologia.sistema_clientes.cliente.cliente_dtos.ClienteRequestDto;
 import com.podologia.sistema_clientes.cliente.cliente_entity.ClienteEntity;
 import com.podologia.sistema_clientes.cliente.cliente_service.IClienteService;
 import com.podologia.sistema_clientes.shared.mappers.ClienteMapper;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,10 +75,23 @@ public class ClienteController {
     }
 
     @GetMapping("/export-excel")
-    public void exportExcel(final HttpServletResponse response) throws IOException{
-        response.setHeader("Content-Disposition","attachment; filname=clientes.xlsx");
-        this.clienteService.exportExcel(response);
+    public void exportarExcel(final HttpServletResponse response) {
+        try {
+            ByteArrayOutputStream excelData = clienteService.generarExcelClientes();
+
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=clientes.xlsx");
+
+            ServletOutputStream outputStream = response.getOutputStream();
+            excelData.writeTo(outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error exportando archivo Excel", e);
+        }
     }
+
 
 
     @GetMapping("/{idCliente}")
@@ -122,6 +140,18 @@ public class ClienteController {
         return ResponseEntity.ok(clienteMapper.toClienteDto(cliente));
     }
 
+    //aca se hace la ruta para que podamos almacenar clientes durante el dia
+    @GetMapping("/por-dia")
+    public ResponseEntity<List<ClienteDto>> obtenerClientesPorFecha(
+            @RequestParam("fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
+    ) {
+        List<ClienteEntity> clientesDelDia = clienteService.guardarClientePorDia(fecha);
+        List<ClienteDto> clienteDtos = clientesDelDia.stream()
+                .map(clienteMapper::toClienteDto)
+                .toList();
+
+        return ResponseEntity.ok(clienteDtos);
+    }
 
 
 

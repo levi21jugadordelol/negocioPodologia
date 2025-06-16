@@ -23,6 +23,8 @@ import { cerrandoSession } from "./closeSession/cerrandoSession.js";
 import { cargarClientesDelDia } from "./cliente/cargarClienteDelDia.js";
 import { evento_excel } from "./cliente/evento_excel.js";
 import { eventoEliminarCliente } from "./cliente/eventoEliminarCliente.js";
+import { cargarProductosDesdeLocalStorage } from "./localStorage/cargarProductosDesdeLocalStorage.js";
+import { recuperarProductosDesdeLocalStorage } from "./producto/recuperarProductosDesdeLocalStorage.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 DOM listo, inicializando app...");
@@ -32,8 +34,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("📅 Clientes cargados al iniciar:", clientesDelDia); // 👈
   cargarClientesDesdeLocalStorage(); // 👈 cargar desde localStorage
   cargarCitasDesdeLocalStorage();
+  cargarProductosDesdeLocalStorage();
   console.log("📦 datosCliente actuales:", datosCliente); // 👈 ¿está vacío?
   //enviandoDatos(datosCliente);
+  const datosProduct = recuperarProductosDesdeLocalStorage();
+  console.log("los productos en el domContenLoaded: ", datosProduct);
   crearModalNuevoCliente(
     ".btn_nuevo_cliente",
     ".modal-overlay",
@@ -62,7 +67,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     ".btn_verPendientes",
     "#vista-clientes-pendientes",
     ".btn_verFinalizadas",
-    "#vista-clientes-finalizadas"
+    "#vista-clientes-finalizadas",
+    ".btn_verCanceladas",
+    "#vista-clientes-cancelados"
   );
   openModalDetailsService(
     ".click_finalizar",

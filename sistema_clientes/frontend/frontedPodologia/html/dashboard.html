@@ -63,6 +63,7 @@
               🧴 Productos
             </button>
           </li>
+
           <li>
             <button
               type="button"
@@ -321,6 +322,57 @@
               </thead>
 
               <tbody id="tabla-citas-finalizadas">
+                <!-- Datos dinámicos -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- === vista de clientes cancelados === -->
+        <div id="vista-clientes-cancelados" class="section">
+          <h2>Citas canceladas</h2>
+
+          <!-- Buscadores -->
+          <!-- Buscadores con botones -->
+          <div class="mb-3 d-flex gap-3 align-items-center">
+            <input
+              type="text"
+              id="input-dni"
+              class="form-control"
+              placeholder="Buscar por DNI"
+              style="width: 30%"
+            />
+            <button id="btn-buscar-dni" class="btn btn-primary">
+              Buscar DNI
+            </button>
+
+            <input
+              type="text"
+              id="input-nombre"
+              class="form-control"
+              placeholder="Buscar por Nombre del Cliente"
+              style="width: 30%"
+            />
+            <button id="btn-buscar-nombre" class="btn btn-primary">
+              Buscar Nombre
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>ID cita</th>
+                  <th>Cliente</th>
+                  <th>servicio id</th>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                  <th>Observaciones</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody id="tabla-citas-cancelados">
                 <!-- Datos dinámicos -->
               </tbody>
             </table>

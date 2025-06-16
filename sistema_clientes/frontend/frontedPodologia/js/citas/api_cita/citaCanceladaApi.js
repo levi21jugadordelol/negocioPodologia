@@ -1,20 +1,15 @@
 import { BASE_URL } from "../../config/configuracion.js";
 
-import { renderizarTablaCitas } from "../metodos/renderizarTabla_citas.js";
-
 const d = document;
 
-export const citaFinalizada = async ({ dni = "", nombre = "" } = {}) => {
+export const citaCanceladaApi = async ({ dni = "", nombre = "" } = {}) => {
   try {
-    console.log("🔄 Solicitando citas finalizadas...");
-
-    // Construir URL con filtros opcionales
-    let url = `${BASE_URL}/citas/clientes?estado=ATENDIDA`;
+    console.log("🔄 Solicitando citas canceladas...");
+    let url = `${BASE_URL}/citas/clientes?estado=CANCELADA`;
     if (dni) url += `&dni=${encodeURIComponent(dni)}`;
     else if (nombre) url += `&nombre=${encodeURIComponent(nombre)}`;
 
     console.log("valor de la url de atendida es: ", url);
-
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
@@ -22,11 +17,10 @@ export const citaFinalizada = async ({ dni = "", nombre = "" } = {}) => {
       },
     });
     const citas = await response.json();
-    // Asegurarte de que citas sea siempre un array
     const citasArray = Array.isArray(citas) ? citas : [];
     console.log(`✅ ${citasArray.length} citas recibidas`);
-    renderizarTablaCitas(citasArray);
+    return citasArray;
   } catch (error) {
-    console.error("❌ Error general en citaFinalizadaApi:", error);
+    console.error("❌ Error general en citaCanceladaApi:", error);
   }
 };
