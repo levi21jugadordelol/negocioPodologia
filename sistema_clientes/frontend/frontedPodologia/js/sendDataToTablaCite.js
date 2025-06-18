@@ -16,6 +16,8 @@ export const sendDataToTablaCite = () => {
        <td>${servicio.$nombreServicio}</td>
     `;*/
 
+    fila.dataset.id = servicio.id || servicio.idServicio;
+
     fila.innerHTML = `
   <td>${servicio.nombre}</td>
   <td>${servicio.precio}</td>
@@ -38,8 +40,8 @@ export const sendDataToTablaCite = () => {
     });
 
     // Clases específicas
-    botonEditar.classList.add("click_editar", "green");
-    buttonDeleteServicio.classList.add("click_delete", "red");
+    botonEditar.classList.add("click_editar_servicio", "green");
+    buttonDeleteServicio.classList.add("click_delete_servicio", "red");
 
     // Agregar botones a celda
     celdaAcciones.appendChild(botonEditar);

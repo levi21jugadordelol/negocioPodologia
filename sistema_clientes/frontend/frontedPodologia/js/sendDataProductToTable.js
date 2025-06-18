@@ -1,4 +1,5 @@
 import { datosProducto } from "./getDataProduct.js";
+import { productoStorage } from "./localStorage/productoStorage.js";
 
 export const sendDataProductToTable = () => {
   const d = document;
@@ -17,6 +18,7 @@ export const sendDataProductToTable = () => {
     );
 
     const fila = document.createElement("tr");
+    fila.dataset.id = producto.id;
 
     fila.innerHTML = `
       <td>${producto.nombre}</td>
@@ -39,8 +41,8 @@ export const sendDataProductToTable = () => {
     });
 
     // Clases específicas
-    botonEditar.classList.add("click_editar", "green");
-    buttonDeleteProducto.classList.add("click_delete", "red");
+    botonEditar.classList.add("click_editar_producto", "green");
+    buttonDeleteProducto.classList.add("click_delete_producto", "red");
 
     // Agregar botones a celda
     celdaAcciones.appendChild(botonEditar);
@@ -49,4 +51,8 @@ export const sendDataProductToTable = () => {
 
     tableDataProduct.appendChild(fila);
   });
+  console.log(
+    "✅ Tabla actualizada en el DOM con productos:",
+    productoStorage.obtenerProductos()
+  );
 };

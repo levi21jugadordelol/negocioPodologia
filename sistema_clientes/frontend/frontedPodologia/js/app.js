@@ -25,6 +25,10 @@ import { evento_excel } from "./cliente/evento_excel.js";
 import { eventoEliminarCliente } from "./cliente/eventoEliminarCliente.js";
 import { cargarProductosDesdeLocalStorage } from "./localStorage/cargarProductosDesdeLocalStorage.js";
 import { recuperarProductosDesdeLocalStorage } from "./producto/recuperarProductosDesdeLocalStorage.js";
+import { eventoEditDeleteProducto } from "./producto/evento_producto/eventoEditDeleteProducto.js";
+import { eventoEditDeleteServicio } from "./servicios/evento_servicio/eventoEditDeleteServicio.js";
+import { recuperarServiciosDesdeLocalStorage } from "./servicios/metodos/recuperarServiciosDesdeLocalStorage.js";
+import { cargarServiciosDesdeLocalStorage } from "./localStorage/cargarServiciosDesdeLocalStorage.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 DOM listo, inicializando app...");
@@ -38,6 +42,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("📦 datosCliente actuales:", datosCliente); // 👈 ¿está vacío?
   //enviandoDatos(datosCliente);
   const datosProduct = recuperarProductosDesdeLocalStorage();
+  //recuperarServiciosDesdeLocalStorage();
+  cargarServiciosDesdeLocalStorage();
   console.log("los productos en el domContenLoaded: ", datosProduct);
   crearModalNuevoCliente(
     ".btn_nuevo_cliente",
@@ -92,6 +98,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
   evento_excel(".btn_enviarExcel");
   eventoEliminarCliente(".click_delete_cliente");
+  eventoEditDeleteProducto(
+    ".click_editar_producto",
+    ".click_delete_producto",
+    ".close",
+    ".btn_edit_producto"
+  );
+  eventoEditDeleteServicio(
+    ".click_editar_servicio",
+    ".click_delete_servicio",
+    ".btn_enviarEdit_servicio",
+    ".close"
+  );
   cerrandoSession("#btn_cerrarSession");
 });
 

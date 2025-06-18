@@ -562,6 +562,73 @@
         </form>
       </div>
 
+      <!-- === VENTANA MODAL DE EDIT SERVICIO === -->
+
+      <div id="modal_servicio_edit" class="modal-overlay_service translate">
+        <form
+          id="form_servicio_edit"
+          class="modal-content form-control w-75"
+          data-id=""
+        >
+          <h1 class="text-center">Creando Registro</h1>
+
+          <div class="mb-3">
+            <label for="modal_nombreServicio_edit" class="form-label"
+              >Nombre del servicio:</label
+            >
+            <input
+              id="modal_nombreServicio_edit"
+              type="text"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_precio_edit" class="form-label">precio:</label>
+            <input id="modal_precio_edit" type="number" class="form-control" />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_descripcion_edit" class="form-label"
+              >descripcion:</label
+            >
+            <input
+              id="modal_descripcion_edit"
+              type="text"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_duracion_edit" class="form-label"
+              >duracion:</label
+            >
+            <input
+              id="modal_duracion_edit"
+              type="number"
+              class="form-control"
+              placeholder="Duración en minutos"
+            />
+          </div>
+
+          <div class="mb-3 text-center">
+            <button
+              type="button"
+              class="btn btn-primary btn_enviarEdit_servicio"
+            >
+              Guardar
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-danger close position-absolute top-0 end-0 m-2"
+          >
+            ✖
+          </button>
+        </form>
+      </div>
+
       <!-- === VENTANA MODAL producto === -->
       <div id="modal_producto" class="modal-overlay_product translate">
         <form
@@ -597,6 +664,62 @@
 
           <div class="mb-3 text-center">
             <button type="button" class="btn btn-primary btn_enviar_producto">
+              Guardar
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-danger close position-absolute top-0 end-0 m-2"
+          >
+            ✖
+          </button>
+        </form>
+      </div>
+
+      <!-- ===VENTANA MODADL EDI PRODUCTO=== -->
+      <div id="modal_producto_edit" class="modal-overlay_product translate">
+        <form
+          id="form_producto_edit"
+          class="modal-content form-control w-75"
+          data-id=""
+        >
+          <h1 class="text-center">Editando Producto</h1>
+
+          <div class="mb-3">
+            <label for="modal_nombreProducto_edit" class="form-label"
+              >Nombre del producto:</label
+            >
+            <input
+              id="modal_nombreProducto_edit"
+              type="text"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_stock_edit" class="form-label">Stock:</label>
+            <input
+              id="modal_stock_edit"
+              type="number"
+              min="0"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="modal_tipoProducto_edit" class="form-label"
+              >Tipo de producto:</label
+            >
+            <input
+              id="modal_tipoProducto_edit"
+              type="text"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3 text-center">
+            <button type="button" class="btn btn-primary btn_edit_producto">
               Guardar
             </button>
           </div>

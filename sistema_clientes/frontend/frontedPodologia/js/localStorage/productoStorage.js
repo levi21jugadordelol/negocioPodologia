@@ -12,6 +12,10 @@ export class ProductoStorage {
 
   guardarProducto(producto) {
     const productos = this.obtenerProductos();
+    console.log(
+      "los productos en guardar producto desde ls en el metodo guardarProducto() es: ",
+      productos
+    );
     let id = producto.idProducto || producto.id;
 
     if (!id) {
@@ -58,6 +62,10 @@ export class ProductoStorage {
     const data = localStorage.getItem(STORAGE_KEY);
     const lista = data ? JSON.parse(data) : [];
 
+    console.log(
+      "la lista de productos en el ls, en el metodo obtenerProductos() es: ",
+      lista
+    );
     return lista
       .filter(
         (obj) =>
