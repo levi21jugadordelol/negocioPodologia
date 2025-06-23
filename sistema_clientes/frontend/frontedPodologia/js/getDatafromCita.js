@@ -29,9 +29,7 @@ export const getDataFromCita = async () => {
     console.log("input obs tendria: ", inputObs);
 
     const tdCliente = fila.querySelector("td:nth-child(2)");
-    //const idCliente = parseInt(tdCliente?.textContent.trim(), 10);
-    const textoCrudo = tdCliente?.textContent.replace(/\D/g, "");
-    const idCliente = parseInt(textoCrudo, 10);
+    const idCliente = parseInt(tdCliente?.dataset.idcliente, 10);
 
     // === Consolas de verificación ===
     console.log("📅 Fecha ingresada:", inputFecha?.value);

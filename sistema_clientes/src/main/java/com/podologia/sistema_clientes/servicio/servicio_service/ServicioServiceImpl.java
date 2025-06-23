@@ -8,11 +8,13 @@ import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.servicio.IServicioRepo;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
+import com.podologia.sistema_clientes.shared.exception.ServicioEnUsoException;
 import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionServicio;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,20 +51,24 @@ public class ServicioServiceImpl implements IServicioService {
 
 
 
-
     @Transactional
     @Override
-    public void deleteServicio(Long id_servicio) {
-           if(!servicioRepo.existsById(id_servicio)){
+    public void deleteServicio(Long idServicio) {
+        ServicioEntity servicio = servicioRepo.findById(idServicio)
+                .orElseThrow(() -> new EntidadNoEncontradaException("Servicio con ID " + idServicio + " no existe."));
 
-               log.error("no existe dicho id {}", id_servicio);
-               throw new EntidadNoEncontradaException("servicio con ID " + id_servicio + " no existe.");
-
-           }else{
-               servicioRepo.deleteById(id_servicio);
-               log.info("el id fue eliminado correctamente: {}",id_servicio);
-           }
+        try {
+            servicioRepo.delete(servicio);
+            log.info("✅ Servicio con ID {} eliminado correctamente", idServicio);
+        } catch (DataIntegrityViolationException ex) {
+            log.warn("⛔ No se puede eliminar el servicio con ID {} porque está en uso en otra entidad", idServicio);
+            throw new ServicioEnUsoException("Este servicio no se puede eliminar porque está en uso en citas.");
+        }
     }
+
+
+
+
 
     @Override
     public Optional<ServicioEntity> findServicio(Long id_servicio) {
@@ -77,12 +83,14 @@ public class ServicioServiceImpl implements IServicioService {
 
     @Transactional
     @Override
-    public void editServicio(Long id_servicio, ServicioEntity servicioNuevo) {
+    public ServicioEntity editServicio(Long id_servicio, ServicioEntity servicioNuevo) {
        ServicioEntity servicioEditado = validacionServicio.validateParametersToEditService(id_servicio,servicioNuevo);
 
        servicioRepo.save(servicioEditado);
 
         log.info("Servicio actualizado correctamente con ID: {}", id_servicio);
+
+        return servicioEditado;
     }
 
     @Override

@@ -1,7 +1,7 @@
 import { llenarComboEstadoCita } from "./conexion/fillComboFromBackend.js";
 import { llenarComboServicio } from "./conexion/fillComboServiceFromBackend.js";
 
-export const addIdToTable = async (idCliente) => {
+export const addIdToTable = async (idCliente, nombreCliente) => {
   const d = document;
   console.log("ID recibido:", idCliente);
 
@@ -34,8 +34,8 @@ export const addIdToTable = async (idCliente) => {
 
   // 👤 Cliente (oculto, pero se enviará)
   const tdClienteVisible = d.createElement("td");
-  tdClienteVisible.textContent = idCliente; // Muestra el id en la tabla
-
+  tdClienteVisible.dataset.idcliente = idCliente;
+  tdClienteVisible.textContent = nombreCliente;
   fila.appendChild(tdClienteVisible);
 
   // Servicio

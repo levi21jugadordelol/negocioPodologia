@@ -10,12 +10,14 @@ import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import com.podologia.sistema_clientes.servicio.servicio_service.IServicioService;
 import com.podologia.sistema_clientes.servicio.servicio_service.ServicioServiceImpl;
 import com.podologia.sistema_clientes.shared.exception.EntidadNoEncontradaException;
+import com.podologia.sistema_clientes.shared.exception.ServicioEnUsoException;
 import com.podologia.sistema_clientes.shared.exception.ValidacionException;
 import com.podologia.sistema_clientes.shared.mappers.ServicioMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,25 +72,37 @@ public class ServicioController {
     }
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<?> editarServicio(@PathVariable Long id, @RequestBody ServicioRequestDto servicioRequestDto) {
-        try {
-            ServicioEntity nuevosDatos = servicioMapper.toServicioEntity(servicioRequestDto);
-            servicioService.editServicio(id, nuevosDatos);
-            return ResponseEntity.ok("Servicio actualizado correctamente");
-        } catch (EntidadNoEncontradaException | ValidacionException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
+    public ResponseEntity<ServicioDto> editarServicio(
+            @PathVariable Long id,
+            @RequestBody ServicioRequestDto servicioRequestDto) {
+
+        log.info("🔧 Editando servicio con id: {}", id);
+
+        // 1. Convertir DTO de request a entidad
+        ServicioEntity nuevosDatos = servicioMapper.toServicioEntity(servicioRequestDto);
+
+        // 2. Ejecutar la lógica del servicio
+        ServicioEntity actualizado = servicioService.editServicio(id, nuevosDatos);
+
+        // 3. Convertir la entidad actualizada al DTO de respuesta
+        ServicioDto respuesta = servicioMapper.toServicioDto(actualizado);
+
+        // 4. Devolver respuesta estructurada
+        return ResponseEntity.ok(respuesta);
     }
+
 
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarServicio(@PathVariable Long id) {
-        try {
-            servicioService.deleteServicio(id);
-            return ResponseEntity.ok("Servicio eliminado correctamente");
-        } catch (EntidadNoEncontradaException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        }
+        log.info("🗑️ Solicitando eliminación de servicio con ID {}", id);
+        servicioService.deleteServicio(id);  // cualquier excepción subirá automáticamente
+        return ResponseEntity.ok("Servicio eliminado correctamente");
     }
+
+
+
+
+
 
     @GetMapping("/buscarNombre")
     public ResponseEntity<?> buscarPorNombre(@RequestParam String nombre) {

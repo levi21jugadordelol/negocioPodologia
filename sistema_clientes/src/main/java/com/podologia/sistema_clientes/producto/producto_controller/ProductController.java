@@ -65,12 +65,26 @@ public class ProductController {
 
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<String> editarProducto(@PathVariable Long id, @RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<ProductDto> editarProducto(
+            @PathVariable Long id,
+            @RequestBody ProductRequestDto productRequestDto) {
 
-        ProductoEntity actualizado = productMapper.toProductEntity(productRequestDto);
-        productService.editProducto(id, actualizado);
-        return ResponseEntity.ok("Producto actualizado correctamente");
+        log.info("🔧 Editando producto con id: {}", id);
+
+        // 1. Convertir DTO a entidad
+        ProductoEntity productoEntity = productMapper.toProductEntity(productRequestDto);
+
+        // 2. Llamar al servicio para editar
+        ProductoEntity actualizado = productService.editProducto(id, productoEntity);
+
+
+        // 3. Convertir entidad actualizada a DTO de salida
+        ProductDto productoDto = productMapper.toProductDto(actualizado);
+
+        // 4. Retornar respuesta estructurada con JSON
+        return ResponseEntity.ok(productoDto);
     }
+
 
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<String> eliminarProducto(@PathVariable Long id) {

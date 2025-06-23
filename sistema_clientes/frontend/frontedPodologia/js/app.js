@@ -29,17 +29,32 @@ import { eventoEditDeleteProducto } from "./producto/evento_producto/eventoEditD
 import { eventoEditDeleteServicio } from "./servicios/evento_servicio/eventoEditDeleteServicio.js";
 import { recuperarServiciosDesdeLocalStorage } from "./servicios/metodos/recuperarServiciosDesdeLocalStorage.js";
 import { cargarServiciosDesdeLocalStorage } from "./localStorage/cargarServiciosDesdeLocalStorage.js";
+import { recuperarCitasDesdeLocalStorage } from "./localStorage/recuperarCitasDesdeLocalStorage.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 DOM listo, inicializando app...");
 
-  localStorage.removeItem("citasStorage");
+  // localStorage.removeItem("citasStorage");
   const clientesDelDia = await cargarClientesDelDia();
   console.log("📅 Clientes cargados al iniciar:", clientesDelDia); // 👈
   cargarClientesDesdeLocalStorage(); // 👈 cargar desde localStorage
-  cargarCitasDesdeLocalStorage();
+
+  // 🧼 Paso de limpieza del localStorage (descarta citas inválidas antiguas)
+  /* const citasValidas = citaStorage.obtenerTodos();
+  citaStorage.guardarTodos(citasValidas); // ← esto limpia el storage */
+
+  /*const totalCitas = await cargarCitasDesdeLocalStorage();
+  console.log("citas cargadas al iniciar : ", totalCitas);*/
+
+  const citasRecuperadas = recuperarCitasDesdeLocalStorage();
+  console.log(
+    "🔁 Citas retornadas por recuperarCitasDesdeLocalStorage:",
+    citasRecuperadas
+  );
+
   cargarProductosDesdeLocalStorage();
   console.log("📦 datosCliente actuales:", datosCliente); // 👈 ¿está vacío?
+
   //enviandoDatos(datosCliente);
   const datosProduct = recuperarProductosDesdeLocalStorage();
   //recuperarServiciosDesdeLocalStorage();
@@ -51,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ".close",
     ".button_enviar_cliente"
   );
-  tableCita("#btn-citas", "#vista-citas");
+  //tableCita("#btn-citas", "#vista-citas");
   sendClientToCita(".click_createCite", "#vista-citas", "#vista-clientes"); //click_createCite, button creado en sendInfoToTable y vista-citas, id dentro del html para el div donde esta citas
   tableClient("#btn-clientes", "#vista-clientes");
   invocateDivServicio("#btn-servicios", "#vista-servicio");
@@ -113,4 +128,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   cerrandoSession("#btn_cerrarSession");
 });
 
-tableCita("#btn-citas", "#vista-citas");
+tableCita("#btn-citas", "#vista-citas-del-dia");

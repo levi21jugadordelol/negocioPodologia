@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -201,7 +203,7 @@ public class CitaServiceImpl implements ICitaService {
 
     @Override
     public List<CitaDto> getListPendiente(EstadoCita estadoCita) {
-        List<CitaEntity> listaPendiente = citaRepo.getListPendiente(estadoCita);
+        List<CitaEntity> listaPendiente = citaRepo.getListByEstado(estadoCita);
         if(listaPendiente.isEmpty()){
             log.warn("no hay nada en la lista: {}", listaPendiente.size());
             throw new EntidadNoEncontradaException("No se encontraron citas con estado: " + estadoCita);
@@ -258,6 +260,14 @@ public class CitaServiceImpl implements ICitaService {
         } else {
             return getListPendiente(estado);
         }
+    }
+
+    @Override
+    public List<CitaEntity> guardarCitaPorDia(LocalDate fecha) {
+        LocalDateTime inicio = fecha.atStartOfDay();
+        LocalDateTime fin = fecha.plusDays(1).atStartOfDay().minusNanos(1);
+
+        return citaRepo.getCitaXday(inicio,fin);
     }
 
 

@@ -21,6 +21,8 @@ export const sendClientToCita = (
         alert("Este cliente no tiene un ID válido.");
         return;
       }
+      const nombreCliente = fila?.children[0]?.textContent;
+      console.log("nombre de cliente es: ", nombreCliente);
 
       // Guardamos ese ID en el form_cliente (en su data-id)
       const formulario = document.getElementById("form_cliente");
@@ -38,7 +40,7 @@ export const sendClientToCita = (
       }
 
       // Enviar ID a la tabla cita
-      addIdToTable(idCliente);
+      addIdToTable(idCliente, nombreCliente);
     }
   });
 };

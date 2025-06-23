@@ -20,7 +20,7 @@ export async function comenzarTollenarClientPorDiaApi(fecha) {
     // console.log("🗑️ Cliente eliminado también de
     // const data = await respuesta.json();
     const data = await respuesta.json();
-    console.log("📡 Clientes recibidos del backend:", data);
+    console.log("📡 Clientes recibidos del backend por dia:", data);
 
     return data; // ✅ DEVUELVE los clientes al caller (muy importante)localStorage");
   } catch (error) {

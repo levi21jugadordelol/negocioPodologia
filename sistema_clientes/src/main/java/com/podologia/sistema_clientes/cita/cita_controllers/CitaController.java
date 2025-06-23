@@ -16,11 +16,13 @@ import com.podologia.sistema_clientes.shared.metodoValidaciones.ValidacionCita;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -198,6 +200,14 @@ public class CitaController {
         return servicioOptional
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
+    @GetMapping("/por-dia")
+    public ResponseEntity<List<CitaDto>> obtenerCitasPorFecha(@RequestParam("fecha") @DateTimeFormat(iso= DateTimeFormat.ISO.DATE)LocalDate fecha){
+        List<CitaEntity> citasDelDia = citaService.guardarCitaPorDia(fecha);
+        List<CitaDto> citasDtos = citasDelDia.stream().map(citaMapper::toCitaDto).toList();
+        return ResponseEntity.ok(citasDtos);
     }
 
 

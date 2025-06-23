@@ -15,7 +15,7 @@ public interface IProductService {
 
     public Optional<ProductoEntity> findProduct(Long id_producto);
 
-    public void editProducto(Long id_producto, ProductoEntity productoEntity);
+    public ProductoEntity editProducto(Long id_producto, ProductoEntity productoEntity);
 
     Optional<ProductoEntity> buscarProducto(String nombre_producto);
 

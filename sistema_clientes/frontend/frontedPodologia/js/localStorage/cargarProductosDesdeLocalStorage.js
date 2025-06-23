@@ -28,7 +28,6 @@ export async function cargarProductosDesdeLocalStorage() {
     productoStorage.guardarTodosLosProductos(productos);
     console.log("✅ Todos los productos fueron guardados en localStorage");
 
-    console.log("✅ Todos los productos fueron guardados en localStorage");
     recuperarProductosDesdeLocalStorage();
     return productos;
   } catch (error) {

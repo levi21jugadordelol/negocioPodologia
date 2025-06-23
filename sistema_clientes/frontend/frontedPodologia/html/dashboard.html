@@ -177,6 +177,40 @@
           </div>
         </div>
 
+        <!-- === Vista de citas del dia === -->
+
+        <div id="vista-citas-del-dia" class="section">
+          <h2>Citas</h2>
+
+          <button class="btn btn-warning my-3 btn_verPendientes">
+            ⏳ Citas pendientes
+          </button>
+
+          <button class="btn btn-success my-3 btn_verFinalizadas">
+            ✅ Citas finalizadas
+          </button>
+
+          <button class="btn btn-danger my-3 btn_verCanceladas">
+            ❌ Citas canceladas
+          </button>
+          <div class="table-responsive">
+            <table id="tabla-citas" class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Fecha</th>
+                  <th>Cliente</th>
+                  <th>Servicio</th>
+                  <th>Estado</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-citas-xDia">
+                <!-- Datos dinámicos -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- === Vista de servicio === -->
         <div id="vista-servicio" class="section">
           <h2>Servicios</h2>
@@ -279,7 +313,7 @@
         <!-- === vista de clientes finalziados === -->
 
         <div id="vista-clientes-finalizadas" class="section">
-          <h2>Citas Programadas</h2>
+          <h2>Citas Finalizadas</h2>
 
           <!-- Buscadores -->
           <!-- Buscadores con botones -->

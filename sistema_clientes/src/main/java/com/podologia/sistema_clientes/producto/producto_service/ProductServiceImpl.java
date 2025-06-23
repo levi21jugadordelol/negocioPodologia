@@ -64,11 +64,19 @@ public class ProductServiceImpl implements IProductService {
 
     @Transactional
     @Override
-    public void editProducto(Long id_producto, ProductoEntity productoEntity) {
-        ProductoEntity productoEditado = validacionProducto.validateParametersToEditProduct(id_producto, productoEntity);
-        productoRepo.save(productoEditado);
-        log.info("Producto actualizado correctamente con ID: {}", id_producto);
+    public ProductoEntity editProducto(Long idProducto, ProductoEntity productoEntity) {
+        // Validar existencia, y posibles reglas del dominio
+        ProductoEntity productoEditado = validacionProducto.validateParametersToEditProduct(idProducto, productoEntity);
+
+        // Guardar cambios y obtener entidad actualizada
+        ProductoEntity productoActualizado = productoRepo.save(productoEditado);
+
+        // Log de auditoría
+        log.info("Producto actualizado correctamente con ID: {}", productoActualizado.getIdProducto());
+
+        return productoActualizado;
     }
+
 
     @Override
     public Optional<ProductoEntity> buscarProducto(String nombre_producto) {

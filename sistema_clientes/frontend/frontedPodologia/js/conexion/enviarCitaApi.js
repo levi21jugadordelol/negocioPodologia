@@ -14,6 +14,7 @@ export async function enviarCitaApi(cita) {
       },
       body: JSON.stringify(cita),
     });
+
     if (!respuesta.ok) {
       throw new Error(`Error del servidor: ${respuesta.status}`);
     }
@@ -21,15 +22,16 @@ export async function enviarCitaApi(cita) {
     const citaGuardado = await respuesta.json();
     const { idCita } = citaGuardado;
 
-    // 🟩 Combinar la cita original con el id retornado por la API
-    const citaConId = { ...cita, idCita };
+    // 💾 Guarda sólo el ID si eso necesitas, o toda la respuesta real del backend
+    citaStorage.guardar({ ...citaGuardado });
 
-    // 🟩 Guardar en localStorage
-    // CitaStorage.guardarCita(citaConId);
-    citaStorage.guardar(citaConId);
+    alert("✅ Cita guardada exitosamente");
 
-    alert("✅ Cita guardado exitosamente");
-    return { exito: true, idCita, mensaje: citaGuardado.mensaje };
+    return {
+      exito: true,
+      idCita,
+      mensaje: citaGuardado.mensaje,
+    };
   } catch (e) {
     console.error("❌ Error al enviar cita:", e.message);
     alert("❌ Error al guardar cita");

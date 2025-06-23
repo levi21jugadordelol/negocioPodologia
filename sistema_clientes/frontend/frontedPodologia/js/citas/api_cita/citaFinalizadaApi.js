@@ -22,9 +22,14 @@ export const citaFinalizada = async ({ dni = "", nombre = "" } = {}) => {
       },
     });
     const citas = await response.json();
+    console.log("📦 JSON parseado:", citas);
     // Asegurarte de que citas sea siempre un array
     const citasArray = Array.isArray(citas) ? citas : [];
-    console.log(`✅ ${citasArray.length} citas recibidas`);
+    console.log(
+      `📋 Total de citas finalizadas recibidas: ${citasArray.length}`
+    );
+    console.log("📦 Arreglo final de citas:", citasArray);
+
     renderizarTablaCitas(citasArray);
   } catch (error) {
     console.error("❌ Error general en citaFinalizadaApi:", error);

@@ -8,6 +8,7 @@ import com.podologia.sistema_clientes.detalleCita.detalle_entity.DetalleEntity;
 import com.podologia.sistema_clientes.enume.EstadoCita;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public interface ICitaService {
    List<CitaDto> buscarCitaFiltradaDni(EstadoCita estadoCita, String dni);
    List<CitaDto> buscarCitaFiltradaNombre(EstadoCita estadoCita, String nombre);
    List<CitaDto> filtrarCitas(EstadoCita estado, String dni, String nombre);
+   List<CitaEntity> guardarCitaPorDia(LocalDate fecha);
     Optional<ServicioEntity> obtenerServicioPorIdCita(Long idCita);
 
 }

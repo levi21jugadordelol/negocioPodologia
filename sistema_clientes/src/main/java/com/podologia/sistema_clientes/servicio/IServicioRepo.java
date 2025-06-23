@@ -13,4 +13,9 @@ public interface IServicioRepo extends JpaRepository<ServicioEntity,Long> {
 
     @Query("SELECT c from ServicioEntity c where c.nombreServicio = :nombreServicio")
     Optional<ServicioEntity> findServicioByNombre(@Param("nombreServicio") String nombreServicio);
+
+
+    @Query("SELECT COUNT(d) FROM DetalleEntity d WHERE d.servicio.id = :idServicio")
+    long countDetallesPorServicio(@Param("idServicio") Long idServicio);
+
 }

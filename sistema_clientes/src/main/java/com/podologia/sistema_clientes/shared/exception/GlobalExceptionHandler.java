@@ -1,6 +1,8 @@
 package com.podologia.sistema_clientes.shared.exception;
 
+import jakarta.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -95,6 +97,29 @@ public class GlobalExceptionHandler {
         log.error("Error interno no controlado", ex);
         return buildResponse("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(ServicioEnUsoException.class)
+    public ResponseEntity<Map<String, Object>> handleServicioEnUso(ServicioEnUsoException ex) {
+        log.warn("⛔ Servicio en uso: {}", ex.getMessage());
+        return buildResponse(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        log.warn("🚫 Violación de integridad referencial: {}", ex.getRootCause().getMessage());
+
+        String mensaje = "No se puede eliminar el recurso porque está en uso por otras entidades relacionadas.";
+        return buildResponse(mensaje, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PersistenceException.class)
+    public ResponseEntity<Map<String, Object>> handlePersistence(PersistenceException ex) {
+        log.warn("📛 Error de persistencia: {}", ex.getMessage());
+        return buildResponse("Error de persistencia en la base de datos.", HttpStatus.CONFLICT);
+    }
+
+
+
 
     // Construcción común de respuestas de error
     private ResponseEntity<Map<String, Object>> buildResponse(String mensaje, HttpStatus status) {

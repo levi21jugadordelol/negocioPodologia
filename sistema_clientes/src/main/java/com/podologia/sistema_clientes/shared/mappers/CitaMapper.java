@@ -17,12 +17,15 @@ public interface CitaMapper {
 
   @Mappings({
           @Mapping(source = "cliente.nombreCliente", target = "nombreCliente"),
+          @Mapping(source = "cliente.idCliente", target = "clienteId"),
           @Mapping(source = "factura.idFactura", target = "facturaId"),
-        //  @Mapping(source = "servicio.idServicio", target = "servicioId"),
-          @Mapping(source = "servicio", target = "servicioDto"),
-          @Mapping(source = "listaDetalle", target = "detalles")
+          @Mapping(source = "servicio", target = "servicioDto"), // esto es suficiente
+          @Mapping(source = "listaDetalle", target = "detalles"),
+          @Mapping(source = "createdAt", target = "createdAt")
   })
-    CitaDto toCitaDto(CitaEntity citaEntity);
+  CitaDto toCitaDto(CitaEntity citaEntity);
+
+
 
 
 

@@ -51,8 +51,8 @@ export const sendDataProductToTable = () => {
 
     tableDataProduct.appendChild(fila);
   });
-  console.log(
+  /* console.log(
     "✅ Tabla actualizada en el DOM con productos:",
     productoStorage.obtenerProductos()
-  );
+  ); */
 };

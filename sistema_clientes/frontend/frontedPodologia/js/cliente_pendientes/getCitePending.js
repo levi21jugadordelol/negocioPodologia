@@ -7,11 +7,10 @@ export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
   try {
     console.log("🔄 Solicitando citas programadas...");
 
-    // Construir URL con filtros opcionales
     let url = `${BASE_URL}/citas/clientes?estado=PROGRAMADA`;
     if (dni) url += `&dni=${encodeURIComponent(dni)}`;
     else if (nombre) url += `&nombre=${encodeURIComponent(nombre)}`;
-    console.log("valor de la url de programada es: ", url);
+    console.log("🧭 URL: ", url);
 
     const response = await fetch(url, {
       headers: {
@@ -19,6 +18,7 @@ export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
         Authorization: `Bearer ${sessionStorage.token}`,
       },
     });
+
     const citas = await response.json();
 
     console.log(`✅ ${citas.length} citas recibidas`);
@@ -33,32 +33,42 @@ export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
     for (const cita of citas) {
       const row = document.createElement("tr");
 
-      row.appendChild(crearCelda(cita.idCita));
-      row.appendChild(crearCelda(cita.nombreCliente));
-      row.appendChild(crearCelda(cita.servicioDto?.idServicio || "-"));
-      row.appendChild(crearCelda(cita.fechaCita));
-      row.appendChild(crearCelda(cita.estadoCita));
-      row.appendChild(crearCelda(cita.observaciones || "-"));
+      const idCita = cita.id;
+      const nombreCliente = cita.nombreCliente;
+      const servicioId = cita.servicio?.idServicio ?? "-";
+      const nombreServicio = cita.servicio?.nombreServicio ?? "-";
+      const fechaCita = cita.fechaCita;
+      const estadoCita = cita.estadoCita;
+      const observaciones = cita.observaciones || "-";
+
+      row.appendChild(crearCelda(idCita));
+      row.appendChild(crearCelda(nombreCliente));
+      row.appendChild(crearCelda(nombreServicio));
+      row.appendChild(crearCelda(fechaCita));
+      row.appendChild(crearCelda(estadoCita));
+      row.appendChild(crearCelda(observaciones));
 
       const tdAcciones = document.createElement("td");
 
       const btnFinalizar = document.createElement("button");
       btnFinalizar.textContent = "Finalizado";
       btnFinalizar.classList.add("action-button", "click_finalizar", "green");
-      btnFinalizar.dataset.idCita = cita.idCita;
+      btnFinalizar.dataset.idCita = idCita;
 
-      // ✅ Usa el servicio incluido directamente
-      if (cita?.servicioDto?.idServicio) {
-        console.log("🧩 Servicio incluido:", cita.servicioDto.idServicio);
-        btnFinalizar.dataset.servicioId = cita.servicioDto.idServicio;
-        btnFinalizar.dataset.servicioNombre = cita.servicioDto.nombreServicio;
-        // ✅ NUEVO: agregar duración si existe
-        const detalle = cita.detalles?.find(
-          (d) => d.servicioId === cita.servicioDto.idServicio
-        );
-        btnFinalizar.dataset.duracion = detalle?.duracionTotal || "";
+      const detalle = cita.detalles?.[0]; // primero si existe
+
+      if (detalle?.servicioId) {
+        console.log("🧩 Servicio desde detalle:", detalle.servicioId);
+        btnFinalizar.dataset.servicioId = detalle.servicioId;
+        btnFinalizar.dataset.servicioNombre = detalle.nombreServicio || "-";
+        btnFinalizar.dataset.duracion = detalle.duracionTotal || "";
+      } else if (cita.servicio) {
+        console.log("🧩 Servicio desde cita:", servicioId);
+        btnFinalizar.dataset.servicioId = servicioId;
+        btnFinalizar.dataset.servicioNombre = nombreServicio;
+        btnFinalizar.dataset.duracion = cita.servicio.duracionServicio || "";
       } else {
-        console.warn(`⚠️ No se encontró servicio en la cita ${cita.idCita}`);
+        console.warn(`⚠️ No se encontró servicio en cita ${idCita}`);
       }
 
       const btnEliminar = document.createElement("button");

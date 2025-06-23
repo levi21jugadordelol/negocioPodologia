@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,15 +29,16 @@ public interface ICitaRepo extends JpaRepository<CitaEntity,Long> {
     List<CitaEntity> getListPendiente(@Param("estadoCita") EstadoCita estadoCita);*/
 
     @Query("""
-                     SELECT DISTINCT c FROM CitaEntity c
-                     JOIN FETCH c.servicio s
-                     WHERE c.estadoCita = :estado
-    """)
-    List<CitaEntity> getListPendiente(@Param("estado") EstadoCita estado);
+         SELECT DISTINCT c FROM CitaEntity c
+         JOIN FETCH c.servicio s
+         WHERE c.estadoCita = :estado
+""")
+    List<CitaEntity> getListByEstado(@Param("estado") EstadoCita estado);
 
 
 
-     //buscar a cliente en la lista de pendiente por dni
+
+    //buscar a cliente en la lista de pendiente por dni
     @Query("""
     SELECT DISTINCT c FROM CitaEntity c
     JOIN FETCH c.servicio s
@@ -60,6 +62,8 @@ public interface ICitaRepo extends JpaRepository<CitaEntity,Long> {
 """)
     List<CitaEntity> buscarPorEstadoYNombre(@Param("estado") EstadoCita estado, @Param("nombre") String nombre);
 
+    @Query("SELECT c FROM CitaEntity c WHERE c.createdAt BETWEEN :inicio AND :fin")
+    List<CitaEntity> getCitaXday(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
 
 
 }

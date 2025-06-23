@@ -9,6 +9,7 @@ import com.podologia.sistema_clientes.factura.factura_entity.FacturaEntity;
 import com.podologia.sistema_clientes.servicio.servicio_entity.ServicioEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -19,6 +20,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Slf4j
 @ToString(exclude = {"cliente", "factura", "listaDetalle"})
 @Table(name = "cita_entity")
 public class CitaEntity {
@@ -26,6 +28,8 @@ public class CitaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cita")
     private Long idCita;
+
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -78,5 +82,11 @@ public class CitaEntity {
     @Override
     public int hashCode() {
         return Objects.hashCode(idCita);
+    }
+
+    @PrePersist
+    private void prePersist(){
+        this.setCreatedAt(LocalDateTime.now());
+        log.info("pre persiste {}", this.getCreatedAt().toString());
     }
 }
