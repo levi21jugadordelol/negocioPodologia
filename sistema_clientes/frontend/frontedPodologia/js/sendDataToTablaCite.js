@@ -9,13 +9,6 @@ export const sendDataToTablaCite = () => {
   datosServicio.forEach((servicio) => {
     const fila = d.createElement("tr");
 
-    /*fila.innerHTML = `
-       <td>${servicio.$nombreServicio}</td>
-       <td>${servicio.$nombreServicio}</td>
-       <td>${servicio.$nombreServicio}</td>
-       <td>${servicio.$nombreServicio}</td>
-    `;*/
-
     fila.dataset.id = servicio.id || servicio.idServicio;
 
     fila.innerHTML = `

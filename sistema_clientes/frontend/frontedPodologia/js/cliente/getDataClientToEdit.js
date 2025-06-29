@@ -8,11 +8,9 @@ export const getDataClientToEdit = (idCliente) => {
   console.log("el valor del formulario en el html es: ", $form);
   if (!$form) return;
 
-  /* const clientes = clienteStorage.obtenerClientes();
-  console.log("los clientes obtenidos son : ", clientes); */
-
-  // Busca el cliente por idCliente
-  /* const cliente = clientes.find((c) => String(c.id) === String(idCliente)); */
+  const clientes = actualizarClientesEnMemoria();
+  console.log("📦 Clientes en memoria:", clientes);
+  console.log("🔍 Buscando cliente con ID:", idCliente);
 
   const cliente = actualizarClientesEnMemoria().find(
     (c) => String(c.id) === String(idCliente)

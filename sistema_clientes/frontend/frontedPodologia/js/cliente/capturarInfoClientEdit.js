@@ -2,6 +2,8 @@ import { clienteStorage } from "../localStorage/clienteStorage.js";
 import { enviandoDatos } from "../enviandoDatos.js";
 import { enviarEditClienteApi } from "./api_cliente/enviarEditClientApi.js";
 import { Cliente } from "../clases/cliente.js";
+import { comenzarTollenarClientPorDiaApi } from "../cliente/api_cliente/comenzarTollenarClientPorDia.js";
+import { cargarClientesDelDia } from "./cargarClienteDelDia.js";
 const d = document;
 export const capturaInfoClientEdit = async () => {
   const $form = d.getElementById("form_cliente_edit");
@@ -39,7 +41,17 @@ export const capturaInfoClientEdit = async () => {
   $form.reset();
 
   // Recupera todos los clientes actualizados desde localStorage:
-  const clientesActualziados = clienteStorage.obtenerClientes();
+  //const clientesActualizados = clienteStorage.obtenerClientes();
   // Vuelve a renderizar la tabla con los nuevos datos:
-  enviandoDatos(clientesActualziados);
+
+  // ✅ Lógica para recargar lista de clientes del día tras editar
+  //clienteStorage.obtenerClientes;
+
+  /* console.log(
+    "los clientes actualizados en capturarInfoClientEdit son : ",
+    clientesActualizados
+  ); */
+
+  //enviandoDatos(clientesActualizados);
+  await cargarClientesDelDia();
 };

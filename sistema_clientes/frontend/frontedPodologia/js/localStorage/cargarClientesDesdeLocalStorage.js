@@ -5,14 +5,6 @@ import { clienteStorage } from "./clienteStorage.js";
 import { BASE_URL } from "../config/configuracion.js";
 
 export async function cargarClientesDesdeLocalStorage() {
-  //asegura una única instancia.
-  /* const lista = clienteStorage.obtenerClientes();
-
-  datosCliente.length = 0;
-  datosCliente.push(...lista);
-
-  console.log("📥 Clientes cargados desde localStorage:", datosCliente); */
-
   try {
     const respuesta = await fetch(`${BASE_URL}/cliente/todas`, {
       headers: {

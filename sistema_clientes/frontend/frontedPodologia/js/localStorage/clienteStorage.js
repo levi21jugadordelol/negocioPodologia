@@ -42,21 +42,21 @@ export class ClienteStorage {
     const lista = data ? JSON.parse(data) : [];
 
     return lista
-      .filter(
-        (obj) => typeof obj.nombre === "string" && obj.nombre.trim() !== ""
-      )
       .map((obj) => {
-        const cliente = new Cliente(
-          obj.nombre,
-          obj.apellido,
-          obj.correo,
-          obj.celular,
-          obj.dni
-        );
+        // Acepta tanto nombre como nombreCliente
+        const nombre = obj.nombre || obj.nombreCliente || "";
+        const apellido = obj.apellido || obj.apellidoCliente || "";
+        const correo = obj.correo || obj.correoCliente || "";
+        const celular = obj.celular || obj.cellCliente || "";
+        const dni = obj.dni || obj.dniCliente || "";
+
+        const cliente = new Cliente(nombre, apellido, correo, celular, dni);
         cliente.id = obj.idCliente || obj.id;
         cliente.idCliente = obj.idCliente || obj.id;
+
         return cliente;
-      });
+      })
+      .filter((c) => typeof c.nombre === "string" && c.nombre.trim() !== "");
   }
 
   eliminarClientePorId(id) {

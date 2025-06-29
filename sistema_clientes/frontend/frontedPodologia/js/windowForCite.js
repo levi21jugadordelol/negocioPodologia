@@ -3,17 +3,6 @@ const ss = sessionStorage;
 //import { BASE_URL } from "./config/configuracion.js";
 import { traerCitasDelDia } from "./citas/metodos/traerCitasDelDia.js";
 
-/*const validarCliente = async (id) => {
-  const res = await fetch(`${BASE_URL}/cliente/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${sessionStorage.token}`,
-    },
-  });
-  if (!res.ok) throw new Error("Cliente no encontrado");
-  return await res.json();
-}; */
-
 export const tableCita = (button_open, sectionCite) => {
   d.addEventListener("click", (e) => {
     if (e.target.matches(button_open) || e.target.closest(button_open)) {

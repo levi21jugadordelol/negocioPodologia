@@ -9,15 +9,21 @@ import {
 export const datosCita = [];
 
 export const getDataFromCita = async () => {
-  //alert("hola desde el metodo getDataFromCita");
+  citaStorage.vaciar();
+  datosCita.length = 0;
+
   const d = document;
   const filas = d.querySelectorAll("#tabla-citas tbody tr");
+
   console.log("fila tendria: ", filas);
   if (!filas) return null;
 
-  datosCita.length = 0;
-
   for (const fila of filas) {
+    if (fila.dataset.id) {
+      console.log("⏩ Fila ya procesada, se omite. ID:", fila.dataset.id);
+      continue; // Saltar fila ya guardada
+    }
+
     const inputFecha = fila.querySelector(".fecha-cita");
     console.log("input fecha tendria: ", inputFecha);
     const selectServicio = fila.querySelector("td:nth-child(3) select");
@@ -30,6 +36,18 @@ export const getDataFromCita = async () => {
 
     const tdCliente = fila.querySelector("td:nth-child(2)");
     const idCliente = parseInt(tdCliente?.dataset.idcliente, 10);
+
+    if (
+      !inputFecha ||
+      !inputFecha.value ||
+      !selectServicio ||
+      !selectServicio.value ||
+      !selectEstado ||
+      !selectEstado.value
+    ) {
+      console.warn("⚠️ Fila con campos incompletos. Se omite.");
+      continue;
+    }
 
     // === Consolas de verificación ===
     console.log("📅 Fecha ingresada:", inputFecha?.value);
@@ -71,20 +89,40 @@ export const getDataFromCita = async () => {
 
       if (respuesta.exito && respuesta.idCita) {
         // ✅ Guardar el ID en la fila para luego editar
+        cita.idCita = respuesta.idCita;
+        citaStorage.guardar(cita);
         fila.dataset.id = respuesta.idCita;
         console.log("🆔 ID asignado a la fila:", respuesta.idCita);
+
+        // 🔥 Agrega esto:
+        const btnGuardar = fila.querySelector(".btn-guardar-cita"); // asegúrate de que esta clase sea la correcta
+        if (btnGuardar) {
+          btnGuardar.dataset.idCita = respuesta.idCita;
+          btnGuardar.dataset.servicioId = selectServicio.value;
+          btnGuardar.dataset.servicioNombre =
+            selectServicio.options[selectServicio.selectedIndex].textContent;
+
+          // 🧪 Verificamos todo lo que tiene el botón
+          console.log("📦 Dataset del botón después de guardar:");
+          console.log("🆔 idCita:", btnGuardar.dataset.idCita);
+          console.log("💼 servicioId:", btnGuardar.dataset.servicioId);
+          console.log("📛 servicioNombre:", btnGuardar.dataset.servicioNombre);
+          console.log("🔍 Botón completo:", btnGuardar.outerHTML);
+        } else {
+          console.warn("❌ No se encontró el botón guardar en la fila");
+        }
+
+        //desactivamos el button guardar al ver que se guardo cita
+        desactivarBotonGuardar();
+
+        //ponemos inhabilitadas los edit en los input de cita
+        desactivarCamposFila();
       } else {
         console.warn("⚠️ No se recibió un `idCita` válido en la respuesta:");
         console.warn("⚠️ No se recibió un idCita válido");
       }
 
       console.log("cita creada correctamente: ", respuesta.mensaje);
-
-      //desactivamos el button guardar al ver que se guardo cita
-      desactivarBotonGuardar();
-
-      //ponemos inhabilitadas los edit en los input de cita
-      desactivarCamposFila();
 
       console.log(
         "🛑 Campos desactivados y botón deshabilitado para esta fila"
@@ -95,9 +133,6 @@ export const getDataFromCita = async () => {
       console.error("Detalle del error:", e);
     }
   }
-
-  //Guardar el arreglo completo en localStorage para persistencia
-  datosCita.forEach((cita) => citaStorage.guardar(cita));
-
-  console.log("✅ Datos guardados en localStorage");
+  // 🔁 Limpieza total del UI tras procesar todas las filas
+  document.querySelector("#tabla-citas tbody").innerHTML = "";
 };

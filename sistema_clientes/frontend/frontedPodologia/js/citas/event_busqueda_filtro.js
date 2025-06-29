@@ -1,18 +1,3 @@
-/*
-document.addEventListener("DOMContentLoaded", () => {
-  getCitePending(); // carga inicial
-
-  document.getElementById("btn-buscar-dni").addEventListener("click", () => {
-    const dni = document.getElementById("input-dni").value.trim();
-    getCitePending({ dni });
-  });
-
-  document.getElementById("btn-buscar-nombre").addEventListener("click", () => {
-    const nombre = document.getElementById("input-nombre").value.trim();
-    getCitePending({ nombre });
-  });
-}); */
-
 import { getCitePending } from "../cliente_pendientes/getCitePending.js";
 
 const d = document;

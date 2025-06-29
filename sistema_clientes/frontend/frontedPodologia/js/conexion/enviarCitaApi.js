@@ -23,7 +23,7 @@ export async function enviarCitaApi(cita) {
     const { idCita } = citaGuardado;
 
     // 💾 Guarda sólo el ID si eso necesitas, o toda la respuesta real del backend
-    citaStorage.guardar({ ...citaGuardado });
+    // citaStorage.guardar({ ...citaGuardado });
 
     alert("✅ Cita guardada exitosamente");
 

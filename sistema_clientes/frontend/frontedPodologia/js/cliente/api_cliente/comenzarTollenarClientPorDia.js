@@ -2,6 +2,7 @@ import { BASE_URL } from "../../config/configuracion.js";
 
 const d = document;
 export async function comenzarTollenarClientPorDiaApi(fecha) {
+  console.log("📅 Fecha enviada al backend:", fecha);
   //aca hacemos un fect llamando al endpoint, supongo que como parametro debo ponerle una fecha
   const URL_API = `${BASE_URL}/cliente/por-dia?fecha=${fecha}`;
 

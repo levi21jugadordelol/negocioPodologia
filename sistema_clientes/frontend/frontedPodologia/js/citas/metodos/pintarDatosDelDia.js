@@ -36,39 +36,6 @@ export const pintarDatosDelDia = (citas = []) => {
     tdObs.textContent = cita.observaciones || "";
     fila.appendChild(tdObs);
 
-    // Acciones
-    /* const tdAcciones = d.createElement("td");
-
-    const btnGuardar = d.createElement("button");
-    btnGuardar.textContent = "Guardar"; // ✅ Corregido nombre
-    btnGuardar.className = "btn btn-success btn-sm me-1";
-    btnGuardar.classList.add("btn-guardar-cita");
-
-    const btnGuardarEdit = document.createElement("button");
-    btnGuardarEdit.textContent = "Guardar cambios";
-    btnGuardarEdit.className =
-      "btn btn-primary btn-sm me-1 btn-guardar-edit d-none";
-
-    const btnEditar = d.createElement("button");
-    btnEditar.textContent = "Editar";
-    btnEditar.className = "btn btn-warning btn-sm me-1";
-    btnEditar.classList.add("btn-editar-cita");
-
-    const btnEliminar = d.createElement("button");
-    btnEliminar.textContent = "Eliminar";
-    btnEliminar.className = "btn btn-danger btn-sm";
-    btnEliminar.classList.add("btn-eliminar-cita");
-
-    // Agrega los botones a la celda
-
-    tdAcciones.appendChild(btnGuardar);
-    tdAcciones.appendChild(btnGuardarEdit);
-    tdAcciones.appendChild(btnEditar);
-    tdAcciones.appendChild(btnEliminar);
-
-    // Añade la celda de acciones a la fila
-    fila.appendChild(tdAcciones); */
-
     // Agregar fila a tabla
     $tablaCitasDelDia.appendChild(fila);
   });

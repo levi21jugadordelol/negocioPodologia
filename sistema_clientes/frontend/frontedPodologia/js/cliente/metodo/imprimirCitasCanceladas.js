@@ -1,39 +1,15 @@
-import { BASE_URL } from "../config/configuracion.js";
-
 const d = document;
 
-// Obtener las citas programadas
-export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
+export const imprimirCitasCanceladas = (citas = []) => {
+  const $contenidoTablaCitasCanceladas = d.getElementById(
+    "tabla-citas-cancelados"
+  );
+
+  $contenidoTablaCitasCanceladas.innerHTML = "";
+
+  console.log("🧹 Tabla limpiada, procesando citas...");
+
   try {
-    console.log("🔄 Solicitando citas programadas...");
-
-    let url = `${BASE_URL}/citas/clientes?estado=PROGRAMADA`;
-    if (dni) url += `&dni=${encodeURIComponent(dni)}`;
-    else if (nombre) url += `&nombre=${encodeURIComponent(nombre)}`;
-    console.log("🧭 URL: ", url);
-
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`⛔ HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const citas = await response.json();
-
-    console.log(`✅ [getCitePending] ${citas.length} citas recibidas`);
-    console.table(citas);
-
-    const $contenidoTablaPendiente = document.getElementById(
-      "tabla-citas-programadas"
-    );
-    $contenidoTablaPendiente.innerHTML = "";
-    console.log("🧹 Tabla limpiada, procesando citas...");
-
     for (const cita of citas) {
       const row = document.createElement("tr");
 
@@ -91,12 +67,12 @@ export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
       tdAcciones.appendChild(btnEliminar);
       row.appendChild(tdAcciones);
 
-      $contenidoTablaPendiente.appendChild(row);
+      $contenidoTablaCitasCanceladas.appendChild(row);
     }
 
     console.log("✅ Tabla completada");
-  } catch (e) {
-    console.error("❌ Error general en getCitePending:", e);
+  } catch (error) {
+    console.error("❌ Error general en imprimirCitasFinalizadas:", error);
   }
 };
 

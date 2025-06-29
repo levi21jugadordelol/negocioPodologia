@@ -5,7 +5,7 @@ import { sendClientToCita } from "./sendInfoToTableCite.js";
 import { tableCita } from "./windowForCite.js";
 import { tableClient } from "./windowForClient.js";
 import { invocateDivServicio } from "./windowToServicio.js";
-import { infoCita } from "./saveDate.js";
+
 import { openWindowProduct } from "./openWindowProduct.js";
 import { openModalProducto } from "./openModalProducto.js";
 import { openTablePending } from "./cliente_pendientes/openTablePending.js";
@@ -30,6 +30,8 @@ import { eventoEditDeleteServicio } from "./servicios/evento_servicio/eventoEdit
 import { recuperarServiciosDesdeLocalStorage } from "./servicios/metodos/recuperarServiciosDesdeLocalStorage.js";
 import { cargarServiciosDesdeLocalStorage } from "./localStorage/cargarServiciosDesdeLocalStorage.js";
 import { recuperarCitasDesdeLocalStorage } from "./localStorage/recuperarCitasDesdeLocalStorage.js";
+import { evento_busquedaNombreDni_finalizado } from "./citas/evento_citas/evento_busquedaNombreDni_finalizados.js";
+import { eventoBusquedaNombreDni_cancelados } from "./citas/evento_citas/eventoBusquedaNombreDni_Cancelados.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 DOM listo, inicializando app...");
@@ -76,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ".close",
     ".btn_enviar_servicio"
   );
-  infoCita(".btn-guardar-cita");
+
   openWindowProduct("#btn-productos", "#vista-productos");
   openModalProducto(
     ".btn_nuevo_producto",
@@ -95,10 +97,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   openModalDetailsService(
     ".click_finalizar",
     "#modal_detalle",
+    ".btn-guardar-cita",
     ".close",
     ".enviar"
   );
   event_busqueda_filtro("#btn-buscar-dni", "#btn-buscar-nombre");
+  evento_busquedaNombreDni_finalizado(
+    "#btn-buscar-dniFinalizado",
+    "#btn-buscar-nombreFinalizado"
+  );
+  eventoBusquedaNombreDni_cancelados(
+    "#btn-buscar-dni-cancelados",
+    "#btn-buscar-nombre-cancelados"
+  );
   edit_cliente(
     ".click_editar",
     ".modal-overlay_edit",

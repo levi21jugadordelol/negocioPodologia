@@ -24,10 +24,16 @@ export async function enviarDetalleApi(idCita, detalle) {
     console.log(detalleGuardado);
 
     alert("✅ Detalle guardado correctamente.");
-    console.log({ exito: true, mensaje: detalleGuardado.mensaje });
-    return idServicio;
+    // console.log({ exito: true, mensaje: detalleGuardado.mensaje });
+    // return idServicio;
     // return { exito: true, mensaje: detalleGuardado.mensaje };
     // Puedes cerrar el modal o limpiar el formulario si deseas
+    return {
+      exito: true,
+      mensaje: detalleGuardado.mensaje,
+      idServicio: detalleGuardado.idServicio,
+      data: detalleGuardado,
+    };
   } catch (e) {
     console.error("❌ Error al enviar cita:", e.message);
     alert("❌ Error al guardar cita");

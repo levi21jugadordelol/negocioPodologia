@@ -20,13 +20,6 @@ export const postDataDetails = async (idCita, productosUtilizados) => {
     d.getElementById("modal_duracion_detalle").value
   );
 
-  // Llenar todos los combos de productos visibles
-  /*const selectsProductos = d.querySelectorAll(".producto_id");
-  console.log("Encontrados:", selectsProductos.length);
-  selectsProductos.forEach((select) => {
-    fillComboProductFromBackend(select); // ✅ ahora sí pasamos cada <select> individual
-  }); */
-
   const duracion = Number(duracionInput.value);
   console.log("🧪 Input duración (elemento):", duracionInput);
   console.log("🧪 Valor crudo:", duracionInput.value);
@@ -41,24 +34,13 @@ export const postDataDetails = async (idCita, productosUtilizados) => {
   //obteniendo motivo
   const motivo = d.querySelector("#modal_motivo").value.trim();
 
+  console.log("📌 idCita recibido:", idCita);
+  console.log("📦 productosUtilizados recibidos:", productosUtilizados);
+
   if (productosUtilizados.length === 0) {
     alert("Debe agregar al menos un producto utilizado");
     return;
   }
-
-  // Capturar productos utilizados
-  /* const productosUtilizados = [];
-  d.querySelectorAll(".producto_item").forEach((item) => {
-    const idProducto = parseInt(item.querySelector(".producto_id").value);
-
-    if (!isNaN(idProducto) && idProducto > 0) {
-      //productosUtilizados.push({ productoId: idProducto });
-      productosUtilizados.push({
-        // producto: { idProducto: idProducto },
-        productoId: idProducto,
-      });
-    }
-  });  */
 
   console.log("📦 Datos a enviar del detalle:", {
     servicioId,
@@ -85,9 +67,6 @@ export const postDataDetails = async (idCita, productosUtilizados) => {
     if (respuestaDetalle.error) {
       alert("❌ Error al enviar al backend: " + respuestaDetalle.mensaje);
     } else {
-      /* alert("✅ detalle enviado exitosamente.");
-      d.querySelector("#servicio_guardado_id").textContent = idServicioGuardado;
-      $formDetalle.reset(); */
       alert("✅ detalle enviado exitosamente.");
       // Limpia estado y UI
       productosUtilizados.length = 0;
@@ -98,5 +77,4 @@ export const postDataDetails = async (idCita, productosUtilizados) => {
     console.error("Error:", e);
     alert("Ocurrió un error al guardar el detalle.");
   }
-  // $formDetalle.reset();
 };

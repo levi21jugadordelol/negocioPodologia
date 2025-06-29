@@ -4,7 +4,7 @@ import { productoStorage } from "../../localStorage/productoStorage.js";
 const d = document;
 
 export const editProductoApi = async (idProducto, productoBackend) => {
-  const URL_API = `${BASE_URL}/producto/editar/${idProducto}`;
+  const URL_API = `${BASE_URL}/servicio/editar/${idProducto}`;
   try {
     // const respuesta = await fetch(`${BASE_URL}/producto/editar/${idProducto}`, {
     const respuesta = await fetch(URL_API, {
