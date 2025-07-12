@@ -59,6 +59,7 @@ public class CitaEntity {
     fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true)
+
     @JsonManagedReference("cita-detalle")
     private List<DetalleEntity> listaDetalle = new ArrayList<>();
 

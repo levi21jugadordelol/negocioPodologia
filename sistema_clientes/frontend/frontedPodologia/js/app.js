@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ".close",
     ".btn_enviar_edit_cliente"
   );
-  evento_edit(".btn-editar-cita", ".btn-guardar-cita");
+  evento_edit(".btn-editar-cita", ".btn-guardar-cita", ".btn-eliminar-cita");
   mostrarListaClientes(
     ".btn_listaCliente",
     "#vista-clientes-totales",

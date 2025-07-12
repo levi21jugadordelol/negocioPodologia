@@ -24,62 +24,89 @@
   <body>
     <main class="d-flex">
       <!-- === SIDEBAR === -->
-      <aside class="sidebar" style="background-color: lightslategray">
-        <div class="sidebar-top text-center">
-          <h3>👤 Juan Pérez</h3>
-          <p>Admin</p>
+      <aside
+        class="sidebar"
+        style="
+          background-color: #2f4f4f;
+          color: white;
+          min-height: 100vh;
+          padding: 1.5rem;
+          border-top-right-radius: 15px;
+          border-bottom-right-radius: 15px;
+          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        "
+      >
+        <!-- Parte superior -->
+        <div class="sidebar-top text-center mb-4">
+          <h3 style="font-size: 2rem">👤</h3>
+          <p id="nombre_admin" class="fw-bold mb-0">Admin</p>
         </div>
 
-        <ul class="menu list-unstyled">
-          <li>
+        <!-- Menú -->
+        <ul class="menu list-unstyled mb-4">
+          <li class="mb-2">
             <button
               type="button"
               id="btn-clientes"
-              class="btn w-100 text-start"
+              class="btn btn-outline-light w-100 text-start rounded"
             >
               👥 Clientes
             </button>
           </li>
-          <li>
-            <button type="button" id="btn-citas" class="btn w-100 text-start">
+          <li class="mb-2">
+            <button
+              type="button"
+              id="btn-citas"
+              class="btn btn-outline-light w-100 text-start rounded"
+            >
               📅 Citas
             </button>
           </li>
-          <li>
+          <li class="mb-2">
             <button
               type="button"
               id="btn-servicios"
-              class="btn w-100 text-start"
+              class="btn btn-outline-light w-100 text-start rounded"
             >
               🛠️ Servicios
             </button>
           </li>
-          <li>
+          <li class="mb-2">
             <button
               type="button"
               id="btn-productos"
-              class="btn w-100 text-start"
+              class="btn btn-outline-light w-100 text-start rounded"
             >
               🧴 Productos
             </button>
           </li>
-
-          <li>
+          <li class="mb-2">
             <button
               type="button"
               id="btn-facturas"
-              class="btn w-100 text-start"
+              class="btn btn-outline-light w-100 text-start rounded"
             >
               🧾 Facturas
             </button>
           </li>
         </ul>
 
+        <!-- Parte inferior -->
         <div class="sidebar-bottom">
-          <p>📈 Total Clientes: <span id="total-clientes">0</span></p>
-          <p>📅 Hoy: <span id="fecha-hoy"></span></p>
-          <button type="button" class="btn" id="btn_cerrarSession">
-            Cerrar sesión
+          <p class="mb-1">
+            📈 <strong>Total Clientes:</strong>
+            <span id="total-clientes">0</span>
+          </p>
+          <p class="mb-3">
+            📅 <strong>Hoy:</strong> <span id="fecha-hoy"></span>
+          </p>
+
+          <button
+            type="button"
+            class="btn btn-danger w-100 py-2 fw-bold rounded"
+            id="btn_cerrarSession"
+          >
+            🔒 Cerrar sesión
           </button>
         </div>
       </aside>
@@ -351,7 +378,7 @@
                   <th>Fecha</th>
                   <th>Estado</th>
                   <th>Observaciones</th>
-                  <th>Acciones</th>
+                  <!-- <th>Acciones</th>-->
                 </tr>
               </thead>
 
@@ -852,5 +879,30 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="../js/app.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const $fechaHoy = document.getElementById("fecha-hoy");
+
+        function actualizarFechaHora() {
+          const ahora = new Date();
+
+          const opcionesFecha = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          };
+
+          const fecha = ahora.toLocaleDateString("es-ES", opcionesFecha);
+          const hora = ahora.toLocaleTimeString("es-ES");
+
+          $fechaHoy.textContent = `${fecha} — ${hora}`;
+        }
+
+        actualizarFechaHora(); // mostrarla al cargar
+        setInterval(actualizarFechaHora, 1000); // actualizar cada segundo
+      });
+    </script>
   </body>
 </html>

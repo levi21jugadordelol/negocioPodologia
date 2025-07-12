@@ -211,8 +211,11 @@ public class CitaServiceImpl implements ICitaService {
         }
 
 
-        // ✅ AQUI AGREGA ESTA LINEA DE DEBUG:
-        log.info(">>> Cita servicio: {}", listaPendiente.get(0).getServicio());
+        // ✅ Agrega estos logs para ver en consola
+        log.info(">>> Total de citas pendientes encontradas: {}", listaPendiente.size());
+        listaPendiente.forEach(cita ->
+                log.info("ID cita: {}, estado: {}", cita.getIdCita(), cita.getEstadoCita())
+        );
 
 
         return listaPendiente.stream()

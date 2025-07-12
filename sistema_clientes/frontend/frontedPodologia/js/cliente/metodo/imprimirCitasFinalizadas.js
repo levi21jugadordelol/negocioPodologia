@@ -6,6 +6,7 @@ export const imprimirCitasFinalizadas = (citas = []) => {
   );
   $contenidoTablaCitasFinalizadas.innerHTML = "";
   console.log("🧹 Tabla limpiada, procesando citas...");
+
   try {
     for (const cita of citas) {
       const row = document.createElement("tr");
@@ -33,36 +34,8 @@ export const imprimirCitasFinalizadas = (citas = []) => {
       row.appendChild(crearCelda(estadoCita));
       row.appendChild(crearCelda(observaciones));
 
-      const tdAcciones = document.createElement("td");
-
-      const btnFinalizar = document.createElement("button");
-      btnFinalizar.textContent = "Finalizado";
-      btnFinalizar.classList.add("action-button", "click_finalizar", "green");
-      btnFinalizar.dataset.idCita = idCita;
-
-      const detalle = cita.detalles?.[0]; // primero si existe
-
-      if (detalle?.servicioId) {
-        console.log("🧩 Servicio desde detalle:", detalle.servicioId);
-        btnFinalizar.dataset.servicioId = detalle.servicioId;
-        btnFinalizar.dataset.servicioNombre = detalle.nombreServicio || "-";
-        btnFinalizar.dataset.duracion = detalle.duracionTotal || "";
-      } else if (cita.servicio) {
-        console.log("🧩 Servicio desde cita:", servicioId);
-        btnFinalizar.dataset.servicioId = servicioId;
-        btnFinalizar.dataset.servicioNombre = nombreServicio;
-        btnFinalizar.dataset.duracion = cita.servicio.duracionServicio || "";
-      } else {
-        console.warn(`⚠️ No se encontró servicio en cita ${idCita}`);
-      }
-
-      const btnEliminar = document.createElement("button");
-      btnEliminar.textContent = "Eliminar";
-      btnEliminar.classList.add("action-button", "click_delete", "red");
-
-      tdAcciones.appendChild(btnFinalizar);
-      tdAcciones.appendChild(btnEliminar);
-      row.appendChild(tdAcciones);
+      // ❌ No se agrega columna de acciones
+      // ❌ No se crean botones "Finalizado" ni "Eliminar"
 
       $contenidoTablaCitasFinalizadas.appendChild(row);
     }

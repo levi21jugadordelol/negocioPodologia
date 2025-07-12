@@ -1,3 +1,5 @@
+import { citaStorage } from "../../localStorage/CitaStorage.js";
+import { deleteCitaApi } from "../api_cita/deleteCitaApi.js";
 import { getDataCiteDorEdit } from "../getDataCiteForEdit.js";
 import {
   activarBotonGuardar,
@@ -11,7 +13,11 @@ import {
 const d = document;
 
 //btn-editar-cita
-export const evento_edit = (button_editar, btn_guardar_citaEditada) => {
+export const evento_edit = (
+  button_editar,
+  btn_guardar_citaEditada,
+  btn_delete_cita
+) => {
   d.addEventListener("click", async (e) => {
     if (e.target.matches(button_editar)) {
       alert("creando evento edit");
@@ -104,6 +110,46 @@ export const evento_edit = (button_editar, btn_guardar_citaEditada) => {
         alert("✅ Cambios guardados con éxito");
       } catch (err) {
         console.error("❌ Error al guardar cambios:", err);
+      }
+    }
+
+    if (
+      e.target.matches(btn_delete_cita) ||
+      e.target.matches(".click_delete")
+    ) {
+      console.log("click para eliminar cita");
+      try {
+        const fila = e.target.closest("tr"); // ⬅️ obtenemos la fila
+        if (!fila) throw new Error("No se encontró la fila");
+        console.log("el valor de fila es: ", fila);
+
+        const idCita = parseInt(fila.dataset.id, 10); // ⬅️ capturamos el id desde data-id
+        console.log("el id de cita a eliminar es: ", idCita);
+        if (isNaN(idCita)) throw new Error("ID de cita inválido");
+
+        console.log("🔑 ID de la cita a eliminar es:", idCita); // ⬅️ verificación
+
+        const confirmado = confirm("¿Estás seguro de eliminar esta cita?");
+        if (!confirmado) {
+          console.log("❎ Eliminación cancelada por el usuario");
+          return;
+        }
+
+        console.log("🔁 Intentando eliminar cita del backend...");
+
+        const eliminado = await deleteCitaApi(idCita);
+
+        if (eliminado) {
+          console.log("eliminando del storage");
+          citaStorage.eliminarPorId(idCita);
+          console.log("🧼 Eliminando visualmente la fila del DOM");
+          fila.remove();
+          alert("✅ cita eliminado correctamente.");
+        } else {
+          alert("❌ No se pudo eliminar el producto.");
+        }
+      } catch (error) {
+        console.error("el error es : ", error);
       }
     }
   });

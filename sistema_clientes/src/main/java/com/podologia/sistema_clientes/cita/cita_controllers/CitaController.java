@@ -128,7 +128,9 @@ public class CitaController {
             @RequestParam(required = false) String dni,
             @RequestParam(required = false) String nombre) {
         List<CitaDto> resultado = citaService.filtrarCitas(estado, dni, nombre);
+        log.info("Los clientes con estado {} son: {}", estado, resultado);
         return ResponseEntity.ok(resultado);
+
     }
 
 

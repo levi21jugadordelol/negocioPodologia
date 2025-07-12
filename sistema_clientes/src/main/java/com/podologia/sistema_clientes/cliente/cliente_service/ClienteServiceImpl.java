@@ -191,17 +191,12 @@ public class ClienteServiceImpl implements IClienteService{
 
     @Override
     public List<ClienteEntity> guardarClientePorDia(LocalDate fecha) {
-        //Convierte la fecha a un LocalDateTime en la hora inicial del día: 00:00:00.000
-        LocalDateTime inicio = fecha.atStartOfDay();
-
-        /*fecha.plusDays(1).atStartOfDay() → Esto te da el inicio del día siguiente (ej. 2025-06-09T00:00)
-
-       .minusNanos(1) → Le resta 1 nanosegundo para obtener el último instante del día original,
-       es decir: 2025-06-08T23:59:59.999999999*/
-        LocalDateTime fin = fecha.plusDays(1).atStartOfDay().minusNanos(1);
+        LocalDateTime inicio = fecha.atStartOfDay();              // 2025-06-28T00:00
+        LocalDateTime fin = fecha.plusDays(1).atStartOfDay();     // 2025-06-29T00:00 (SIN .minusNanos)
 
         return clienteRepo.getClientXday(inicio, fin);
     }
+
 
 
 

@@ -19,8 +19,12 @@ public interface IClienteRepo extends JpaRepository<ClienteEntity,Long> {
    @Query("Select c FROM ClienteEntity c WHERE c.dniCliente = :dniCliente")
     Optional<ClienteEntity> findByDni(@Param("dniCliente") String dniCliente);
 
-    @Query("SELECT c FROM ClienteEntity c WHERE c.createdAt BETWEEN :inicio AND :fin")
+   /* @Query("SELECT c FROM ClienteEntity c WHERE c.createdAt BETWEEN :inicio AND :fin")
+    List<ClienteEntity> getClientXday(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin); */
+
+    @Query("SELECT c FROM ClienteEntity c WHERE c.updatedAt BETWEEN :inicio AND :fin")
     List<ClienteEntity> getClientXday(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
+
 
 
 

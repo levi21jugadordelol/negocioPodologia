@@ -39,7 +39,7 @@ export const crearCeldaAcciones = (cita) => {
       console.log("❓ Estructura actual de cita:", cita);
     }
 
-    tdAcciones.appendChild(btnFinalizar);
+    // tdAcciones.appendChild(btnFinalizar);
   }
 
   const btnEliminar = document.createElement("button");
@@ -47,7 +47,7 @@ export const crearCeldaAcciones = (cita) => {
   btnEliminar.classList.add("action-button", "click_delete", "red");
   btnEliminar.dataset.idCita = cita.idCita;
 
-  tdAcciones.appendChild(btnEliminar);
+  //  tdAcciones.appendChild(btnEliminar);
 
   return tdAcciones;
 };

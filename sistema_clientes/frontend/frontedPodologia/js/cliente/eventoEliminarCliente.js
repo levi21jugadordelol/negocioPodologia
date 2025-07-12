@@ -21,6 +21,14 @@ export const eventoEliminarCliente = (button_eliminar_cliente) => {
         if (eliminado?.success) {
           console.log("✅ Eliminando fila del DOM");
           fila.remove(); // <--- esto elimina visualmente la fila
+          // 2️⃣ Contar cuántas filas quedan en la tabla (excluyendo encabezado si lo tienes)
+          const totalFilas = document.querySelectorAll(
+            "#tabla-clientes tbody tr"
+          ).length;
+
+          // 3️⃣ Actualizar el número de clientes en el <span>
+          const $totalClienteDom = document.getElementById("total-clientes");
+          $totalClienteDom.textContent = totalFilas;
           alert("✅ Cliente eliminado correctamente");
         } else {
           alert("❌ No se pudo eliminar el cliente");

@@ -22,6 +22,7 @@ export const addIdToTable = async (idCliente, nombreCliente) => {
 
   // Crear nueva fila
   const fila = d.createElement("tr");
+  fila.dataset.id = idCita;
 
   // Fecha
   const tdFecha = d.createElement("td");

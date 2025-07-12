@@ -45,6 +45,8 @@ export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
       const estadoCita = cita.estadoCita;
       const observaciones = cita.observaciones || "-";
 
+      row.dataset.id = idCita;
+
       console.log(`📄 Procesando cita ID ${idCita}`, {
         nombreCliente,
         nombreServicio,
@@ -61,6 +63,8 @@ export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
       row.appendChild(crearCelda(observaciones));
 
       const tdAcciones = document.createElement("td");
+
+      // tdAcciones.appendChild(btnEditar);
 
       const btnFinalizar = document.createElement("button");
       btnFinalizar.textContent = "Finalizado";
@@ -86,9 +90,11 @@ export const getCitePending = async ({ dni = "", nombre = "" } = {}) => {
       const btnEliminar = document.createElement("button");
       btnEliminar.textContent = "Eliminar";
       btnEliminar.classList.add("action-button", "click_delete", "red");
+      btnEliminar.dataset.idCita = idCita;
 
       tdAcciones.appendChild(btnFinalizar);
       tdAcciones.appendChild(btnEliminar);
+      //  tdAcciones.appendChild(btnEditar);
       row.appendChild(tdAcciones);
 
       $contenidoTablaPendiente.appendChild(row);

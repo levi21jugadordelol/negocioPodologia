@@ -24,6 +24,7 @@ public class ClienteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCliente;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String nombreCliente;
     private String apellidoCliente;
     private String dniCliente;
@@ -69,10 +70,19 @@ public class ClienteEntity {
     }
 
     @PrePersist
-    private void prePersist(){
-        this.setCreatedAt(LocalDateTime.now());
-        log.info("pre persiste {}",this.getCreatedAt().toString());
+    private void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+        log.info("🟢 prePersist: createdAt={}, updatedAt={}", createdAt, updatedAt);
     }
+
+    @PreUpdate
+    private void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+        log.info("🟡 preUpdate: updatedAt={}", updatedAt);
+    }
+
 
 
 }
